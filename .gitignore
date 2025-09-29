@@ -1,2 +1,4 @@
 .vscode
 api/app/Config/Database.php
+api/tests
+api/vendor
