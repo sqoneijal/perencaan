@@ -29,7 +29,7 @@ export function FormText({
             type="text"
             id={id}
             placeholder={label}
-            value={value}
+            value={value || ""}
             onChange={onChange}
             name={name}
             className={cn(errors?.[name] && "border border-red-500")}
@@ -52,7 +52,7 @@ export function FormSelect({
    return (
       <div className="grid w-full items-center gap-1 flex-1">
          <Label htmlFor={id}>{label}</Label>
-         <Select value={value} onValueChange={onValueChange}>
+         <Select key={value} value={value || ""} onValueChange={onValueChange}>
             <SelectTrigger className={cn(errors?.[name] && "border border-red-500", "w-full")}>
                <SelectValue placeholder={`Pilih ${label}`} />
             </SelectTrigger>
@@ -84,7 +84,7 @@ export function FormTextarea({
          <Textarea
             id={id}
             placeholder={label}
-            value={value}
+            value={value || ""}
             onChange={onChange}
             name={name}
             className={cn(errors?.[name] && "border border-red-500")}

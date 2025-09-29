@@ -5,9 +5,9 @@ namespace App\Controllers;
 use CodeIgniter\Controller;
 use CodeIgniter\HTTP\CLIRequest;
 use CodeIgniter\HTTP\IncomingRequest;
-use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
-use Psr\Log\LoggerInterface;
+use CodeIgniter\API\ResponseTrait;
+use Config\Cors;
 
 /**
  * Class BaseController
@@ -21,38 +21,51 @@ use Psr\Log\LoggerInterface;
  */
 abstract class BaseController extends Controller
 {
-    /**
-     * Instance of the main Request object.
-     *
-     * @var CLIRequest|IncomingRequest
-     */
-    protected $request;
 
-    /**
-     * An array of helpers to be loaded automatically upon
-     * class instantiation. These helpers will be available
-     * to all other controllers that extend BaseController.
-     *
-     * @var list<string>
-     */
-    protected $helpers = [];
+   use ResponseTrait;
 
-    /**
-     * Be sure to declare properties for any property fetch you initialized.
-     * The creation of dynamic property is deprecated in PHP 8.2.
-     */
-    // protected $session;
 
-    /**
-     * @return void
-     */
-    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
-    {
-        // Do Not Edit This Line
-        parent::initController($request, $response, $logger);
+   /**
+    * Instance of the main Request object.
+    *
+    * @var CLIRequest|IncomingRequest
+    */
+   protected $request;
 
-        // Preload any models, libraries, etc, here.
+   /**
+    * An array of helpers to be loaded automatically upon
+    * class instantiation. These helpers will be available
+    * to all other controllers that extend BaseController.
+    *
+    * @var list<string>
+    */
+   protected $helpers = ['init'];
 
-        // E.g.: $this->session = service('session');
-    }
+   /**
+    * Be sure to declare properties for any property fetch you initialized.
+    * The creation of dynamic property is deprecated in PHP 8.2.
+    */
+   // protected $session;
+
+   public function options()
+   {
+      return $this->respondCors($this->response)->setStatusCode(200);
+   }
+
+   private function respondCors(ResponseInterface $response): ResponseInterface
+   {
+      $config = new Cors();
+      $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
+
+      if (in_array($origin, $config->allowedOrigins)) {
+         $response->setHeader('Access-Control-Allow-Origin', $origin);
+      }
+
+      $response->setHeader('Access-Control-Allow-Credentials', 'true');
+      $response->setHeader('Access-Control-Allow-Methods', implode(', ', $config->allowedMethods));
+      $response->setHeader('Access-Control-Allow-Headers', implode(', ', $config->allowedHeaders));
+      $response->setHeader('Access-Control-Max-Age', '3600');
+
+      return $response;
+   }
 }

@@ -1,8 +1,10 @@
+import ConfirmDialog from "@/components/confirm-delete";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getValue } from "@/helpers/init";
 import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil } from "lucide-react";
 import type { NavigateFunction } from "react-router";
 
 type ColumnDeps = { navigate: NavigateFunction };
@@ -14,12 +16,10 @@ const getColumns = ({ navigate }: ColumnDeps): Array<ColumnDef<Lists>> => [
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="icon" onClick={() => navigate(`/referensi/unit-satuan/${getValue(original, "id")}`)}>
+               <Button variant="ghost" size="sm" onClick={() => navigate(`/referensi/unit-satuan/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
-               <Button variant="ghost" size="icon" onClick={() => navigate(`/referensi/unit-satuan/${getValue(original, "id")}`)}>
-                  <Trash />
-               </Button>
+               <ConfirmDialog url={`/referensi/unit-satuan/${getValue(original, "id")}`} refetchKey={["referensi", "unit-satuan"]} />
             </>
          );
       },
@@ -36,9 +36,10 @@ const getColumns = ({ navigate }: ColumnDeps): Array<ColumnDef<Lists>> => [
       enableSorting: true,
    },
    {
-      accessorKey: "status",
+      accessorKey: "aktif",
       header: "status",
       enableSorting: true,
+      cell: ({ row: { original } }) => <Badge variant="outline">{getValue(original, "akti") === "t" ? "Aktif" : "Tidak Aktif"}</Badge>,
    },
 ];
 export { getColumns };

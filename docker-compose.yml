@@ -1,0 +1,12 @@
+services:
+   perencanaan-api:
+      container_name: perencanaan-api
+      image: perencanaan-api
+      build:
+         context: ./api
+         dockerfile: ./Dockerfile
+      ports:
+         - 1017:80
+      volumes:
+         - ./api:/var/www/html
+      restart: always

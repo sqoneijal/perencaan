@@ -11,6 +11,7 @@ const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
    { key: v4(), path: "/referensi/unit-satuan/actions", element: <ReferensiUnitSatuanActions /> },
+   { key: v4(), path: "/referensi/unit-satuan/actions/:id_unit_satuan", element: <ReferensiUnitSatuanActions /> },
 ];
 
 export default function Routes() {

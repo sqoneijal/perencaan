@@ -1,0 +1,70 @@
+import {
+   AlertDialog,
+   AlertDialogAction,
+   AlertDialogCancel,
+   AlertDialogContent,
+   AlertDialogDescription,
+   AlertDialogFooter,
+   AlertDialogHeader,
+   AlertDialogTitle,
+   AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+import { useDeleteMutation } from "@/lib/useApi";
+import { useQueryClient } from "@tanstack/react-query";
+import { Loader2Icon, Trash } from "lucide-react";
+import { toast } from "sonner";
+import { Button } from "./ui/button";
+
+interface ConfirmDialogProps {
+   url: string;
+   refetchKey?: Array<unknown>; // supaya fleksibel
+}
+
+export default function ConfirmDialog({ url, refetchKey }: Readonly<ConfirmDialogProps>) {
+   const queryClient = useQueryClient();
+
+   const _delete = useDeleteMutation(url, {
+      onSuccess: (data) => {
+         if (data?.status) {
+            toast.success(data?.message);
+            if (refetchKey) {
+               queryClient.refetchQueries({ queryKey: refetchKey });
+            }
+         } else {
+            toast.error(data?.message);
+         }
+      },
+      onError: (error) => {
+         toast.error(error?.message);
+      },
+   });
+
+   return (
+      <AlertDialog>
+         <AlertDialogTrigger asChild>
+            <Button variant="ghost" size="icon">
+               <Trash />
+            </Button>
+         </AlertDialogTrigger>
+         <AlertDialogContent>
+            <AlertDialogHeader>
+               <AlertDialogTitle>Konfirmasi penghapusan?</AlertDialogTitle>
+               <AlertDialogDescription>Apakah anda yakin ingin menghapus. Data yang dihapus tidak dapat dikembalikan!!!</AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+               <AlertDialogCancel>Batal</AlertDialogCancel>
+               <AlertDialogAction disabled={_delete.isPending} onClick={() => _delete.mutate()}>
+                  {_delete.isPending ? (
+                     <>
+                        <Loader2Icon className="animate-spin" />
+                        Bentar ya, lagi loading...
+                     </>
+                  ) : (
+                     "Lanjutkan"
+                  )}
+               </AlertDialogAction>
+            </AlertDialogFooter>
+         </AlertDialogContent>
+      </AlertDialog>
+   );
+}

@@ -1,7 +1,7 @@
+import { useKeycloakAuth } from "@/hooks/use-keycloak-auth";
 import type { KeycloakProfile } from "keycloak-js";
 import Keycloak from "keycloak-js";
 import { createContext, type ReactNode, useContext } from "react";
-import { useKeycloakAuth } from "./use-keycloak-auth";
 
 interface AuthContextProps {
    keycloak: Keycloak | null;
