@@ -1,0 +1,33 @@
+import type { KeycloakProfile } from "keycloak-js";
+import Keycloak from "keycloak-js";
+import { createContext, type ReactNode, useContext } from "react";
+import { useKeycloakAuth } from "./use-keycloak-auth";
+
+interface AuthContextProps {
+   keycloak: Keycloak | null;
+   user: KeycloakProfile | null;
+   token: string | null;
+   tokenExpiresAt: number | null;
+   initialized: boolean;
+   login: () => void;
+   logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextProps | undefined>(undefined);
+
+interface AuthProviderProps {
+   children: ReactNode;
+}
+
+export function AuthProvider({ children }: Readonly<AuthProviderProps>) {
+   const auth = useKeycloakAuth();
+   return <AuthContext.Provider value={auth}>{children}</AuthContext.Provider>;
+}
+
+export function UseAuth(): AuthContextProps {
+   const context = useContext(AuthContext);
+   if (!context) {
+      throw new Error("useAuth must be used within an AuthProvider");
+   }
+   return context;
+}
