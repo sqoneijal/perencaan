@@ -13,7 +13,6 @@ export default function Page() {
    const { setButton } = useHeaderButton();
    const { id_kategori_sbm } = useParams();
    const { pagination } = useTablePagination();
-
    const navigate = useNavigate();
 
    const [formData, setFormData] = useState<Lists>({});
@@ -40,7 +39,7 @@ export default function Page() {
 
    useEffect(() => {
       if (id_kategori_sbm && data?.data) {
-         if (data?.status) {
+         if (data.status) {
             setFormData((prev) => (Object.keys(prev).length === 0 ? data.data! : prev));
          } else {
             toast.error("Data tidak ditemukan.");
@@ -49,33 +48,26 @@ export default function Page() {
       }
    }, [data, id_kategori_sbm, navigate]);
 
-   const limit = pagination?.pageSize;
-   const offset = pagination?.pageIndex * pagination.pageSize;
-
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
-
-      submit.mutate(
-         {
-            ...formData,
+      submit.mutate(formData, {
+         onSuccess: (data) => {
+            setErrors(data?.errors ?? {});
+            if (data?.status) {
+               queryClient.refetchQueries({
+                  queryKey: ["referensi", "kategori-sbm", pagination?.pageSize, pagination?.pageIndex * pagination.pageSize],
+               });
+               toast.success(data.message);
+               navigate("/referensi/kategori-sbm");
+               return;
+            }
+            toast.error(data?.message);
          },
-         {
-            onSuccess: (data) => {
-               setErrors(data?.errors ?? {});
-               if (data?.status) {
-                  queryClient.refetchQueries({ queryKey: ["referensi", "kategori-sbm", limit, offset] });
-                  toast.success(data?.message);
-                  navigate("/referensi/kategori-sbm");
-                  return;
-               }
-
-               toast.error(data?.message);
-            },
-            onError: (error: Error) => {
-               toast.error(error.message);
-            },
-         }
-      );
+         onError: (error: Error) => {
+            toast.error(error.message);
+            setErrors({ general: error.message });
+         },
+      });
    };
 
    if (id_kategori_sbm && isLoading)
@@ -95,35 +87,29 @@ export default function Page() {
          <div className="border rounded-lg p-6 shadow-sm bg-white">
             <form onSubmit={handleSubmit} className="space-y-4">
                <div className="flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
-                  <div className="w-full md:w-[300px]">
-                     <FormText
-                        label="Kode Kategori SBM"
-                        value={getValue(formData, "kode")}
-                        onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, kode: value }))}
-                        name="kode"
-                        errors={errors}
-                     />
-                  </div>
-                  <div className="flex-1">
-                     <FormText
-                        label="Nama Kategori SBM"
-                        value={getValue(formData, "nama")}
-                        onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, nama: value }))}
-                        name="nama"
-                        errors={errors}
-                     />
-                  </div>
-               </div>
-               <div className="w-full">
-                  <FormTextarea
-                     label="Deskripsi"
-                     value={getValue(formData, "deskripsi")}
-                     onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, deskripsi: value }))}
-                     name="deskripsi"
+                  <FormText
+                     label="Kode Kategori SBM"
+                     value={getValue(formData, "kode")}
+                     onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, kode: value }))}
+                     name="kode"
+                     errors={errors}
+                  />
+                  <FormText
+                     label="Nama Kategori SBM"
+                     value={getValue(formData, "nama")}
+                     onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, nama: value }))}
+                     name="nama"
                      errors={errors}
                   />
                </div>
-               <Button type="submit" size="sm" disabled={submit.isPending}>
+               <FormTextarea
+                  label="Deskripsi"
+                  value={getValue(formData, "deskripsi")}
+                  onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, deskripsi: value }))}
+                  name="deskripsi"
+                  errors={errors}
+               />
+               <Button type="submit" size="sm" disabled={submit.isPending || isLoading}>
                   {submit.isPending ? btn_loading() : "Simpan"}
                </Button>
             </form>
