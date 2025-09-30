@@ -1,32 +1,17 @@
 import { FormSelect, FormText, FormTextarea } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { btn_loading, getValue } from "@/helpers/init";
-import { useHeaderButton, useTablePagination } from "@/hooks/store";
-import { queryClient } from "@/lib/queryClient";
-import { useApiQuery, usePostMutation } from "@/lib/useApi";
-import type { Lists } from "@/types/init";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useHeaderButton } from "@/hooks/store";
+import { useEffect } from "react";
 import { toast } from "sonner";
+import { useUnitSatuanForm } from "./useForms";
 
 export default function Page() {
    const { setButton } = useHeaderButton();
-   const { id_unit_satuan } = useParams();
-   const { pagination } = useTablePagination();
 
-   const navigate = useNavigate();
+   const { id_unit_satuan, formData, setFormData, errors, isLoading, error, handleSubmit, submit, navigate } = useUnitSatuanForm();
 
-   const [formData, setFormData] = useState<Lists>({});
-   const [errors, setErrors] = useState<Lists>({});
-
-   const { data, isLoading, error } = useApiQuery<Lists>({
-      queryKey: ["referensi", "unit-satuan", "actions", id_unit_satuan || "new"],
-      url: id_unit_satuan ? `/referensi/unit-satuan/actions/${id_unit_satuan}` : "",
-      options: { enabled: !!id_unit_satuan },
-   });
-
-   const submit = usePostMutation<{ errors: Record<string, string> }>("/referensi/unit-satuan/actions");
-
+   // Keep the header button effect
    useEffect(() => {
       setButton(
          <Button variant="outline" size="sm" onClick={() => navigate("/referensi/unit-satuan")}>
@@ -38,46 +23,6 @@ export default function Page() {
       };
    }, [setButton, navigate]);
 
-   useEffect(() => {
-      if (id_unit_satuan && data?.data) {
-         if (data?.status) {
-            setFormData((prev) => (Object.keys(prev).length === 0 ? data.data! : prev));
-         } else {
-            toast.error("Data tidak ditemukan.");
-            navigate("/referensi/unit-satuan");
-         }
-      }
-   }, [data, id_unit_satuan, navigate]);
-
-   const limit = pagination?.pageSize;
-   const offset = pagination?.pageIndex * pagination.pageSize;
-
-   const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-
-      submit.mutate(
-         {
-            ...formData,
-         },
-         {
-            onSuccess: (data) => {
-               setErrors(data?.errors ?? {});
-               if (data?.status) {
-                  queryClient.refetchQueries({ queryKey: ["referensi", "unit-satuan", limit, offset] });
-                  toast.success(data?.message);
-                  navigate("/referensi/unit-satuan");
-                  return;
-               }
-
-               toast.error(data?.message);
-            },
-            onError: (error: Error) => {
-               toast.error(error.message);
-            },
-         }
-      );
-   };
-
    if (id_unit_satuan && isLoading)
       return (
          <div className="min-h-screen flex items-center justify-center from-slate-50 to-slate-100">
@@ -88,7 +33,10 @@ export default function Page() {
          </div>
       );
 
-   if (id_unit_satuan && error) return toast.error(error?.message);
+   if (id_unit_satuan && error) {
+      toast.error(error?.message);
+      return null;
+   }
 
    return (
       <div className="p-0">

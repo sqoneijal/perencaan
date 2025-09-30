@@ -1,47 +1,32 @@
 import { FormCommand, FormText, FormTextarea } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { btn_loading, getValue } from "@/helpers/init";
-import { useHeaderButton, useTablePagination } from "@/hooks/store";
-import { queryClient } from "@/lib/queryClient";
-import { useApiQuery, usePostMutation } from "@/lib/useApi";
-import type { Lists } from "@/types/init";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useHeaderButton } from "@/hooks/store";
+import { useEffect } from "react";
+import { useNavigate } from "react-router";
 import { toast } from "sonner";
+import { useStandarBiayaForm } from "./useStandarBiayaForm";
 
 export default function Page() {
    const { setButton } = useHeaderButton();
-   const { id_standar_biaya } = useParams();
-   const { pagination } = useTablePagination();
-
    const navigate = useNavigate();
 
-   const [formData, setFormData] = useState<Lists>({});
-   const [errors, setErrors] = useState<Lists>({});
-   const [cariKategoriSBM, setCariKategoriSBM] = useState("");
-   const [cariUnitSatuan, setCariUnitSatuan] = useState("");
-
-   const { data, isLoading, error } = useApiQuery<Lists>({
-      queryKey: ["referensi", "standar-biaya", "actions", id_standar_biaya || "new"],
-      url: id_standar_biaya ? `/referensi/standar-biaya/actions/${id_standar_biaya}` : "",
-      options: { enabled: !!id_standar_biaya },
-   });
-
-   const { data: kategoriSBM, isLoading: isLoadingKategoriSBM } = useApiQuery({
-      queryKey: ["referensi", "standar-biaya", "actions", cariKategoriSBM],
-      url: "/referensi/standar-biaya/actions/cari-kategori-sbm",
-      params: { search: cariKategoriSBM },
-      options: { enabled: !!cariKategoriSBM },
-   });
-
-   const { data: unitSatuan, isLoading: isLoadingUnitSatuan } = useApiQuery({
-      queryKey: ["referensi", "standar-biaya", "actions", cariUnitSatuan],
-      url: "/referensi/standar-biaya/actions/cari-unit-satuan",
-      params: { search: cariUnitSatuan },
-      options: { enabled: !!cariUnitSatuan },
-   });
-
-   const submit = usePostMutation<{ errors: Record<string, string> }>("/referensi/standar-biaya/actions");
+   const {
+      formData,
+      setFormData,
+      errors,
+      setCariKategoriSBM,
+      setCariUnitSatuan,
+      isLoading,
+      error,
+      isLoadingKategoriSBM,
+      isLoadingUnitSatuan,
+      submit,
+      handleSubmit,
+      kategoriOptions,
+      unitSatuanOptions,
+      id_standar_biaya,
+   } = useStandarBiayaForm();
 
    useEffect(() => {
       setButton(
@@ -54,46 +39,6 @@ export default function Page() {
       };
    }, [setButton, navigate]);
 
-   useEffect(() => {
-      if (id_standar_biaya && data?.data) {
-         if (data?.status) {
-            setFormData((prev) => (Object.keys(prev).length === 0 ? data.data! : prev));
-         } else {
-            toast.error("Data tidak ditemukan.");
-            navigate("/referensi/standar-biaya");
-         }
-      }
-   }, [data, id_standar_biaya, navigate]);
-
-   const limit = pagination?.pageSize;
-   const offset = pagination?.pageIndex * pagination.pageSize;
-
-   const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-
-      submit.mutate(
-         {
-            ...formData,
-         },
-         {
-            onSuccess: (data) => {
-               setErrors(data?.errors ?? {});
-               if (data?.status) {
-                  queryClient.refetchQueries({ queryKey: ["referensi", "standar-biaya", limit, offset] });
-                  toast.success(data?.message);
-                  navigate("/referensi/standar-biaya");
-                  return;
-               }
-
-               toast.error(data?.message);
-            },
-            onError: (error: Error) => {
-               toast.error(error.message);
-            },
-         }
-      );
-   };
-
    if (id_standar_biaya && isLoading)
       return (
          <div className="min-h-screen flex items-center justify-center from-slate-50 to-slate-100">
@@ -105,25 +50,6 @@ export default function Page() {
       );
 
    if (id_standar_biaya && error) return toast.error(error?.message);
-
-   const fallbackKategoriOption = getValue(formData, "id")
-      ? [
-           {
-              value: getValue(formData, "id_kategori"),
-              label: `${getValue(formData, "kode_kategori")} - ${getValue(formData, "nama_kategori")}`,
-           },
-        ]
-      : [];
-
-   const kategoriOptions = Array.isArray(kategoriSBM)
-      ? kategoriSBM.map((row) => ({ value: row.id, label: `${row.kode} - ${row.nama}` }))
-      : fallbackKategoriOption;
-
-   const fallbackUnitSatuanOption = getValue(formData, "id")
-      ? [{ value: getValue(formData, "id_unit_satuan"), label: getValue(formData, "unit_satuan") }]
-      : [];
-
-   const unitSatuanOptions = Array.isArray(unitSatuan) ? unitSatuan.map((row) => ({ value: row.id, label: row.nama })) : fallbackUnitSatuanOption;
 
    return (
       <div className="p-0">
