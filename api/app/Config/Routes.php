@@ -28,4 +28,18 @@ $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], functi
          $routes->post('/', 'KategoriSBM::submit');
       });
    });
+
+   $routes->group('standar-biaya', function (RouteCollection $routes) {
+      $routes->get('/', 'StandarBiaya::index');
+
+      $routes->delete('(:num)', 'StandarBiaya::handleDelete/$1');
+
+      $routes->group('actions', function (RouteCollection $routes) {
+         $routes->get('(:num)', 'StandarBiaya::getDetailEdit/$1');
+         $routes->get('cari-kategori-sbm', 'StandarBiaya::cariKategoriSBM');
+         $routes->get('cari-unit-satuan', 'StandarBiaya::cariUnitSatuan');
+
+         $routes->post('/', 'StandarBiaya::submit');
+      });
+   });
 });

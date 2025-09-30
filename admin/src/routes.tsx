@@ -10,6 +10,9 @@ const ReferensiUnitSatuanActions = lazy(() => import("@/pages/referensi/unit-sat
 const ReferensiKategoriSBM = lazy(() => import("@/pages/referensi/kategori-sbm/page"));
 const ReferensiKategoriSBMActions = lazy(() => import("@/pages/referensi/kategori-sbm/actions/page"));
 
+const ReferensiStandarBiaya = lazy(() => import("@/pages/referensi/standar-biaya/page"));
+const ReferensiStandarBiayaActions = lazy(() => import("@/pages/referensi/standar-biaya/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -18,6 +21,9 @@ const route_path = [
    { key: v4(), path: "/referensi/kategori-sbm", element: <ReferensiKategoriSBM /> },
    { key: v4(), path: "/referensi/kategori-sbm/actions", element: <ReferensiKategoriSBMActions /> },
    { key: v4(), path: "/referensi/kategori-sbm/actions/:id_kategori_sbm", element: <ReferensiKategoriSBMActions /> },
+   { key: v4(), path: "/referensi/standar-biaya", element: <ReferensiStandarBiaya /> },
+   { key: v4(), path: "/referensi/standar-biaya/actions", element: <ReferensiStandarBiayaActions /> },
+   { key: v4(), path: "/referensi/standar-biaya/actions/:id_standar_biaya", element: <ReferensiStandarBiayaActions /> },
 ];
 
 export default function Routes() {

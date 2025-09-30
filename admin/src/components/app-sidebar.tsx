@@ -31,7 +31,7 @@ const data: Array<MenuItem> = [
       child: [
          { label: "Unit Satuan", url: "/referensi/unit-satuan" },
          { label: "Kategori SBM", url: "/referensi/kategori-sbm" },
-         { label: "Standar Biaya", url: "/referensi/kategori-sbm" },
+         { label: "Standar Biaya", url: "/referensi/standar-biaya" },
          { label: "Detail Harga SBM", url: "/referensi/detail-harga-sbm" },
       ],
    },
