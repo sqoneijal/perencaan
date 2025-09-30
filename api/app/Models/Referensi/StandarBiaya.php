@@ -23,8 +23,11 @@ class StandarBiaya extends Model
    public function getDetailEdit(int $id_standar_biaya): array
    {
       try {
-         $table = $this->db->table('tb_standar_biaya_master');
-         $table->where('id', $id_standar_biaya);
+         $table = $this->db->table('tb_standar_biaya_master tsbm');
+         $table->select('tsbm.*, tks.kode as kode_kategori, tks.nama as nama_kategori, tus.nama as unit_satuan');
+         $table->join('tb_kategori_sbm tks', 'tks.id = tsbm.id_kategori', 'left');
+         $table->join('tb_unit_satuan tus', 'tus.id = tsbm.id_unit_satuan', 'left');
+         $table->where('tsbm.id', $id_standar_biaya);
 
          $get = $table->get();
          $data = $get->getRowArray();

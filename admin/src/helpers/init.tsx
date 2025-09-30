@@ -17,3 +17,22 @@ export const btn_loading = () => {
       </>
    );
 };
+
+export const toNumber = (val: unknown, fallback = 0): number => {
+   if (typeof val === "number") return val;
+   if (typeof val === "string") {
+      const num = Number(val);
+      return Number.isNaN(num) ? fallback : num;
+   }
+   return fallback;
+};
+
+export const toRupiah = (val: unknown): string => {
+   const num = toNumber(val);
+   return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
+};
+
+export const formatRupiah = (value: string) => {
+   const numericValue = value.replace(/\D/g, "");
+   return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+};

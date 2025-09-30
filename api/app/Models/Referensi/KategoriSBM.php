@@ -47,7 +47,7 @@ class KategoriSBM extends Model
    public function submit(array $post): array
    {
       try {
-         $data = cleanDataSubmit(['kode', 'nama', 'user_modified'], $post);
+         $data = cleanDataSubmit(['kode', 'nama', 'user_modified', 'deskripsi'], $post);
 
          $table = $this->db->table('tb_kategori_sbm');
          if (@$post['id']) {

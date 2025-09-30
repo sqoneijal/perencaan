@@ -2,15 +2,60 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { getValue } from "@/helpers/init";
 import { cn } from "@/lib/utils";
 import type { Lists, Option } from "@/types/init";
-import { Check, ChevronsUpDown } from "lucide-react";
-import React from "react";
+import { Check, ChevronDownIcon, ChevronsUpDown } from "lucide-react";
+import React, { useEffect, useState } from "react";
 import { v4 } from "uuid";
 import { Button } from "./ui/button";
+import { Calendar } from "./ui/calendar";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
+
+export function FormDatePicker({
+   label,
+   name,
+   errors,
+   onChange,
+   value,
+}: Readonly<{ errors: Lists; name: string; label?: string; onChange?: (value: Date | string | undefined) => void; value?: string }>) {
+   const id = v4();
+
+   const [open, setOpen] = useState(false);
+   const [date, setDate] = useState<Date | undefined>(value ? new Date(value) : undefined);
+
+   useEffect(() => {
+      setDate(value ? new Date(value) : undefined);
+   }, [value]);
+
+   return (
+      <div className="grid w-full items-center gap-1 flex-1">
+         <Label htmlFor={id}>{label}</Label>
+         <Popover open={open} onOpenChange={setOpen}>
+            <PopoverTrigger asChild>
+               <Button variant="outline" id={id} className={cn("w-full justify-between font-normal", errors?.[name] ? "border border-red-500" : "")}>
+                  {date ? date.toLocaleDateString() : <span className="opacity-80 font-light">Pilih tanggal</span>}
+                  <ChevronDownIcon />
+               </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto overflow-hidden p-0" align="start">
+               <Calendar
+                  mode="single"
+                  selected={date}
+                  captionLayout="dropdown"
+                  onSelect={(date) => {
+                     setDate(date);
+                     setOpen(false);
+                     onChange?.(date);
+                  }}
+               />
+            </PopoverContent>
+         </Popover>
+         {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
+      </div>
+   );
+}
 
 export function FormCommand({
    name,
@@ -21,6 +66,7 @@ export function FormCommand({
    onChange,
    errors,
    isLoading,
+   disabled = false,
 }: Readonly<{
    name: string;
    label?: string;
@@ -30,6 +76,7 @@ export function FormCommand({
    onChange?: (value: string) => void;
    errors?: Lists;
    isLoading?: boolean;
+   disabled?: boolean;
 }>) {
    const [open, setOpen] = React.useState(false);
    const [valueProps, setValueProps] = React.useState(value);
@@ -44,6 +91,7 @@ export function FormCommand({
          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                <Button
+                  disabled={disabled}
                   id={id}
                   variant="outline"
                   className={cn(
@@ -146,13 +194,22 @@ export function FormSelect({
    onValueChange,
    name,
    errors,
-}: Readonly<{ name: string; errors?: Lists; label?: string; options: Array<Lists>; value?: string; onValueChange?: (value: string) => void }>) {
+   disabled = false,
+}: Readonly<{
+   name: string;
+   errors?: Lists;
+   label?: string;
+   options: Array<Lists>;
+   value?: string;
+   onValueChange?: (value: string) => void;
+   disabled?: boolean;
+}>) {
    const id = v4();
 
    return (
       <div className="grid w-full items-center gap-1 flex-1">
          <Label htmlFor={id}>{label}</Label>
-         <Select key={value} value={value || ""} onValueChange={onValueChange}>
+         <Select key={value} value={value || ""} onValueChange={onValueChange} disabled={disabled}>
             <SelectTrigger className={cn(errors?.[name] && "border border-red-500", "w-full")}>
                <SelectValue placeholder={`Pilih ${label}`} />
             </SelectTrigger>

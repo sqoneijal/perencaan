@@ -1,4 +1,4 @@
-import { FormText } from "@/components/forms";
+import { FormText, FormTextarea } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { btn_loading, getValue } from "@/helpers/init";
 import { useHeaderButton, useTablePagination } from "@/hooks/store";
@@ -113,6 +113,15 @@ export default function Page() {
                         errors={errors}
                      />
                   </div>
+               </div>
+               <div className="w-full">
+                  <FormTextarea
+                     label="Deskripsi"
+                     value={getValue(formData, "deskripsi")}
+                     onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, deskripsi: value }))}
+                     name="deskripsi"
+                     errors={errors}
+                  />
                </div>
                <Button type="submit" size="sm" disabled={submit.isPending}>
                   {submit.isPending ? btn_loading() : "Simpan"}

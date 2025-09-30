@@ -42,4 +42,17 @@ $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], functi
          $routes->post('/', 'StandarBiaya::submit');
       });
    });
+
+   $routes->group('detail-harga-sbm', function (RouteCollection $routes) {
+      $routes->get('/', 'DetailHargaSBM::index');
+
+      $routes->delete('(:num)', 'DetailHargaSBM::handleDelete/$1');
+
+      $routes->group('actions', function (RouteCollection $routes) {
+         $routes->get('(:num)', 'DetailHargaSBM::getDetailEdit/$1');
+         $routes->get('cari-standar-biaya', 'DetailHargaSBM::cariStandarBiaya');
+
+         $routes->post('/', 'DetailHargaSBM::submit');
+      });
+   });
 });

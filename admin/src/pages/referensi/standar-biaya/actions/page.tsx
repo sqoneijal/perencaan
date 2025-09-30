@@ -106,6 +106,25 @@ export default function Page() {
 
    if (id_standar_biaya && error) return toast.error(error?.message);
 
+   const fallbackKategoriOption = getValue(formData, "id")
+      ? [
+           {
+              value: getValue(formData, "id_kategori"),
+              label: `${getValue(formData, "kode_kategori")} - ${getValue(formData, "nama_kategori")}`,
+           },
+        ]
+      : [];
+
+   const kategoriOptions = Array.isArray(kategoriSBM)
+      ? kategoriSBM.map((row) => ({ value: row.id, label: `${row.kode} - ${row.nama}` }))
+      : fallbackKategoriOption;
+
+   const fallbackUnitSatuanOption = getValue(formData, "id")
+      ? [{ value: getValue(formData, "id_unit_satuan"), label: getValue(formData, "unit_satuan") }]
+      : [];
+
+   const unitSatuanOptions = Array.isArray(unitSatuan) ? unitSatuan.map((row) => ({ value: row.id, label: row.nama })) : fallbackUnitSatuanOption;
+
    return (
       <div className="p-0">
          <div className="border rounded-lg p-6 shadow-sm bg-white">
@@ -130,7 +149,7 @@ export default function Page() {
                      label="Kategori SBM"
                      onSearch={(value) => setCariKategoriSBM(value)}
                      isLoading={isLoadingKategoriSBM}
-                     options={Array.isArray(kategoriSBM) ? kategoriSBM.map((row) => ({ value: row.id, label: `${row.kode} - ${row.nama}` })) : []}
+                     options={kategoriOptions}
                      errors={errors}
                      onChange={(value) => setFormData((prev) => ({ ...prev, id_kategori: value }))}
                      value={getValue(formData, "id_kategori")}
@@ -140,7 +159,7 @@ export default function Page() {
                      label="Unit Satuan"
                      onSearch={(value) => setCariUnitSatuan(value)}
                      isLoading={isLoadingUnitSatuan}
-                     options={Array.isArray(unitSatuan) ? unitSatuan.map((row) => ({ value: row.id, label: row.nama })) : []}
+                     options={unitSatuanOptions}
                      errors={errors}
                      onChange={(value) => setFormData((prev) => ({ ...prev, id_unit_satuan: value }))}
                      value={getValue(formData, "id_unit_satuan")}

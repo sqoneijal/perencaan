@@ -34,5 +34,10 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       header: "nama",
       enableSorting: true,
    },
+   {
+      accessorKey: "deskripsi",
+      header: "deskripsi",
+      enableSorting: true,
+   },
 ];
 export { getColumns };
