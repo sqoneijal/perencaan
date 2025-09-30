@@ -16,4 +16,16 @@ $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], functi
          $routes->post('/', 'UnitSatuan::submit');
       });
    });
+
+   $routes->group('kategori-sbm', function (RouteCollection $routes) {
+      $routes->get('/', 'KategoriSBM::index');
+
+      $routes->delete('(:num)', 'KategoriSBM::handleDelete/$1');
+
+      $routes->group('actions', function (RouteCollection $routes) {
+         $routes->get('(:num)', 'KategoriSBM::getDetailEdit/$1');
+
+         $routes->post('/', 'KategoriSBM::submit');
+      });
+   });
 });

@@ -2,6 +2,9 @@ import { Table as ShadcnTable, TableBody, TableCell, TableHead, TableHeader, Tab
 import { useTablePagination } from "@/hooks/store";
 import { cn } from "@/lib/utils";
 import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, useReactTable, type ColumnDef } from "@tanstack/react-table";
+import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
+import { Button } from "./ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 
 type Props<T> = {
    columns: Array<ColumnDef<T>>;
@@ -55,7 +58,7 @@ export default function Table<T>({ columns, data, isLoading, total = 0 }: Readon
                            <TableCell
                               key={cell.id}
                               className={cn(
-                                 "font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8",
+                                 "font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8 whitespace-normal break-words",
                                  (cell.column.columnDef.meta as { className?: string })?.className ?? ""
                               )}>
                               {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -97,6 +100,77 @@ export default function Table<T>({ columns, data, isLoading, total = 0 }: Readon
                )}
             </TableBody>
          </ShadcnTable>
+         {total > pagination?.pageSize && (
+            <div className="flex items-center justify-between px-2 mt-2 mb-2">
+               <div className="text-muted-foreground flex-1 text-sm">Total {total} data</div>
+               <div className="flex items-center space-x-6 lg:space-x-8">
+                  <div className="flex items-center space-x-2">
+                     <p className="text-xs font-medium">Baris per halaman</p>
+                     <Select
+                        value={`${table.getState().pagination.pageSize}`}
+                        onValueChange={(value) => {
+                           table.setPageSize(Number(value));
+                        }}>
+                        <SelectTrigger className="border rounded-md px-2 py-1 focus:ring focus:ring-blue-200 text-xs gap-1 h-1" size="sm">
+                           <SelectValue placeholder={table.getState().pagination.pageSize} />
+                        </SelectTrigger>
+                        <SelectContent side="top">
+                           {[10, 20, 25, 30, 40, 50, 100].map((pageSize) => (
+                              <SelectItem key={pageSize} value={`${pageSize}`}>
+                                 {pageSize}
+                              </SelectItem>
+                           ))}
+                        </SelectContent>
+                     </Select>
+                  </div>
+                  <div className="flex w-[100px] items-center justify-center text-xs font-medium">
+                     Hal. {table.getState().pagination.pageIndex + 1} dari {table.getPageCount()}
+                  </div>
+                  <div className="flex items-center space-x-2">
+                     <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={!table.getCanPreviousPage()}
+                        onClick={(e) => {
+                           e.preventDefault();
+                           table.setPageIndex(0); // halaman pertama
+                        }}>
+                        <ChevronsLeft />
+                     </Button>
+                     <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={!table.getCanPreviousPage()}
+                        onClick={(e) => {
+                           e.preventDefault();
+                           if (table.getCanPreviousPage()) table.previousPage();
+                        }}>
+                        <ChevronLeft />
+                     </Button>
+                     <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={!table.getCanNextPage()}
+                        onClick={(e) => {
+                           e.preventDefault();
+                           if (table.getCanNextPage()) table.nextPage();
+                        }}>
+                        <ChevronRight />
+                     </Button>
+                     <Button
+                        size="sm"
+                        variant="outline"
+                        disabled={!table.getCanNextPage()}
+                        onClick={(e) => {
+                           e.preventDefault();
+                           table.setPageIndex(table.getPageCount() - 1); // halaman terakhir
+                        }}>
+                        <ChevronsRight />
+                     </Button>
+                  </div>
+               </div>
+            </div>
+         )}
       </div>
    );
 }

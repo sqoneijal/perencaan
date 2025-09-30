@@ -16,8 +16,8 @@ export default function Page() {
 
    useEffect(() => {
       setButton(
-         <Button variant="outline" size="sm" onClick={() => navigate("/referensi/unit-satuan/actions")}>
-            Tambah Unit Satuan
+         <Button variant="outline" size="sm" onClick={() => navigate("/referensi/kategori-sbm/actions")}>
+            Tambah Kategori SBM
          </Button>
       );
       return () => {
@@ -32,8 +32,8 @@ export default function Page() {
       results: Array<Lists>;
       total: number;
    }>({
-      queryKey: ["referensi", "unit-satuan", limit, offset],
-      url: "/referensi/unit-satuan",
+      queryKey: ["referensi", "kategori-sbm", limit, offset],
+      url: "/referensi/kategori-sbm",
       params: { limit, offset },
    });
 

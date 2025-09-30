@@ -5,14 +5,38 @@ namespace App\Models\Referensi;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
-class UnitSatuan extends Model
+class KategoriSBM extends Model
 {
 
-   public function handleDelete(int $id_unit_satuan): array
+   public function getDetailEdit(int $id_kategori_sbm): array
    {
       try {
-         $table = $this->db->table('tb_unit_satuan');
-         $table->where('id', $id_unit_satuan);
+         $table = $this->db->table('tb_kategori_sbm');
+         $table->where('id', $id_kategori_sbm);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function handleDelete(int $id_kategori_sbm): array
+   {
+      try {
+         $table = $this->db->table('tb_kategori_sbm');
+         $table->where('id', $id_kategori_sbm);
          $table->delete();
          return ['status' => true, 'message' => 'Data berhasil dihapus.'];
       } catch (\Exception $e) {
@@ -20,32 +44,12 @@ class UnitSatuan extends Model
       }
    }
 
-   public function getDetailEdit(int $id_unit_satuan): array
-   {
-      $table = $this->db->table('tb_unit_satuan');
-      $table->where('id', $id_unit_satuan);
-
-      $get = $table->get();
-      $data = $get->getRowArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
-      $response = [];
-      if (isset($data)) {
-         foreach ($fieldNames as $field) {
-            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
-         }
-      }
-
-      return ['status' => isset($data) ? true : false, 'data' => $response];
-   }
-
    public function submit(array $post): array
    {
       try {
-         $data = cleanDataSubmit(['nama', 'aktif', 'deskripsi', 'user_modified'], $post);
+         $data = cleanDataSubmit(['kode', 'nama', 'user_modified'], $post);
 
-         $table = $this->db->table('tb_unit_satuan');
+         $table = $this->db->table('tb_kategori_sbm');
          if (@$post['id']) {
             $data['modified'] = new RawSql('now()');
 
@@ -64,7 +68,7 @@ class UnitSatuan extends Model
 
    public function getData(array $params): array
    {
-      $table = $this->db->table('tb_unit_satuan');
+      $table = $this->db->table('tb_kategori_sbm');
       $table->limit((int) $params['limit'], (int) $params['offset']);
 
       $clone = clone $table;
