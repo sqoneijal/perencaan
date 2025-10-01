@@ -8,10 +8,17 @@ use App\Validation\UsulanKegiatan as Validate;
 
 class UsulanKegiatan extends BaseController
 {
-   public function index()
+   public function index(): object
    {
       $model = new Model();
       $data = $model->getData($this->request->getGet());
+      return $this->respond($data);
+   }
+
+   public function getDetail(int $id_usulan_kegiatan): object
+   {
+      $model = new Model();
+      $data = $model->getDetail($id_usulan_kegiatan);
       return $this->respond($data);
    }
 

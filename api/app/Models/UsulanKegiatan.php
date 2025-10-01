@@ -8,6 +8,26 @@ use CodeIgniter\Model;
 class UsulanKegiatan extends Model
 {
 
+   public function getDetail(int $id_usulan_kegiatan): array
+   {
+      $table = $this->db->table('tb_usulan_kegiatan tuk');
+      $table->select('tuk.id, tuk.kode, tuk.nama, tuk.latar_belakang, tuk.tujuan, tuk.sasaran, tuk.waktu_mulai as tanggal_mulai, tuk.waktu_selesai as tanggal_selesai, tuk.tempat_pelaksanaan, tuk.id_unit_pengusul, tuk.operator_input, tuk.total_anggaran, tuk.status_usulan, tuk.tanggal_submit as tanggal_pengajuan, tuk.rencanca_total_anggaran');
+      $table->where('tuk.id', $id_usulan_kegiatan);
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+      return $response;
+   }
+
    public function submit(array $post): array
    {
       try {

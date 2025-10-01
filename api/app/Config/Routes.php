@@ -59,6 +59,8 @@ $routes->group('api', ['filter' => 'cors'], function (RouteCollection $routes) {
    });
 
    $routes->group('usulan-kegiatan', function (RouteCollection $routes) {
+      $routes->get('(:num)', 'UsulanKegiatan::getDetail/$1');
+
       $routes->group('actions', function (RouteCollection $routes) {
          $routes->post('/', 'UsulanKegiatan::submit');
       });

@@ -18,6 +18,7 @@ const ReferensiDetailHargaSBMActions = lazy(() => import("@/pages/referensi/deta
 
 const UsulanKegiatan = lazy(() => import("@/pages/usulan-kegiatan/page"));
 const UsulanKegiatanActions = lazy(() => import("@/pages/usulan-kegiatan/actions/page"));
+const UsulanKegiatanActionsDetail = lazy(() => import("@/pages/usulan-kegiatan/detail/page"));
 
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
@@ -35,6 +36,7 @@ const route_path = [
    { key: v4(), path: "/referensi/detail-harga-sbm/actions/:id_detail_harga", element: <ReferensiDetailHargaSBMActions /> },
    { key: v4(), path: "/usulan-kegiatan", element: <UsulanKegiatan /> },
    { key: v4(), path: "/usulan-kegiatan/actions", element: <UsulanKegiatanActions /> },
+   { key: v4(), path: "/usulan-kegiatan/:id_usulan_kegiatan", element: <UsulanKegiatanActionsDetail /> },
 ];
 
 export default function Routes() {
