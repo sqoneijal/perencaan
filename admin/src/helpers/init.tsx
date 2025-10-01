@@ -36,3 +36,12 @@ export const formatRupiah = (value: string) => {
    const numericValue = value.replace(/\D/g, "");
    return numericValue.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
 };
+
+export function loadingSpinner() {
+   return (
+      <div className="flex items-center space-x-2">
+         <div className="w-5 h-5 border-2 border-t-blue-500 border-gray-300 rounded-full animate-spin" />
+         <span className="text-gray-700 font-medium">Loading...</span>
+      </div>
+   );
+}

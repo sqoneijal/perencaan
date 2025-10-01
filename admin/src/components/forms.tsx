@@ -162,6 +162,7 @@ export function FormText({
    name,
    errors,
    className,
+   disabled = false,
 }: Readonly<{
    label?: string;
    value?: string;
@@ -169,6 +170,7 @@ export function FormText({
    errors?: Lists;
    name: string;
    className?: string;
+   disabled?: boolean;
 }>) {
    const id = v4();
 
@@ -183,6 +185,7 @@ export function FormText({
             onChange={({ target: { value } }) => onChange?.(value)}
             name={name}
             className={cn(errors?.[name] && "border border-red-500", className)}
+            disabled={disabled}
          />
          {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
       </div>

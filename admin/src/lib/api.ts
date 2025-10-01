@@ -112,7 +112,7 @@ const request = async <T = unknown>(
          const error = e as AxiosError;
 
          if (retryCount > 0 && shouldRetry(error)) {
-            console.warn(`Retrying request (${MAX_RETRY - retryCount + 1}/${MAX_RETRY}): ${method.toUpperCase()} ${url}`);
+            toast.info(`Retrying request (${MAX_RETRY - retryCount + 1}/${MAX_RETRY}): ${method.toUpperCase()} ${url}`);
             const refreshed = await handleTokenRefresh(error);
             if (refreshed) {
                return request<T>(method, url, form, config, retryCount - 1);
