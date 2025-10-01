@@ -16,6 +16,9 @@ const ReferensiStandarBiayaActions = lazy(() => import("@/pages/referensi/standa
 const ReferensiDetailHargaSBM = lazy(() => import("@/pages/referensi/detail-harga-sbm/page"));
 const ReferensiDetailHargaSBMActions = lazy(() => import("@/pages/referensi/detail-harga-sbm/actions/page"));
 
+const UsulanKegiatan = lazy(() => import("@/pages/usulan-kegiatan/page"));
+const UsulanKegiatanActions = lazy(() => import("@/pages/usulan-kegiatan/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -30,6 +33,8 @@ const route_path = [
    { key: v4(), path: "/referensi/detail-harga-sbm", element: <ReferensiDetailHargaSBM /> },
    { key: v4(), path: "/referensi/detail-harga-sbm/actions", element: <ReferensiDetailHargaSBMActions /> },
    { key: v4(), path: "/referensi/detail-harga-sbm/actions/:id_detail_harga", element: <ReferensiDetailHargaSBMActions /> },
+   { key: v4(), path: "/usulan-kegiatan", element: <UsulanKegiatan /> },
+   { key: v4(), path: "/usulan-kegiatan/actions", element: <UsulanKegiatanActions /> },
 ];
 
 export default function Routes() {

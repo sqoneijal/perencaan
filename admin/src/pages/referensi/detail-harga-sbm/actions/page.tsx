@@ -64,7 +64,7 @@ export default function Page() {
                   <FormText
                      label="Harga Satuan"
                      value={formatRupiah(getValue(formData, "harga_satuan"))}
-                     onChange={({ target: { value } }) => {
+                     onChange={(value) => {
                         const formatted = formatRupiah(value);
                         setFormData((prev) => ({ ...prev, harga_satuan: formatted }));
                      }}

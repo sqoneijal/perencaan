@@ -161,12 +161,14 @@ export function FormText({
    onChange,
    name,
    errors,
+   className,
 }: Readonly<{
    label?: string;
    value?: string;
-   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+   onChange?: (value: string) => void;
    errors?: Lists;
    name: string;
+   className?: string;
 }>) {
    const id = v4();
 
@@ -178,9 +180,9 @@ export function FormText({
             id={id}
             placeholder={label}
             value={value || ""}
-            onChange={onChange}
+            onChange={({ target: { value } }) => onChange?.(value)}
             name={name}
-            className={cn(errors?.[name] && "border border-red-500")}
+            className={cn(errors?.[name] && "border border-red-500", className)}
          />
          {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
       </div>
@@ -232,7 +234,8 @@ export function FormTextarea({
    onChange,
    name,
    errors,
-}: Readonly<{ label?: string; value?: string; onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void; name: string; errors?: Lists }>) {
+   className,
+}: Readonly<{ label?: string; value?: string; onChange?: (value: string) => void; name: string; errors?: Lists; className?: string }>) {
    const id = v4();
 
    return (
@@ -242,9 +245,9 @@ export function FormTextarea({
             id={id}
             placeholder={label}
             value={value || ""}
-            onChange={onChange}
+            onChange={({ target: { value } }) => onChange?.(value)}
             name={name}
-            className={cn(errors?.[name] && "border border-red-500")}
+            className={cn(errors?.[name] && "border border-red-500", className)}
          />
          {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
       </div>

@@ -59,14 +59,14 @@ export default function Page() {
                   <FormText
                      label="Kode Biaya"
                      value={getValue(formData, "kode")}
-                     onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, kode: value }))}
+                     onChange={(value) => setFormData((prev) => ({ ...prev, kode: value }))}
                      name="kode"
                      errors={errors}
                   />
                   <FormText
                      label="Nama Biaya"
                      value={getValue(formData, "nama")}
-                     onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, nama: value }))}
+                     onChange={(value) => setFormData((prev) => ({ ...prev, nama: value }))}
                      name="nama"
                      errors={errors}
                   />
@@ -94,7 +94,7 @@ export default function Page() {
                      <FormTextarea
                         label="Deskripsi"
                         value={getValue(formData, "deskripsi")}
-                        onChange={({ target: { value } }) => setFormData((prev) => ({ ...prev, deskripsi: value }))}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, deskripsi: value }))}
                         name="deskripsi"
                         errors={errors}
                      />

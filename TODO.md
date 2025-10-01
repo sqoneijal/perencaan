@@ -1,0 +1,10 @@
+-  [x] Add @layer utilities in admin/src/index.css
+-  [x] Define .row class
+-  [x] Define .col class
+-  [x] Define .col-auto class
+-  [x] Define base .col-1 to .col-12 classes
+-  [x] Define responsive .col-sm-1 to .col-sm-12 classes
+-  [x] Define responsive .col-md-1 to .col-md-12 classes
+-  [x] Define responsive .col-lg-1 to .col-lg-12 classes
+-  [x] Define responsive .col-xl-1 to .col-xl-12 classes
+-  [x] Define responsive .col-2xl-1 to .col-2xl-12 classes
