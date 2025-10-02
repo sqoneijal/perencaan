@@ -19,7 +19,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
                <Button variant="ghost" size="sm" onClick={() => navigate(`/referensi/unit-satuan/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
-               <ConfirmDialog url={`/referensi/unit-satuan/${getValue(original, "id")}`} refetchKey={["referensi", "unit-satuan", limit, offset]} />
+               <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
                <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/${getValue(original, "id")}#informasi-dasar`)}>
                   <Eye />
                </Button>

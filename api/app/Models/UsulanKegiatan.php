@@ -8,6 +8,17 @@ use CodeIgniter\Model;
 class UsulanKegiatan extends Model
 {
 
+   public function deleteUsulanKegiatan(int $id): array
+   {
+      try {
+         $this->db->table('tb_usulan_kegiatan')->where('id', $id)->delete();
+         $this->db->table('tb_rab_detail')->where('id_usulan', $id)->delete();
+         return ['status' => true, 'message' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function deleteRAB(int $id): array
    {
       try {

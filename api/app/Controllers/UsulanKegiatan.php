@@ -16,6 +16,13 @@ class UsulanKegiatan extends BaseController
       return $this->respond($data);
    }
 
+   public function deleteUsulanKegiatan(int $id): object
+   {
+      $model = new Model();
+      $data = $model->deleteUsulanKegiatan($id);
+      return $this->respond($data);
+   }
+
    public function deleteRAB(int $id): object
    {
       $model = new Model();

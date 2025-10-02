@@ -12,7 +12,7 @@ import {
    SidebarMenuSub,
    SidebarRail,
 } from "@/components/ui/sidebar";
-import { BookMarked, ChevronRight, CircleGauge, NotepadText, TicketsPlane } from "lucide-react";
+import { BookMarked, ChevronRight, CircleGauge, ListCheck, NotepadText, TicketsPlane } from "lucide-react";
 import { Link } from "react-router";
 
 type MenuItem = {
@@ -35,6 +35,7 @@ const data: Array<MenuItem> = [
          { label: "Detail Harga SBM", url: "/referensi/detail-harga-sbm" },
       ],
    },
+   { label: "Master IKU", icon: <ListCheck />, url: "/master-iku" },
    { label: "Usulan Kegiatan", icon: <NotepadText />, url: "/usulan-kegiatan" },
 ];
 
@@ -50,7 +51,7 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                            <TicketsPlane className="size-10" />
                         </div>
                         <div className="flex flex-col gap-0.5 leading-none">
-                           <span className="font-semibold">Perecanaan</span>
+                           <span className="font-semibold">PlanKePentok</span>
                            <span className="font-medium">v1.0</span>
                         </div>
                      </Link>

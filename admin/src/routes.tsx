@@ -21,6 +21,9 @@ const UsulanKegiatanActions = lazy(() => import("@/pages/usulan-kegiatan/actions
 const UsulanKegiatanActionsDetail = lazy(() => import("@/pages/usulan-kegiatan/detail/page"));
 const UsulanKegiatanActionsDetailRabActions = lazy(() => import("@/pages/usulan-kegiatan/detail/rab-actions/page"));
 
+const MasterIKU = lazy(() => import("@/pages/master-iku/page"));
+const MasterIKUActions = lazy(() => import("@/pages/master-iku/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -39,6 +42,8 @@ const route_path = [
    { key: v4(), path: "/usulan-kegiatan/actions", element: <UsulanKegiatanActions /> },
    { key: v4(), path: "/usulan-kegiatan/:id_usulan_kegiatan", element: <UsulanKegiatanActionsDetail /> },
    { key: v4(), path: "/usulan-kegiatan/:id_usulan_kegiatan/rab/actions", element: <UsulanKegiatanActionsDetailRabActions /> },
+   { key: v4(), path: "/master-iku", element: <MasterIKU /> },
+   { key: v4(), path: "/master-iku/actions", element: <MasterIKUActions /> },
 ];
 
 export default function Routes() {
