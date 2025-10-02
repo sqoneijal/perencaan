@@ -4,7 +4,7 @@ use CodeIgniter\Router\RouteCollection;
 
 $routes->options('api/(:any)', 'BaseController::options');
 
-$routes->group('api', ['filter' => 'cors'], function (RouteCollection $routes) {
+$routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCollection $routes) {
    $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], function (RouteCollection $routes) {
       $routes->group('unit-satuan', function (RouteCollection $routes) {
          $routes->get('/', 'UnitSatuan::index');

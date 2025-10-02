@@ -10,3 +10,19 @@ services:
       volumes:
          - ./api:/var/www/html
       restart: always
+
+   perencanaan-admin:
+      container_name: perencanaan-admin
+      image: perencanaan-admin
+      build:
+         context: ./admin
+         dockerfile: ./Dockerfile
+      volumes:
+         - ./admin/dist:/usr/share/nginx/html
+      ports:
+         - "1018:80"
+      environment:
+         - NODE_ENV=production
+      restart: always
+      depends_on:
+         - perencanaan-api

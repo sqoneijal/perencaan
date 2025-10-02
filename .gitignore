@@ -2,3 +2,5 @@
 api/app/Config/Database.php
 api/tests
 api/vendor
+admin/.env.production
+admin/prod.js
