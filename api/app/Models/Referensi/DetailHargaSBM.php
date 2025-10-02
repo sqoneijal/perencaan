@@ -95,7 +95,7 @@ class DetailHargaSBM extends Model
    public function getData(array $params): array
    {
       $table = $this->db->table('tb_detail_harga_sbm tdhs');
-      $table->select('tdhs.id, tsbm.kode as kode_standar_biaya, tsbm.nama as nama_standar_biaya, tdhs.tahun_anggaran, tdhs.harga_satuan, tus.nama as nama_satuan, tus.aktif as status_satuan, tdhs.tanggal_mulai_efektif, tdhs.tanggal_akhir_efektif, tdhs.status_validasi');
+      $table->select('tdhs.id, tsbm.kode as kode_standar_biaya, tsbm.nama as nama_standar_biaya, tdhs.tahun_anggaran, tdhs.harga_satuan, tus.nama as nama_satuan, tus.aktif as status_satuan, tdhs.tanggal_mulai_efektif, tdhs.tanggal_akhir_efektif, tdhs.status_validasi, tdhs.id_satuan');
       $table->join('tb_standar_biaya_master tsbm', 'tsbm.id = tdhs.id_sbm', 'left');
       $table->join('tb_unit_satuan tus', 'tus.id = tdhs.id_satuan', 'left');
       $table->limit((int) $params['limit'], (int) $params['offset']);

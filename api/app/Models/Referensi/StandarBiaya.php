@@ -54,6 +54,7 @@ class StandarBiaya extends Model
       $table->join('tb_kategori_sbm tks', 'tks.id = tsbm.id_kategori', 'left');
       $table->join('tb_unit_satuan tus', 'tus.id = tsbm.id_unit_satuan', 'left');
       $table->limit((int) $params['limit'], (int) $params['offset']);
+      $table->orderBy('tsbm.kode');
 
       $clone = clone $table;
 

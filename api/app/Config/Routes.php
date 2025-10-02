@@ -59,7 +59,9 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
    });
 
    $routes->group('usulan-kegiatan', function (RouteCollection $routes) {
-      $routes->group('(:num)', function ($routes) {
+      $routes->get('/', 'UsulanKegiatan::index');
+
+      $routes->group('(:num)', function (RouteCollection $routes) {
          $routes->group('rab', function (RouteCollection $routes) {
             $routes->get('/', 'UsulanKegiatan::getDataRAB/$1');
             $routes->get('actions', 'UsulanKegiatan::getRabActions');

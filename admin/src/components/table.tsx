@@ -11,9 +11,11 @@ type Props<T> = {
    data: Array<T>;
    isLoading?: boolean;
    total?: number;
+   trCursor?: boolean;
+   onRowClick?: (row: T) => void;
 };
 
-export default function Table<T>({ columns, data, isLoading, total = 0 }: Readonly<Props<T>>) {
+export default function Table<T>({ columns, data, isLoading, total = 0, trCursor = false, onRowClick }: Readonly<Props<T>>) {
    const { pagination, setPagination } = useTablePagination();
 
    const table = useReactTable<T>({
@@ -33,7 +35,7 @@ export default function Table<T>({ columns, data, isLoading, total = 0 }: Readon
 
    return (
       <div className="overflow-hidden rounded-lg border shadow-sm">
-         <ShadcnTable>
+         <ShadcnTable style={{ width: "w-full" }}>
             <TableHeader className="bg-muted sticky top-0 z-10">
                {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>
@@ -53,7 +55,10 @@ export default function Table<T>({ columns, data, isLoading, total = 0 }: Readon
             <TableBody className="font-medium divide-y divide-gray-200">
                {table.getRowModel().rows?.length ? (
                   table.getRowModel().rows.map((row, index) => (
-                     <TableRow key={row.id} className={index % 2 === 0 ? "bg-white" : "bg-gray-50"}>
+                     <TableRow
+                        key={row.id}
+                        className={cn(index % 2 === 0 ? "bg-white" : "bg-gray-50", trCursor && "hover:cursor-pointer hover:bg-slate-300")}
+                        onClick={onRowClick ? () => onRowClick(row.original) : undefined}>
                         {row.getVisibleCells().map((cell) => (
                            <TableCell
                               key={cell.id}

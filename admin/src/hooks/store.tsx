@@ -1,6 +1,14 @@
 import React from "react";
 import { create } from "zustand";
 
+export const useDialog = create<{
+   open: boolean;
+   setOpen: (status: boolean) => void;
+}>((set) => ({
+   open: false,
+   setOpen: (status) => set({ open: status }),
+}));
+
 type HeaderButtonStore = {
    button: React.ReactElement;
    setButton: (btn: React.ReactElement) => React.ReactElement;

@@ -240,4 +240,31 @@ class UsulanKegiatan extends Model
          return ['status' => false, 'message' => $e->getMessage()];
       }
    }
+
+   public function getData(array $params): array
+   {
+      $table = $this->db->table('tb_usulan_kegiatan tuk');
+      $table->select('tuk.id, tuk.kode, tuk.nama, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.total_anggaran, tuk.rencanca_total_anggaran, tuk.status_usulan');
+      $table->limit((int) $params['limit'], (int) $params['offset']);
+      $table->orderBy('tuk.id', 'desc');
+
+      $clone = clone $table;
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+
+      return [
+         'results' => $response,
+         'total' => $clone->countAllResults()
+      ];
+   }
 }

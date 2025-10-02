@@ -75,6 +75,7 @@ const getColumns = ({ navigate, limit, offset, id_usulan_kegiatan: idUsulanKegia
                   refetchKey={[
                      ["usulan-kegiatan", idUsulanKegiatanNum, "rab", limit, offset],
                      ["usulan-kegiatan", idUsulanKegiatanNum, "anggaran"],
+                     ["usulan-kegiatan", limit, offset],
                   ]}
                />
             </>
