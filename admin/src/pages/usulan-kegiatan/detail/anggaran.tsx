@@ -18,9 +18,12 @@ const loadingElement = (
 export default function Anggaran() {
    const { id_usulan_kegiatan } = useParams();
 
+   // Convert id_usulan_kegiatan to number for consistent query keys
+   const idUsulanKegiatanNum = id_usulan_kegiatan ? Number(id_usulan_kegiatan) : 0;
+
    const { data, isLoading, error } = useApiQuery<Lists>({
-      queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "anggaran"],
-      url: `/usulan-kegiatan/${id_usulan_kegiatan}/anggaran`,
+      queryKey: ["usulan-kegiatan", idUsulanKegiatanNum, "anggaran"],
+      url: `/usulan-kegiatan/${idUsulanKegiatanNum}/anggaran`,
    });
 
    if (isLoading) return loadingElement;

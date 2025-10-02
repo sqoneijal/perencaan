@@ -1,4 +1,5 @@
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { getValue } from "@/helpers/init";
 import { cn } from "@/lib/utils";
 import type { Lists, Option } from "@/types/init";
@@ -163,6 +164,7 @@ export function FormText({
    errors,
    className,
    disabled = false,
+   type = "text",
 }: Readonly<{
    label?: string;
    value?: string;
@@ -170,6 +172,7 @@ export function FormText({
    errors?: Lists;
    name: string;
    className?: string;
+   type?: string;
    disabled?: boolean;
 }>) {
    const id = v4();
@@ -178,7 +181,7 @@ export function FormText({
       <div className="grid w-full items-center gap-1 flex-1">
          <Label htmlFor={id}>{label}</Label>
          <Input
-            type="text"
+            type={type}
             id={id}
             placeholder={label}
             value={value || ""}
@@ -221,7 +224,14 @@ export function FormSelect({
             <SelectContent>
                {options?.map((row) => (
                   <SelectItem key={getValue(row, "value")} value={getValue(row, "value")}>
-                     {getValue(row, "label")}
+                     {getValue(row, "tooltip") ? (
+                        <Tooltip>
+                           <TooltipTrigger>{getValue(row, "label")}</TooltipTrigger>
+                           <TooltipContent>{getValue(row, "tooltip")}</TooltipContent>
+                        </Tooltip>
+                     ) : (
+                        getValue(row, "label")
+                     )}
                   </SelectItem>
                ))}
             </SelectContent>

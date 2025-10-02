@@ -8,6 +8,68 @@ use CodeIgniter\Model;
 class UsulanKegiatan extends Model
 {
 
+   public function deleteRAB(int $id): array
+   {
+      try {
+         $table = $this->db->table('tb_rab_detail');
+         $table->where('id', $id);
+         $table->delete();
+         return ['status' => true, 'message' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function getDataRAB(int $id_usulan_kegiatan, array $params): array
+   {
+      $table = $this->db->table('tb_rab_detail trd');
+      $table->select('trd.id, trd.uraian_biaya, trd.qty, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan');
+      $table->join('tb_unit_satuan tus', 'tus.id = trd.id_satuan', 'left');
+      $table->where('trd.id_usulan', $id_usulan_kegiatan);
+      $table->limit((int) $params['limit'], (int) $params['offset']);
+
+      $clone = clone $table;
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+
+      return [
+         'results' => $response,
+         'total' => $clone->countAllResults()
+      ];
+   }
+
+   public function submitRAB(array $post): array
+   {
+      try {
+         $data = cleanDataSubmit(['id_usulan', 'uraian_biaya', 'qty', 'id_satuan', 'harga_satuan', 'total_biaya', 'catatan', 'user_modified'], $post);
+
+         $table = $this->db->table('tb_rab_detail');
+         if (@$post['id']) {
+            $data['modified'] = new RawSql('now()');
+
+            $table->where('id', $post['id']);
+            $table->update($data);
+         } else {
+            $data['uploaded'] = new RawSql('now()');
+
+            $table->insert($data);
+         }
+         return ['status' => true, 'content' => '', 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function getDetail(int $id_usulan_kegiatan, string $type): array
    {
       $response = [];

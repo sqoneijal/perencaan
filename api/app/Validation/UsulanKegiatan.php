@@ -5,6 +5,36 @@ namespace App\Validation;
 class UsulanKegiatan
 {
 
+   public function submitRAB(): array
+   {
+      return [
+         'uraian_biaya' => [
+            'rules' => 'required',
+            'label' => 'Uraian biaya'
+         ],
+         'qty' => [
+            'rules' => 'required|numeric|greater_than[0]',
+            'label' => 'Kuantitas'
+         ],
+         'id_satuan' => [
+            'rules' => 'required',
+            'label' => 'Satuan'
+         ],
+         'harga_satuan' => [
+            'rules' => 'required|numeric|greater_than[0]',
+            'label' => 'Harga satuan'
+         ],
+         'total_biaya' => [
+            'rules' => 'required|numeric|greater_than[0]',
+            'label' => 'Total biaya'
+         ],
+         'catatan' => [
+            'rules' => 'required',
+            'label' => 'Catatan'
+         ]
+      ];
+   }
+
    public function submit(?int $id = null): array
    {
       return [

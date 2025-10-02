@@ -85,7 +85,7 @@ export function useDeleteMutation<T>(
    return useMutation<ApiResponse<T>, Error, void, unknown>({
       mutationFn: async () => {
          if (!navigator.onLine) {
-            throw new Error("No internet connection");
+            toast.error("No internet connection");
          }
 
          const res = await _delete<T>(url);

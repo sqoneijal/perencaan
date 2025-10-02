@@ -60,11 +60,20 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
 
    $routes->group('usulan-kegiatan', function (RouteCollection $routes) {
       $routes->group('(:num)', function ($routes) {
+         $routes->group('rab', function (RouteCollection $routes) {
+            $routes->get('/', 'UsulanKegiatan::getDataRAB/$1');
+            $routes->get('actions', 'UsulanKegiatan::getRabActions');
+
+            $routes->post('actions', 'UsulanKegiatan::submitRAB/$1');
+         });
+
          $routes->get('(:any)', 'UsulanKegiatan::getDetail/$1/$2');
       });
 
       $routes->group('actions', function (RouteCollection $routes) {
          $routes->post('/', 'UsulanKegiatan::submit');
+
+         $routes->delete('rab/(:num)', 'UsulanKegiatan::deleteRAB/$1');
       });
    });
 });

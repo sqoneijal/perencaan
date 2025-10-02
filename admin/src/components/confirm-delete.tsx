@@ -17,7 +17,7 @@ import { Button } from "./ui/button";
 
 interface ConfirmDialogProps {
    url: string;
-   refetchKey?: Array<unknown>; // supaya fleksibel
+   refetchKey?: Array<unknown> | Array<Array<unknown>>; // supaya fleksibel, bisa single key atau array of keys
 }
 
 export default function ConfirmDialog({ url, refetchKey }: Readonly<ConfirmDialogProps>) {
@@ -28,7 +28,15 @@ export default function ConfirmDialog({ url, refetchKey }: Readonly<ConfirmDialo
          if (data?.status) {
             toast.success(data?.message);
             if (refetchKey) {
-               queryClient.refetchQueries({ queryKey: refetchKey });
+               if (Array.isArray(refetchKey) && refetchKey.length > 0 && Array.isArray(refetchKey[0])) {
+                  // Array of query keys
+                  (refetchKey as Array<Array<unknown>>).forEach((key) => {
+                     queryClient.refetchQueries({ queryKey: key });
+                  });
+               } else {
+                  // Single query key
+                  queryClient.refetchQueries({ queryKey: refetchKey });
+               }
             }
          } else {
             toast.error(data?.message);
