@@ -15,10 +15,10 @@ class UsulanKegiatan extends BaseController
       return $this->respond($data);
    }
 
-   public function getDetail(int $id_usulan_kegiatan): object
+   public function getDetail(int $id_usulan_kegiatan, string $type): object
    {
       $model = new Model();
-      $data = $model->getDetail($id_usulan_kegiatan);
+      $data = $model->getDetail($id_usulan_kegiatan, $type);
       return $this->respond($data);
    }
 

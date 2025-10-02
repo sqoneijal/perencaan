@@ -8,24 +8,146 @@ use CodeIgniter\Model;
 class UsulanKegiatan extends Model
 {
 
-   public function getDetail(int $id_usulan_kegiatan): array
+   public function getDetail(int $id_usulan_kegiatan, string $type): array
    {
-      $table = $this->db->table('tb_usulan_kegiatan tuk');
-      $table->select('tuk.id, tuk.kode, tuk.nama, tuk.latar_belakang, tuk.tujuan, tuk.sasaran, tuk.waktu_mulai as tanggal_mulai, tuk.waktu_selesai as tanggal_selesai, tuk.tempat_pelaksanaan, tuk.id_unit_pengusul, tuk.operator_input, tuk.total_anggaran, tuk.status_usulan, tuk.tanggal_submit as tanggal_pengajuan, tuk.rencanca_total_anggaran');
-      $table->where('tuk.id', $id_usulan_kegiatan);
-
-      $get = $table->get();
-      $data = $get->getRowArray();
-      $fieldNames = $get->getFieldNames();
-      $get->freeResult();
-
       $response = [];
-      if (isset($data)) {
-         foreach ($fieldNames as $field) {
-            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
-         }
+      if ($type === 'informasi-dasar') {
+         $response = $this->getInformasiDasar($id_usulan_kegiatan);
+      } elseif ($type === 'anggaran') {
+         $response = $this->getAnggaran($id_usulan_kegiatan);
+      } elseif ($type === 'latar-belakang') {
+         $response = $this->getLatarBelakang($id_usulan_kegiatan);
+      } elseif ($type === 'tujuan') {
+         $response = $this->getTujuan($id_usulan_kegiatan);
+      } elseif ($type === 'sasaran') {
+         $response = $this->getSasaran($id_usulan_kegiatan);
       }
       return $response;
+   }
+
+   private function getSasaran(int $id_usulan_kegiatan): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan');
+         $table->select('sasaran');
+         $table->where('id', $id_usulan_kegiatan);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   private function getTujuan(int $id_usulan_kegiatan): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan');
+         $table->select('tujuan');
+         $table->where('id', $id_usulan_kegiatan);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   private function getLatarBelakang(int $id_usulan_kegiatan): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan');
+         $table->select('latar_belakang');
+         $table->where('id', $id_usulan_kegiatan);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   private function getAnggaran(int $id_usulan_kegiatan): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan');
+         $table->select('total_anggaran, rencanca_total_anggaran');
+         $table->where('id', $id_usulan_kegiatan);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   private function getInformasiDasar(int $id_usulan_kegiatan): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan tuk');
+         $table->select('tuk.id, tuk.kode, tuk.nama, tuk.waktu_mulai as tanggal_mulai, tuk.waktu_selesai as tanggal_selesai, tuk.tempat_pelaksanaan, tuk.id_unit_pengusul, tuk.operator_input, tuk.status_usulan, tuk.tanggal_submit as tanggal_pengajuan');
+         $table->where('tuk.id', $id_usulan_kegiatan);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
    }
 
    public function submit(array $post): array

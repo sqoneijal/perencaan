@@ -57,7 +57,7 @@ export default function Page() {
                   });
                   toast.success(data?.message);
                   const response = data as UsulanKegiatanResponse;
-                  navigate(`/usulan-kegiatan/${response.id_usulan_kegiatan}`);
+                  navigate(`/usulan-kegiatan/${response.id_usulan_kegiatan}#informasi-dasar`);
                   return;
                }
 
