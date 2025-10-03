@@ -10,7 +10,7 @@ const LatarBelakang = lazy(() => import("./latar-belakang"));
 const Tujuan = lazy(() => import("./tujuan"));
 const Sasaran = lazy(() => import("./sasaran"));
 const Rab = lazy(() => import("./rab"));
-const Iku = lazy(() => import("./iku"));
+const Iku = lazy(() => import("./iku/page"));
 const Dokumen = lazy(() => import("./dokumen/page"));
 
 export default function Page() {

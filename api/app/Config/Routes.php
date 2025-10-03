@@ -75,6 +75,11 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
             $routes->post('actions', 'UsulanKegiatan::submitDokumen/$1');
          });
 
+         $routes->group('iku', function (RouteCollection $routes) {
+            $routes->post('actions', 'UsulanKegiatan::submitIKU/$1');
+            $routes->delete('(:num)', 'UsulanKegiatan::deleteIKU/$1/$2');
+         });
+
          $routes->get('(:any)', 'UsulanKegiatan::getDetail/$1/$2');
       });
 

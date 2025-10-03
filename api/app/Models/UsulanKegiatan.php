@@ -9,6 +9,34 @@ use phpseclib3\Net\SFTP;
 class UsulanKegiatan extends Model
 {
 
+   public function deleteIKU(int $id_usulan, int $id): array
+   {
+      try {
+         $table = $this->db->table('tb_relasi_usulan_iku');
+         $table->where('id_usulan', $id_usulan);
+         $table->where('id', $id);
+         $table->delete();
+         return ['status' => true, 'message' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function submitIKU(array $post): array
+   {
+      try {
+         $data = cleanDataSubmit(['user_modified', 'id_usulan', 'id_iku'], $post);
+
+         $data['uploaded'] = new RawSql('now()');
+
+         $table = $this->db->table('tb_relasi_usulan_iku');
+         $table->ignore(true)->insert($data);
+         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function deleteUsulanKegiatan(int $id): array
    {
       try {
@@ -131,8 +159,37 @@ class UsulanKegiatan extends Model
          $response = $this->getSasaran($id_usulan_kegiatan);
       } elseif ($type === 'dokumen') {
          $response = $this->getDokumen($id_usulan_kegiatan);
+      } elseif ($type === 'iku') {
+         $response = $this->getRelasiIKU($id_usulan_kegiatan);
       }
       return $response;
+   }
+
+   private function getRelasiIKU(int $id_usulan_kegiatan): array
+   {
+      $table = $this->db->table('tb_relasi_usulan_iku trui');
+      $table->select('trui.id, trui.id_usulan, trui.id_iku, tim.jenis as jenis_iku, tim.kode as kode_iku, tim.tahun_berlaku as tahun_berlaku_iku, tim.deskripsi as deskripsi_iku');
+      $table->join('tb_iku_master tim', 'tim.id = trui.id_iku');
+      $table->where('trui.id_usulan', $id_usulan_kegiatan);
+
+      $clone = clone $table;
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+
+      return [
+         'results' => $response,
+         'total' => $clone->countAllResults()
+      ];
    }
 
    private function getDokumen(int $id_usulan_kegiatan): array

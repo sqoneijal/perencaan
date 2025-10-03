@@ -17,6 +17,20 @@ class UsulanKegiatan extends BaseController
       return $this->respond($data);
    }
 
+   public function deleteIKU(int $id_usulan, int $id): object
+   {
+      $model = new Model();
+      $data = $model->deleteIKU($id_usulan, $id);
+      return $this->respond($data);
+   }
+
+   public function submitIKU(): object
+   {
+      $model = new Model();
+      $data = $model->submitIKU((array) $this->request->getJSON());
+      return $this->respond($data);
+   }
+
    private function uploadToSFTP($localPath, $remoteDir, $fileName, &$response): string
    {
       $sftp = new SFTP(env('CDN_HOST'));
