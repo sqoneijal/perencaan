@@ -1,63 +1,13 @@
-import { FormText, FormTextarea } from "@/components/forms";
+import { FormSelect, FormText, FormTextarea } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { btn_loading, getValue } from "@/helpers/init";
-import { useHeaderButton, useTablePagination } from "@/hooks/store";
-import { queryClient } from "@/lib/queryClient";
-import { usePostMutation } from "@/lib/useApi";
-import type { Lists } from "@/types/init";
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
-import { toast } from "sonner";
+import { getTahunAnggaranOptions, loadingElement } from "./helper";
+import { useMasterIKUActionsPage } from "./use-page";
 
 export default function Page() {
-   const { setButton } = useHeaderButton();
-   const { pagination } = useTablePagination();
+   const { formData, setFormData, errors, submit, handleSubmit, isLoading } = useMasterIKUActionsPage();
 
-   const navigate = useNavigate();
-
-   useEffect(() => {
-      setButton(
-         <Button variant="outline" size="sm" onClick={() => navigate("/master-iku")}>
-            Batal
-         </Button>
-      );
-      return () => {
-         setButton(<div />);
-      };
-   }, [setButton, navigate]);
-
-   const [formData, setFormData] = useState<Lists>({});
-   const [errors, setErrors] = useState<Lists>({});
-
-   const submit = usePostMutation<{ errors: Lists }>("/master-iku/actions");
-
-   const handleSubmit = (e: React.FormEvent) => {
-      e.preventDefault();
-
-      submit.mutate(
-         {
-            ...formData,
-         },
-         {
-            onSuccess: (data) => {
-               setErrors(data?.errors ?? {});
-               if (data?.status) {
-                  queryClient.refetchQueries({
-                     queryKey: ["master-iku", pagination.pageSize, pagination.pageIndex * pagination.pageSize],
-                  });
-                  toast.success(data?.message);
-                  navigate("/master-iku");
-                  return;
-               }
-
-               toast.error(data?.message);
-            },
-            onError: (error: Error) => {
-               toast.error(error.message);
-            },
-         }
-      );
-   };
+   if (isLoading) return loadingElement;
 
    return (
       <div className="p-0">
@@ -65,12 +15,16 @@ export default function Page() {
             <form onSubmit={handleSubmit} className="space-y-4">
                <div className="row">
                   <div className="col-12 col-md-4 mb-3 sm:mb-0">
-                     <FormText
-                        label="Jenis"
+                     <FormSelect
+                        label="Jenis IKU"
                         name="jenis"
                         value={getValue(formData, "jenis")}
-                        onChange={(value) => setFormData((prev) => ({ ...prev, jenis: value }))}
+                        onValueChange={(value) => setFormData((prev) => ({ ...prev, jenis: value }))}
                         errors={errors}
+                        options={[
+                           { value: "rektor", label: "Rektor" },
+                           { value: "perguruan_tinggi", label: "Perguruan Tinggi" },
+                        ]}
                      />
                   </div>
                   <div className="col-12 col-md-4 mb-3 sm:mb-0">
@@ -83,12 +37,13 @@ export default function Page() {
                      />
                   </div>
                   <div className="col-12 col-md-4">
-                     <FormText
+                     <FormSelect
                         label="Tahun Berlaku"
                         name="tahun_berlaku"
                         value={getValue(formData, "tahun_berlaku")}
-                        onChange={(value) => setFormData((prev) => ({ ...prev, tahun_berlaku: value }))}
+                        onValueChange={(value) => setFormData((prev) => ({ ...prev, tahun_berlaku: value }))}
                         errors={errors}
+                        options={getTahunAnggaranOptions()}
                      />
                   </div>
                </div>

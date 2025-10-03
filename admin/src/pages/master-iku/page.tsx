@@ -1,23 +1,16 @@
-import { Button } from "@/components/ui/button";
-import { useHeaderButton } from "@/hooks/store";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import Table from "@/components/table";
+import { getColumns } from "./column";
+import { useMasterIKUPage } from "./use-page";
 
 export default function Page() {
-   const { setButton } = useHeaderButton();
+   const { data, isLoading, limit, offset, navigate } = useMasterIKUPage();
 
-   const navigate = useNavigate();
-
-   useEffect(() => {
-      setButton(
-         <Button variant="outline" size="sm" onClick={() => navigate("/master-iku/actions")}>
-            Tambah Master IKU
-         </Button>
-      );
-      return () => {
-         setButton(<div />);
-      };
-   }, [setButton, navigate]);
-
-   return <div>aewhfkjawheflakhwef</div>;
+   return (
+      <Table
+         columns={getColumns({ navigate, limit, offset })}
+         data={Array.isArray(data?.results) ? data?.results : []}
+         total={data?.total ?? 0}
+         isLoading={isLoading}
+      />
+   );
 }

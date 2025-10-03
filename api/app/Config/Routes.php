@@ -85,4 +85,14 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          $routes->delete('dokumen/(:num)', 'UsulanKegiatan::deleteDokumen/$1');
       });
    });
+
+   $routes->group('master-iku', function (RouteCollection $routes) {
+      $routes->get('/', 'MasterIKU::index');
+      $routes->delete('(:num)', 'MasterIKU::handleDelete/$1');
+
+      $routes->group('actions', function (RouteCollection $routes) {
+         $routes->get('(:num)', 'MasterIKU::getDetailEdit/$1');
+         $routes->post('/', 'MasterIKU::submit');
+      });
+   });
 });

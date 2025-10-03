@@ -53,29 +53,8 @@ export function usePostMutation<T, V = Record<string, unknown> | FormData>(
             variables.append('user_modified', user?.preferred_username || '');
             data = variables;
          } else {
-            // Assume variables is a plain object, create FormData from it
-            const formData = new FormData();
-            Object.entries(variables as Record<string, unknown>).forEach(([key, value]) => {
-               if (value instanceof FileList) {
-                  if (value.length > 0) {
-                     formData.append(key, value[0]);
-                  }
-               } else if (value !== undefined && value !== null) {
-                  if (value instanceof File) {
-                     formData.append(key, value);
-                  } else if (typeof value === "object" && value !== null && !(value instanceof FileList)) {
-                     try {
-                        formData.append(key, JSON.stringify(value));
-                     } catch {
-                        formData.append(key, '[non-serializable object]');
-                     }
-                  } else {
-                     formData.append(key, String(value));
-                  }
-               }
-            });
-            formData.append('user_modified', user?.preferred_username || '');
-            data = formData;
+            // Default to JSON: send as plain object with user_modified added
+            data = { ...(variables as Record<string, unknown>), user_modified: user?.preferred_username || '' };
          }
 
          const res = await post<T>(url, data as Record<string, unknown> | FormData);

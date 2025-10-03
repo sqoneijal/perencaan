@@ -67,7 +67,7 @@ const getColumns = ({ navigate, limit, offset, id_usulan_kegiatan: idUsulanKegia
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/delete/rab/${getValue(original, "id")}`)}>
+               <Button variant="ghost" size="sm" onClick={() => navigate(`${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
                <ConfirmDialog

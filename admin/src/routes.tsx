@@ -44,6 +44,7 @@ const route_path = [
    { key: v4(), path: "/usulan-kegiatan/:id_usulan_kegiatan/rab/actions", element: <UsulanKegiatanActionsDetailRabActions /> },
    { key: v4(), path: "/master-iku", element: <MasterIKU /> },
    { key: v4(), path: "/master-iku/actions", element: <MasterIKUActions /> },
+   { key: v4(), path: "/master-iku/actions/:id_iku_master", element: <MasterIKUActions /> },
 ];
 
 export default function Routes() {
