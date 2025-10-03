@@ -94,8 +94,36 @@ class UsulanKegiatan extends Model
          $response = $this->getTujuan($id_usulan_kegiatan);
       } elseif ($type === 'sasaran') {
          $response = $this->getSasaran($id_usulan_kegiatan);
+      } elseif ($type === 'dokumen') {
+         $response = $this->getDokumen($id_usulan_kegiatan);
       }
       return $response;
+   }
+
+   private function getDokumen(int $id_usulan_kegiatan): array
+   {
+      try {
+         $table = $this->db->table('tb_dokumen_pendukung');
+         $table->select('id, nama_dokumen, tipe_dokumen, path_file, uploaded, modified, user_modified, file_dokumen');
+         $table->where('id_usulan', $id_usulan_kegiatan);
+         $table->orderBy('uploaded', 'desc');
+
+         $get = $table->get();
+         $result = $get->getResultArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         foreach ($result as $key => $val) {
+            foreach ($fieldNames as $field) {
+               $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
    }
 
    private function getSasaran(int $id_usulan_kegiatan): array
@@ -247,6 +275,23 @@ class UsulanKegiatan extends Model
          }
 
          return ['status' => true, 'id_usulan_kegiatan' => $id_usulan_kegiatan, 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function submitDokumen(array $data): array
+   {
+      try {
+         $insertData = array_merge($data, [
+            'uploaded' => new RawSql('now()'),
+            'modified' => new RawSql('now()'),
+         ]);
+
+         $table = $this->db->table('tb_dokumen_pendukung');
+         $table->insert($insertData);
+
+         return ['status' => true, 'message' => 'Dokumen berhasil diupload.'];
       } catch (\Exception $e) {
          return ['status' => false, 'message' => $e->getMessage()];
       }

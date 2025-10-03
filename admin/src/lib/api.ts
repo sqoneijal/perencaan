@@ -81,10 +81,34 @@ const abortSignal = (timeoutMs: number): AbortSignal => {
 };
 
 /** 📡 Request utama */
+const handleRequestError = async <T>(
+   error: AxiosError,
+   method: "get" | "post" | "put" | "delete",
+   url: string,
+   form: Record<string, unknown> | FormData,
+   config: Partial<InternalAxiosRequestConfig>,
+   retryCount: number
+): Promise<AxiosResponse<ApiResponse<T>>> => {
+   if (retryCount > 0 && shouldRetry(error)) {
+      toast.info(`Retrying request (${MAX_RETRY - retryCount + 1}/${MAX_RETRY}): ${method.toUpperCase()} ${url}`);
+      const refreshed = await handleTokenRefresh(error);
+      if (refreshed) {
+         return request<T>(method, url, form, config, retryCount - 1);
+      }
+   }
+
+   if (error.code === "ERR_CANCELED") {
+      toast.error("Sistem sedang sibuk, silahkan coba beberapa saat lagi!");
+   } else {
+      toast.error(`[${error.code}] ${error.message}`);
+   }
+   throw error;
+};
+
 const request = async <T = unknown>(
    method: "get" | "post" | "put" | "delete",
    url: string,
-   form: Record<string, unknown> = {},
+   form: Record<string, unknown> | FormData = {},
    config: Partial<InternalAxiosRequestConfig> = {},
    retryCount = MAX_RETRY
 ): Promise<AxiosResponse<ApiResponse<T>>> => {
@@ -101,6 +125,9 @@ const request = async <T = unknown>(
             data: method === "get" || method === "delete" ? undefined : form,
             ...authConfig,
             signal: abortSignal(200_000),
+            transformRequest: form instanceof FormData ? [] : undefined,
+            // Remove transformResponse override to allow axios to parse JSON response
+            // transformResponse: form instanceof FormData ? [] : undefined,
          });
 
          if (res.data?.code && res.data.code !== 200) {
@@ -110,21 +137,7 @@ const request = async <T = unknown>(
          return res;
       } catch (e) {
          const error = e as AxiosError;
-
-         if (retryCount > 0 && shouldRetry(error)) {
-            toast.info(`Retrying request (${MAX_RETRY - retryCount + 1}/${MAX_RETRY}): ${method.toUpperCase()} ${url}`);
-            const refreshed = await handleTokenRefresh(error);
-            if (refreshed) {
-               return request<T>(method, url, form, config, retryCount - 1);
-            }
-         }
-
-         if (error.code === "ERR_CANCELED") {
-            toast.error("Sistem sedang sibuk, silahkan coba beberapa saat lagi!");
-         } else {
-            toast.error(`[${error.code}] ${error.message}`);
-         }
-         throw error;
+         return handleRequestError<T>(error, method, url, form, config, retryCount);
       }
    });
 };
@@ -132,7 +145,7 @@ const request = async <T = unknown>(
 /** 📌 Helpers */
 export const get = <T>(url: string, config?: Partial<InternalAxiosRequestConfig>) => request<T>("get", url, {}, config);
 
-export const post = <T>(url: string, form: Record<string, unknown> = {}, config?: Partial<InternalAxiosRequestConfig>) =>
+export const post = <T>(url: string, form: Record<string, unknown> | FormData = {}, config?: Partial<InternalAxiosRequestConfig>) =>
    request<T>("post", url, form, config);
 
 export const put = <T>(url: string, form: Record<string, unknown> = {}, config?: Partial<InternalAxiosRequestConfig>) =>

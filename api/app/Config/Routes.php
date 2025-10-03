@@ -71,6 +71,10 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
             $routes->post('actions', 'UsulanKegiatan::submitRAB/$1');
          });
 
+         $routes->group('dokumen', function (RouteCollection $routes) {
+            $routes->post('actions', 'UsulanKegiatan::submitDokumen/$1');
+         });
+
          $routes->get('(:any)', 'UsulanKegiatan::getDetail/$1/$2');
       });
 

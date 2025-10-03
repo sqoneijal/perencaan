@@ -36,7 +36,7 @@ export function useApiQuery<T>({ queryKey, url, options, params }: UseApiQueryPr
 /**
  * Hook untuk POST request.
  */
-export function usePostMutation<T, V extends Record<string, unknown> = Record<string, unknown>>(
+export function usePostMutation<T, V = Record<string, unknown> | FormData>(
    url: string,
    options?: Omit<UseMutationOptions<ApiResponse<T>, Error, V, unknown>, "mutationFn">
 ): UseMutationResult<ApiResponse<T>, Error, V, unknown> {
@@ -48,7 +48,37 @@ export function usePostMutation<T, V extends Record<string, unknown> = Record<st
             toast.error("No internet connection");
          }
 
-         const res = await post<T>(url, {...variables, user_modified: user?.preferred_username});
+         let data: V | Record<string, unknown> | FormData;
+         if (variables instanceof FormData) {
+            variables.append('user_modified', user?.preferred_username || '');
+            data = variables;
+         } else {
+            // Assume variables is a plain object, create FormData from it
+            const formData = new FormData();
+            Object.entries(variables as Record<string, unknown>).forEach(([key, value]) => {
+               if (value instanceof FileList) {
+                  if (value.length > 0) {
+                     formData.append(key, value[0]);
+                  }
+               } else if (value !== undefined && value !== null) {
+                  if (value instanceof File) {
+                     formData.append(key, value);
+                  } else if (typeof value === "object" && value !== null && !(value instanceof FileList)) {
+                     try {
+                        formData.append(key, JSON.stringify(value));
+                     } catch {
+                        formData.append(key, '[non-serializable object]');
+                     }
+                  } else {
+                     formData.append(key, String(value));
+                  }
+               }
+            });
+            formData.append('user_modified', user?.preferred_username || '');
+            data = formData;
+         }
+
+         const res = await post<T>(url, data as Record<string, unknown> | FormData);
          return res.data;
       },
       ...options,

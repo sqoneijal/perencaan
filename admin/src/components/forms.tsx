@@ -156,6 +156,40 @@ export function FormCommand({
    );
 }
 
+export function FormFile({
+   label,
+   onChange,
+   name,
+   errors,
+   className,
+   disabled = false,
+}: Readonly<{
+   label?: string;
+   onChange?: (value: FileList | null) => void;
+   errors?: Lists;
+   name: string;
+   className?: string;
+   disabled?: boolean;
+}>) {
+   const id = v4();
+
+   return (
+      <div className="grid w-full items-center gap-1 flex-1">
+         <Label htmlFor={id}>{label}</Label>
+         <Input
+            type="file"
+            id={id}
+            placeholder={label}
+            onChange={({ target }) => onChange?.(target.files)}
+            name={name}
+            className={cn(errors?.[name] && "border border-red-500", className)}
+            disabled={disabled}
+         />
+         {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
+      </div>
+   );
+}
+
 export function FormText({
    label,
    value,

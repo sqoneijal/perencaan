@@ -11,7 +11,7 @@ const Tujuan = lazy(() => import("./tujuan"));
 const Sasaran = lazy(() => import("./sasaran"));
 const Rab = lazy(() => import("./rab"));
 const Iku = lazy(() => import("./iku"));
-const Dokumen = lazy(() => import("./dokumen"));
+const Dokumen = lazy(() => import("./dokumen/page"));
 
 export default function Page() {
    const location = useLocation();
