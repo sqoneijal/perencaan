@@ -7,11 +7,12 @@ import { useDialog, useTablePagination } from "@/hooks/store";
 import { queryClient } from "@/lib/queryClient";
 import { useApiQuery, usePostMutation } from "@/lib/useApi";
 import type { Lists, Option } from "@/types/init";
-import { Suspense, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 import { loadingElement } from "../helper";
-import { DialogReferensiHargaSBM } from "./dialog-referensi-harga-sbm";
+
+const DialogReferensiHargaSBM = lazy(() => import("./dialog-referensi-harga-sbm"));
 
 function DialogAction() {
    const { open, setOpen } = useDialog();

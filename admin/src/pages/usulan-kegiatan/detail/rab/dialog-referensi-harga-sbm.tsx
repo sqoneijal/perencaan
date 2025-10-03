@@ -11,7 +11,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { getColumnsDialog } from "./columns-referensi-harga-sbm";
 
-export function DialogReferensiHargaSBM({
+export default function DialogReferensiHargaSBM({
    open,
    setOpen,
    onRowClick,

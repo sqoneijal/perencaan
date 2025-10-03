@@ -3,6 +3,7 @@ import { getFirstHash } from "@/helpers/init";
 
 import { lazy, Suspense } from "react";
 import { useLocation, useNavigate } from "react-router";
+import { loadingElement } from "./helper";
 
 const InformasiDasar = lazy(() => import("./informasi-dasar"));
 const Anggaran = lazy(() => import("./anggaran"));
@@ -40,19 +41,7 @@ export default function Page() {
             </TabsList>
             {tabsMenu.map((item) => (
                <TabsContent value={item.value} className="space-y-4" key={item.value}>
-                  <Suspense
-                     fallback={
-                        <div className="bg-gray-50 p-4 rounded-md">
-                           <div className="flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 min-h-[200px]">
-                              <div className="text-center">
-                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
-                                 <p className="text-gray-600 font-medium">Memuat data...</p>
-                              </div>
-                           </div>
-                        </div>
-                     }>
-                     {item.element}
-                  </Suspense>
+                  <Suspense fallback={loadingElement}>{item.element}</Suspense>
                </TabsContent>
             ))}
          </Tabs>

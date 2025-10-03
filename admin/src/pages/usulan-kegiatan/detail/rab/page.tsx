@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { useDialog, useHeaderButton, useTablePagination } from "@/hooks/store";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
-import { Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
 import { loadingElement } from "../helper";
 import { getColumns } from "./column";
-import DialogAction from "./dialog-action";
+
+const DialogAction = lazy(() => import("./dialog-action"));
 
 export default function Page() {
    const { pagination } = useTablePagination();
