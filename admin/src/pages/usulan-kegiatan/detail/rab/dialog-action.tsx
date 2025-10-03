@@ -1,22 +1,66 @@
 import { FormSelect, FormText, FormTextarea } from "@/components/forms";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { btn_loading, formatRupiah, getValue, toNumber, toRupiah } from "@/helpers/init";
-import { useDialog, useHeaderButton } from "@/hooks/store";
-import type { Lists } from "@/types/init";
-import { useEffect } from "react";
-import { useNavigate } from "react-router";
+import { useDialog, useTablePagination } from "@/hooks/store";
+import { queryClient } from "@/lib/queryClient";
+import { useApiQuery, usePostMutation } from "@/lib/useApi";
+import type { Lists, Option } from "@/types/init";
+import { Suspense, useState } from "react";
+import { useParams } from "react-router";
 import { toast } from "sonner";
-import DialogHargaSBM from "./DialogHargaSBM";
-import LoadingElement from "./LoadingElement";
-import { useRabActions } from "./useRabActions";
+import { loadingElement } from "../helper";
+import { DialogReferensiHargaSBM } from "./dialog-referensi-harga-sbm";
 
-export default function Page() {
-   const { setButton } = useHeaderButton();
-   const { setOpen } = useDialog();
+function DialogAction() {
+   const { open, setOpen } = useDialog();
+   const { id_usulan_kegiatan } = useParams();
+   const { pagination } = useTablePagination();
 
-   const navigate = useNavigate();
+   const [formData, setFormData] = useState<Lists>({});
+   const [errors, setErrors] = useState<Lists>({});
+   const [openReferensiSBM, setOpenReferensiSBM] = useState(false);
 
-   const { idUsulanKegiatanNum, formData, setFormData, errors, data, isLoading, error, submit, handleSubmit } = useRabActions();
+   const limit = pagination.pageSize;
+   const offset = pagination.pageSize * pagination.pageIndex;
+
+   const submit = usePostMutation<{ errors: Lists }>(`/usulan-kegiatan/${id_usulan_kegiatan}/rab/actions`);
+
+   const handleSubmit = (e: React.FormEvent) => {
+      e.preventDefault();
+
+      submit.mutate(
+         {
+            ...formData,
+            harga_satuan: getValue(formData, "harga_satuan").toString().replace(/\./g, ""),
+         },
+         {
+            onSuccess: (data) => {
+               setErrors(data?.errors ?? {});
+               if (data?.status) {
+                  setFormData({});
+                  setOpen(false);
+                  queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "rab", limit, offset] });
+                  queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "anggaran"] });
+                  queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", limit, offset] });
+                  toast.success(data?.message);
+                  return;
+               }
+
+               toast.error(data?.message);
+            },
+            onError: (error: Error) => {
+               toast.error(error.message);
+            },
+         }
+      );
+   };
+
+   const { data, isLoading, error } = useApiQuery<{ daftarUnitSatuan: Array<Option> }>({
+      queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "rab", "actions"],
+      url: `/usulan-kegiatan/${id_usulan_kegiatan}/rab/actions`,
+   });
 
    const handleRowClick = (row: Lists) => {
       setFormData((prev) => ({
@@ -25,38 +69,30 @@ export default function Page() {
          harga_satuan: formatRupiah(getValue(row, "harga_satuan")),
          id_satuan: getValue(row, "id_satuan"),
       }));
-      setOpen(false);
+      setOpenReferensiSBM(false);
    };
 
-   useEffect(() => {
-      setButton(
-         <>
-            <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-               Referensi Harga SBM
-            </Button>
-            <Button variant="outline" size="sm" onClick={() => navigate(`/usulan-kegiatan/${idUsulanKegiatanNum}#rab`)}>
-               Batal
-            </Button>
-         </>
-      );
-
-      return () => {
-         setButton(<div />);
-      };
-   }, [setButton, navigate, idUsulanKegiatanNum, setOpen]);
-
-   if (isLoading) return <LoadingElement />;
+   if (isLoading) return loadingElement;
 
    if (error) return toast.error(error?.message);
 
    return (
-      <>
-         <DialogHargaSBM onRowClick={handleRowClick} />
-         <div className="p-0">
-            <div className="border rounded-lg p-6 shadow-sm bg-white">
-               <form onSubmit={handleSubmit} className="space-y-4">
+      <Dialog open={open} onOpenChange={() => setOpen(false)}>
+         <DialogContent className="w-auto min-h-0 sm:max-w-none">
+            <DialogHeader>
+               <DialogTitle>RAB</DialogTitle>
+               <DialogDescription>
+                  RAB (Rencana Anggaran Biaya) adalah perincian rencana biaya yang dibutuhkan untuk suatu kegiatan atau proyek, digunakan sebagai
+                  acuan pengajuan dan pengendalian anggaran.
+               </DialogDescription>
+            </DialogHeader>
+            <ScrollArea className="w-full max-h-[calc(100vh-200px)] min-h-0">
+               <Suspense fallback={loadingElement}>
+                  <DialogReferensiHargaSBM open={openReferensiSBM} setOpen={() => setOpenReferensiSBM(false)} onRowClick={handleRowClick} />
+               </Suspense>
+               <div className="space-y-4">
                   <div className="row">
-                     <div className="col-12 col-md-2 mb-3 sm:mb-0">
+                     <div className="col-12 col-md-3">
                         <FormText
                            type="number"
                            label="Qty"
@@ -74,7 +110,7 @@ export default function Page() {
                            errors={errors}
                         />
                      </div>
-                     <div className="col-12 col-md-2 mb-3 sm:mb-0">
+                     <div className="col-12 col-md-3">
                         <FormSelect
                            label="Satuan"
                            name="id_satuan"
@@ -88,7 +124,7 @@ export default function Page() {
                            }))}
                         />
                      </div>
-                     <div className="col-12 col-md-2 mb-3 sm:mb-0">
+                     <div className="col-12 col-md-6">
                         <FormText
                            label="Harga Satuan"
                            name="harga_satuan"
@@ -104,7 +140,9 @@ export default function Page() {
                            errors={errors}
                         />
                      </div>
-                     <div className="col-12 col-md-2 mb-3 sm:mb-0">
+                  </div>
+                  <div className="row">
+                     <div className="col-12 col-md-6">
                         <FormText
                            label="Total Biaya"
                            name="total_biaya"
@@ -134,12 +172,17 @@ export default function Page() {
                         />
                      </div>
                   </div>
-                  <Button type="submit" size="sm" disabled={submit.isPending}>
+                  <Button size="sm" disabled={submit.isPending} onClick={handleSubmit}>
                      {submit.isPending ? btn_loading() : "Simpan"}
                   </Button>
-               </form>
-            </div>
-         </div>
-      </>
+                  <Button variant="outline" size="sm" onClick={() => setOpenReferensiSBM(true)} className="float-end">
+                     Referensi Harga SBM
+                  </Button>
+               </div>
+            </ScrollArea>
+         </DialogContent>
+      </Dialog>
    );
 }
+
+export default DialogAction;
