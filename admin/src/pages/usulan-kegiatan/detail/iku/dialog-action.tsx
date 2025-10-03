@@ -45,14 +45,7 @@ export default function DialogIKUMaster({ onRowClick }: Readonly<{ onRowClick: (
             <ScrollArea className="w-full max-h-[calc(100vh-200px)] min-h-0">
                <div className="mb-4 row">
                   <div className="col-12 col-md-4">
-                     <FormText
-                        label="Cari master IKU..."
-                        value={search}
-                        onChange={setSearch}
-                        name="search"
-                        withLabel={false}
-                        className="rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
-                     />
+                     <FormText label="Cari master IKU..." value={search} onChange={setSearch} name="search" withLabel={false} />
                   </div>
                   <div className="col-12 col-md-2">
                      <FormSelect

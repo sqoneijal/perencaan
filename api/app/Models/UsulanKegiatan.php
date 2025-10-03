@@ -97,7 +97,7 @@ class UsulanKegiatan extends Model
    public function getDataRAB(int $id_usulan_kegiatan, array $params): array
    {
       $table = $this->db->table('tb_rab_detail trd');
-      $table->select('trd.id, trd.uraian_biaya, trd.qty, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan');
+      $table->select('trd.id, trd.uraian_biaya, trd.qty, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan, trd.id_usulan');
       $table->join('tb_unit_satuan tus', 'tus.id = trd.id_satuan', 'left');
       $table->where('trd.id_usulan', $id_usulan_kegiatan);
       $table->limit((int) $params['limit'], (int) $params['offset']);
