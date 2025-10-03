@@ -1,9 +1,13 @@
+import { FormSelect, FormText } from "@/components/forms";
 import Table from "@/components/table";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getYearOptions } from "@/helpers/init";
 import { useDialog, useTablePagination } from "@/hooks/store";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
+import moment from "moment";
+import { useState } from "react";
 import { toast } from "sonner";
 import { getColumnsDialog } from "./dialog-action-column";
 
@@ -14,13 +18,16 @@ export default function DialogIKUMaster({ onRowClick }: Readonly<{ onRowClick: (
    const limit = pagination.pageSize;
    const offset = pagination.pageSize * pagination.pageIndex;
 
+   const [search, setSearch] = useState("");
+   const [year, setYear] = useState(moment().year().toString());
+
    const { data, isLoading, error } = useApiQuery<{
       results: Array<Lists>;
       total: number;
    }>({
-      queryKey: ["master-iku", limit, offset],
+      queryKey: ["master-iku", limit, offset, search, year],
       url: "/master-iku",
-      params: { limit, offset },
+      params: { limit, offset, search, year },
    });
 
    if (error) toast.error(error?.message);
@@ -36,6 +43,29 @@ export default function DialogIKUMaster({ onRowClick }: Readonly<{ onRowClick: (
                </DialogDescription>
             </DialogHeader>
             <ScrollArea className="w-full max-h-[calc(100vh-200px)] min-h-0">
+               <div className="mb-4 row">
+                  <div className="col-12 col-md-4">
+                     <FormText
+                        label="Cari master IKU..."
+                        value={search}
+                        onChange={setSearch}
+                        name="search"
+                        withLabel={false}
+                        className="rounded-md border border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-200"
+                     />
+                  </div>
+                  <div className="col-12 col-md-2">
+                     <FormSelect
+                        withLabel={false}
+                        label="Tahun"
+                        name="year"
+                        options={getYearOptions()}
+                        value={year.toString()}
+                        onValueChange={(value) => setYear(value)}
+                        disabled={false}
+                     />
+                  </div>
+               </div>
                <Table
                   columns={getColumnsDialog()}
                   data={Array.isArray(data?.results) ? data?.results : []}

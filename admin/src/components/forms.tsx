@@ -199,6 +199,7 @@ export function FormText({
    className,
    disabled = false,
    type = "text",
+   withLabel = true,
 }: Readonly<{
    label?: string;
    value?: string;
@@ -208,12 +209,13 @@ export function FormText({
    className?: string;
    type?: string;
    disabled?: boolean;
+   withLabel?: boolean;
 }>) {
    const id = v4();
 
    return (
       <div className="grid w-full items-center gap-1 flex-1">
-         <Label htmlFor={id}>{label}</Label>
+         {withLabel && <Label htmlFor={id}>{label}</Label>}
          <Input
             type={type}
             id={id}
@@ -237,6 +239,7 @@ export function FormSelect({
    name,
    errors,
    disabled = false,
+   withLabel = true,
 }: Readonly<{
    name: string;
    errors?: Lists;
@@ -245,12 +248,13 @@ export function FormSelect({
    value?: string;
    onValueChange?: (value: string) => void;
    disabled?: boolean;
+   withLabel?: boolean;
 }>) {
    const id = v4();
 
    return (
       <div className="grid w-full items-center gap-1 flex-1">
-         <Label htmlFor={id}>{label}</Label>
+         {withLabel && <Label htmlFor={id}>{label}</Label>}
          <Select key={value} value={value || ""} onValueChange={onValueChange} disabled={disabled}>
             <SelectTrigger className={cn(errors?.[name] && "border border-red-500", "w-full")}>
                <SelectValue placeholder={`Pilih ${label}`} />

@@ -69,6 +69,7 @@ class KategoriSBM extends Model
    public function getData(array $params): array
    {
       $table = $this->db->table('tb_kategori_sbm');
+      tableSearch($table, ['kode', 'nama', 'deskripsi'], $params);
       $table->limit((int) $params['limit'], (int) $params['offset']);
 
       $clone = clone $table;

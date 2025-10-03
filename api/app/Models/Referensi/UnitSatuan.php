@@ -65,6 +65,9 @@ class UnitSatuan extends Model
    public function getData(array $params): array
    {
       $table = $this->db->table('tb_unit_satuan');
+
+      tableSearch($table, ['nama', 'deskripsi'], $params);
+
       $table->limit((int) $params['limit'], (int) $params['offset']);
 
       $clone = clone $table;

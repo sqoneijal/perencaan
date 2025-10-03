@@ -53,6 +53,7 @@ class StandarBiaya extends Model
       $table->select('tsbm.id, tsbm.kode, tsbm.nama, tsbm.deskripsi, tks.kode as kode_kategori, tks.nama as nama_kategori, tus.nama as nama_unit_satuan, tus.deskripsi as deskripsi_unit_satuan');
       $table->join('tb_kategori_sbm tks', 'tks.id = tsbm.id_kategori', 'left');
       $table->join('tb_unit_satuan tus', 'tus.id = tsbm.id_unit_satuan', 'left');
+      tableSearch($table, ['tsbm.kode', 'tsbm.nama', 'tsbm.deskripsi', 'tks.kode', 'tks.nama', 'tus.nama', 'tus.deskripsi'], $params);
       $table->limit((int) $params['limit'], (int) $params['offset']);
       $table->orderBy('tsbm.kode');
 

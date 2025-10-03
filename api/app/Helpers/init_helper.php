@@ -11,3 +11,36 @@ function cleanDataSubmit(array $fields, array $post): array
    }
    return $data;
 }
+
+function tableSearch($table, array $column_search, array $post)
+{
+   $i = 0;
+   foreach ($column_search as $item) {
+      if (@$post['search']) {
+         if ($i === 0) {
+            $table->groupStart();
+            $table->like('trim(lower(cast(' . $item . ' as varchar)))', trim(strtolower($post['search'])));
+         } else {
+            $table->orLike('trim(lower(cast(' . $item . ' as varchar)))', trim(strtolower($post['search'])));
+         }
+
+         if (count($column_search) - 1 === $i) {
+            $table->groupEnd();
+         }
+      }
+      $i++;
+   }
+}
+
+function tableWhere($table, array $fields)
+{
+   $table->groupStart();
+
+   foreach ($fields as $key => $value) {
+      if ($value) {
+         $table->where('trim(lower(cast(' . $key . ' as varchar)))', trim(strtolower($value)));
+      }
+   }
+
+   $table->groupEnd();
+}

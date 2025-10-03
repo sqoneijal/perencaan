@@ -2,11 +2,15 @@ import { Button } from "@/components/ui/button";
 import { useHeaderButton, useTablePagination } from "@/hooks/store";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
-import { useEffect } from "react";
+import moment from "moment";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { toast } from "sonner";
 
 export function useMasterIKUPage() {
+   const [search, setSearch] = useState("");
+   const [year, setYear] = useState(moment().year().toString());
+
    const { setButton } = useHeaderButton();
    const { pagination } = useTablePagination();
 
@@ -29,12 +33,12 @@ export function useMasterIKUPage() {
       results: Array<Lists>;
       total: number;
    }>({
-      queryKey: ["master-iku", limit, offset],
+      queryKey: ["master-iku", limit, offset, search, year],
       url: "/master-iku",
-      params: { limit, offset },
+      params: { limit, offset, search, year },
    });
 
    if (error) toast.error(error?.message);
 
-   return { data, isLoading, error, limit, offset, navigate };
+   return { data, isLoading, error, limit, offset, navigate, search, setSearch, year, setYear };
 }

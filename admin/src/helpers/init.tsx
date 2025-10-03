@@ -52,3 +52,11 @@ export function getFirstHash(url: string): string {
    const hashPart = url.substring(hashIndex); // ambil dari #
    return hashPart.split("&")[0];
 }
+
+export const getYearOptions = () => {
+   const currentYear = new Date().getFullYear();
+   return Array.from({ length: 10 }, (_, i) => ({
+      label: (currentYear - i).toString(),
+      value: (currentYear - i).toString(),
+   }));
+};

@@ -49,7 +49,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       enableSorting: true,
       cell: ({ row: { original } }) => (
          <Tooltip>
-            <TooltipTrigger>{getValue(original, "nama_kategori")}</TooltipTrigger>
+            <TooltipTrigger className="text-start">{getValue(original, "nama_kategori")}</TooltipTrigger>
             <TooltipContent>{getValue(original, "kode_kategori")}</TooltipContent>
          </Tooltip>
       ),
@@ -58,6 +58,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       accessorKey: "unit_satuan",
       header: "unit satuan",
       enableSorting: true,
+      meta: { className: "text-center" },
       cell: ({ row: { original } }) => (
          <Tooltip>
             <TooltipTrigger>{getValue(original, "nama_unit_satuan")}</TooltipTrigger>

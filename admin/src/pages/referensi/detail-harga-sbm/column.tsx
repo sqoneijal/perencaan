@@ -5,7 +5,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { getValue, toRupiah } from "@/helpers/init";
 import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Eye, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 import moment from "moment";
 import React from "react";
 import type { NavigateFunction } from "react-router";
@@ -39,13 +39,10 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
                   url={`/referensi/detail-harga-sbm/${getValue(original, "id")}`}
                   refetchKey={["referensi", "detail-harga-sbm", limit, offset]}
                />
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/referensi/detail-harga-sbm/${getValue(original, "id")}`)}>
-                  <Eye />
-               </Button>
             </>
          );
       },
-      meta: { className: "text-start w-[150px]" },
+      meta: { className: "text-start w-[100px]" },
    },
    {
       accessorKey: "kode_standar_biaya",
