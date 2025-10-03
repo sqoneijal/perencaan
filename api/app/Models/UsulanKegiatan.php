@@ -4,6 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
+use phpseclib3\Net\SFTP;
 
 class UsulanKegiatan extends Model
 {
@@ -13,6 +14,40 @@ class UsulanKegiatan extends Model
       try {
          $this->db->table('tb_usulan_kegiatan')->where('id', $id)->delete();
          $this->db->table('tb_rab_detail')->where('id_usulan', $id)->delete();
+         return ['status' => true, 'message' => 'Data berhasil dihapus.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function deleteDokumen(int $id): array
+   {
+      try {
+         $table = $this->db->table('tb_dokumen_pendukung');
+         $table->select('file_dokumen');
+         $table->where('id', $id);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $get->freeResult();
+
+         if (isset($data) && !empty($data['file_dokumen'])) {
+            // Connect to SFTP server
+            $sftp = new SFTP(env('CDN_HOST'));
+            if (!$sftp->login(env('CDN_USER'), env('CDN_PASS'))) {
+               return ['status' => false, 'message' => 'SFTP login failed.'];
+            }
+
+            // Delete the file on the server
+            $filePath = '/usr/share/nginx/cdn/plankepentok/' . $data['file_dokumen'];
+            if ($sftp->file_exists($filePath)) {
+               $sftp->delete($filePath);
+            }
+         }
+
+         // Delete the record from the database
+         $this->db->table('tb_dokumen_pendukung')->where('id', $id)->delete();
+
          return ['status' => true, 'message' => 'Data berhasil dihapus.'];
       } catch (\Exception $e) {
          return ['status' => false, 'message' => $e->getMessage()];
@@ -108,6 +143,8 @@ class UsulanKegiatan extends Model
          $table->where('id_usulan', $id_usulan_kegiatan);
          $table->orderBy('uploaded', 'desc');
 
+         $clone = clone $table;
+
          $get = $table->get();
          $result = $get->getResultArray();
          $fieldNames = $get->getFieldNames();
@@ -120,7 +157,7 @@ class UsulanKegiatan extends Model
             }
          }
 
-         return ['status' => true, 'data' => $response];
+         return ['status' => true, 'results' => $response, 'total' => $clone->countAllResults()];
       } catch (\Exception $e) {
          return ['status' => false, 'message' => $e->getMessage()];
       }

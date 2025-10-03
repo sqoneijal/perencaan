@@ -9,8 +9,13 @@ import { post } from "@/lib/api";
 import { queryClient } from "@/lib/queryClient";
 import type { Lists } from "@/types/init";
 
+import ConfirmDialog from "@/components/confirm-delete";
+import Table from "@/components/table";
+import { useApiQuery } from "@/lib/useApi";
+import type { ColumnDef } from "@tanstack/react-table";
+import { Eye, Pencil } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams, type NavigateFunction } from "react-router";
 import { toast } from "sonner";
 import LoadingElement from "./loading-element";
 
@@ -52,10 +57,11 @@ function ActionDialog() {
          });
          data.append("user_modified", user?.preferred_username || "");
          const res = await post(`/usulan-kegiatan/${idUsulanKegiatanNum}/dokumen/actions`, data);
-         const responseData = JSON.parse(res.data as unknown as string);
+         const responseData = res.data;
 
          setErrors(responseData?.errors ?? {});
          if (responseData?.status) {
+            setOpen(false);
             queryClient.refetchQueries({
                queryKey: ["usulan-kegiatan", idUsulanKegiatanNum, "dokumen", limit, offset],
             });
@@ -109,9 +115,57 @@ function ActionDialog() {
    );
 }
 
+type ColumnDeps = { navigate: NavigateFunction; limit: number; offset: number; id_usulan_kegiatan: number };
+
+const getColumns = ({ navigate, limit, offset, id_usulan_kegiatan: idUsulanKegiatanNum }: ColumnDeps): Array<ColumnDef<Lists>> => [
+   {
+      accessorKey: "aksi",
+      header: "",
+      cell: ({ row: { original } }) => {
+         return (
+            <>
+               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/delete/rab/${getValue(original, "id")}`)}>
+                  <Pencil />
+               </Button>
+               <ConfirmDialog
+                  url={`/usulan-kegiatan/actions/dokumen/${getValue(original, "id")}`}
+                  refetchKey={[["usulan-kegiatan", idUsulanKegiatanNum, "dokumen", limit, offset]]}
+               />
+               <Button variant="ghost" size="sm" onClick={() => open(getValue(original, "path_file"), "_blank")}>
+                  <Eye />
+               </Button>
+            </>
+         );
+      },
+      meta: { className: "text-start w-[150px]" },
+   },
+   {
+      accessorKey: "nama_dokumen",
+      header: "nama dokumen",
+      enableSorting: true,
+   },
+   {
+      accessorKey: "tipe_dokumen",
+      header: "tipe dokumen",
+      enableSorting: true,
+   },
+   {
+      accessorKey: "file_dokumen",
+      header: "file dokumen",
+      enableSorting: true,
+   },
+];
+
 export default function Page() {
    const { setButton } = useHeaderButton();
    const { setOpen } = useDialog();
+   const { pagination } = useTablePagination();
+   const { id_usulan_kegiatan } = useParams();
+
+   const idUsulanKegiatanNum = id_usulan_kegiatan ? Number(id_usulan_kegiatan) : 0;
+   const limit = pagination.pageSize;
+   const offset = pagination.pageSize * pagination.pageIndex;
+   const navigate = useNavigate();
 
    useEffect(() => {
       setButton(
@@ -125,11 +179,28 @@ export default function Page() {
       };
    }, [setButton, setOpen]);
 
+   const { data, isLoading, error } = useApiQuery<{
+      results: Array<Lists>;
+      total: number;
+   }>({
+      queryKey: ["usulan-kegiatan", idUsulanKegiatanNum, "dokumen", limit, offset],
+      url: `/usulan-kegiatan/${idUsulanKegiatanNum}/dokumen`,
+      params: { limit, offset },
+   });
+
+   if (error) return toast.error(error?.message);
+
    return (
-      <div className="p-6 text-center">
+      <>
          <Suspense fallback={<LoadingElement />}>
             <ActionDialog />
          </Suspense>
-      </div>
+         <Table
+            columns={getColumns({ navigate, limit, offset, id_usulan_kegiatan: idUsulanKegiatanNum })}
+            data={Array.isArray(data?.results) ? data?.results : []}
+            total={data?.total ?? 0}
+            isLoading={isLoading}
+         />
+      </>
    );
 }
