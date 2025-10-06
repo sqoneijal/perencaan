@@ -26,10 +26,14 @@ const getColumns = ({ navigate, limit, offset, submitUsulan }: ColumnDeps): Arra
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
-                  <Pencil />
-               </Button>
-               <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
+               {getValue(original, "status_usulan") === "draft" && (
+                  <>
+                     <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
+                        <Pencil />
+                     </Button>
+                     <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
+                  </>
+               )}
                <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/${getValue(original, "id")}#informasi-dasar`)}>
                   <Eye />
                </Button>
