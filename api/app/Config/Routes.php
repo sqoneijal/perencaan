@@ -84,8 +84,8 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
       });
 
       $routes->group('actions', function (RouteCollection $routes) {
+         $routes->get('(:num)', 'UsulanKegiatan::getDataEdit/$1');
          $routes->post('/', 'UsulanKegiatan::submit');
-
          $routes->delete('rab/(:num)', 'UsulanKegiatan::deleteRAB/$1');
          $routes->delete('dokumen/(:num)', 'UsulanKegiatan::deleteDokumen/$1');
       });

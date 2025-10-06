@@ -1,7 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { getFirstHash } from "@/helpers/init";
 
-import { lazy, Suspense } from "react";
+import { Button } from "@/components/ui/button";
+import { useHeaderButton } from "@/hooks/store";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import { loadingElement } from "./helper";
 
@@ -15,8 +17,23 @@ const Iku = lazy(() => import("./iku/page"));
 const Dokumen = lazy(() => import("./dokumen/page"));
 
 export default function Page() {
+   const { setButton } = useHeaderButton();
+
    const location = useLocation();
    const navigate = useNavigate();
+
+   const [currentTab, setCurrentTab] = useState(getFirstHash(location.hash));
+
+   useEffect(() => {
+      setButton(
+         <Button variant="outline" size="sm" onClick={() => navigate("/usulan-kegiatan")}>
+            Kembali
+         </Button>
+      );
+      return () => {
+         setButton(<div />);
+      };
+   }, [setButton, navigate]);
 
    const tabsMenu = [
       { value: "#informasi-dasar", label: "Informasi Dasar", element: <InformasiDasar /> },
@@ -29,10 +46,15 @@ export default function Page() {
       { value: "#dokumen", label: "Dokumen", element: <Dokumen /> },
    ];
 
+   const handleTabChange = (value: string) => {
+      setCurrentTab(value);
+      navigate(value);
+   };
+
    return (
       <div className="overflow-hidden rounded-lg border shadow-sm p-4">
-         <Tabs defaultValue={getFirstHash(location.hash)}>
-            <TabsList className="grid w-full grid-cols-4 lg:grid-cols-8">
+         <Tabs value={currentTab} onValueChange={handleTabChange}>
+            <TabsList>
                {tabsMenu.map((tab) => (
                   <TabsTrigger key={tab.value} value={tab.value} onClick={() => navigate(tab.value)}>
                      {tab.label}

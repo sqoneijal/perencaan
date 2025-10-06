@@ -25,8 +25,8 @@ export default function LatarBelakang() {
    const dataArray = data?.data ?? {};
 
    return (
-      <div className="bg-gray-50 p-4 rounded-md">
-         <p className="text-gray-900 whitespace-pre-wrap">{getValue(dataArray, "latar_belakang")}</p>
+      <div className="row">
+         <div className="col-12">{getValue(dataArray, "latar_belakang")}</div>
       </div>
    );
 }

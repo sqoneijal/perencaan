@@ -1,4 +1,4 @@
-import { getValue, toRupiah } from "@/helpers/init";
+import { detailLabel, getValue, toRupiah } from "@/helpers/init";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
 import { useParams } from "react-router";
@@ -25,14 +25,10 @@ export default function Anggaran() {
    const dataArray = data?.data ?? {};
 
    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Total Anggaran</div>
-            <p className="mt-1 text-gray-900">{toRupiah(getValue(dataArray, "total_anggaran"))}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Rencana Total Anggaran</div>
-            <p className="mt-1 text-gray-900">{toRupiah(getValue(dataArray, "rencanca_total_anggaran"))}</p>
+      <div className="row">
+         <div className="col-12 col-md-6">{detailLabel({ label: "Total Anggaran", value: toRupiah(getValue(dataArray, "total_anggaran")) })}</div>
+         <div className="col-12 col-md-6">
+            {detailLabel({ label: "Rencana Total Anggaran", value: toRupiah(getValue(dataArray, "rencanca_total_anggaran")) })}
          </div>
       </div>
    );

@@ -10,10 +10,18 @@ use phpseclib3\Net\SFTP;
 
 class UsulanKegiatan extends BaseController
 {
+
    public function index(): object
    {
       $model = new Model();
       $data = $model->getData($this->request->getGet());
+      return $this->respond($data);
+   }
+
+   public function getDataEdit(int $id): object
+   {
+      $model = new Model();
+      $data = $model->getDataEdit($id);
       return $this->respond($data);
    }
 

@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import type { Lists } from "@/types/init";
 import { Loader2Icon } from "lucide-react";
 
@@ -59,4 +60,33 @@ export const getYearOptions = () => {
       label: (currentYear - i).toString(),
       value: (currentYear - i).toString(),
    }));
+};
+
+export const getStatusUsulanKegiatan = (status?: string) => {
+   const obj = {
+      draft: "Draft",
+      submitted: "Submitted",
+      verified: "Verified",
+      rejected: "Rejected",
+   };
+
+   const colorMap = {
+      draft: "bg-gray-500",
+      submitted: "bg-blue-500",
+      verified: "bg-green-500",
+      rejected: "bg-red-500",
+   };
+
+   return status && status in obj ? (
+      <Badge className={`${colorMap[status as keyof typeof colorMap]} text-white`}>{obj[status as keyof typeof obj]}</Badge>
+   ) : null;
+};
+
+export const detailLabel = ({ label, value }: { label?: string; value?: React.ReactNode }) => {
+   return (
+      <div className="mt-2">
+         <div className="block text-sm font-medium text-gray-600">{label}</div>
+         <p className="mt-1 text-gray-900">{value}</p>
+      </div>
+   );
 };

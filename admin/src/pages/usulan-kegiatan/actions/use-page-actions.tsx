@@ -3,18 +3,17 @@ import { useCariUnitPegawai } from "@/helpers/simpeg";
 import { UseAuth } from "@/hooks/auth-context";
 import { useHeaderButton, useTablePagination } from "@/hooks/store";
 import { queryClient } from "@/lib/queryClient";
-import { usePostMutation } from "@/lib/useApi";
-import type { ApiResponse, Lists } from "@/types/init";
+import { useApiQuery, usePostMutation } from "@/lib/useApi";
+import type { Lists } from "@/types/init";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
-
-type UsulanKegiatanResponse = ApiResponse<{ errors: Lists }> & { id_usulan_kegiatan?: number };
 
 export function usePageActions() {
    const { setButton } = useHeaderButton();
    const { pagination } = useTablePagination();
    const { user } = UseAuth();
+   const { id_usulan_kegiatan } = useParams();
 
    const navigate = useNavigate();
 
@@ -49,12 +48,21 @@ export function usePageActions() {
             onSuccess: (data) => {
                setErrors(data?.errors ?? {});
                if (data?.status) {
+                  toast.success(data?.message);
+
                   queryClient.refetchQueries({
                      queryKey: ["usulan-kegiatan", pagination.pageSize, pagination.pageIndex * pagination.pageSize],
                   });
-                  toast.success(data?.message);
-                  const response = data as UsulanKegiatanResponse;
-                  navigate(`/usulan-kegiatan/${response.id_usulan_kegiatan}#informasi-dasar`);
+
+                  if (id_usulan_kegiatan) {
+                     queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "informasi-dasar"] });
+                     queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "anggaran"] });
+                     queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "latar-belakang"] });
+
+                     navigate("/usulan-kegiatan");
+                  } else {
+                     navigate(`/usulan-kegiatan/${id_usulan_kegiatan}#informasi-dasar`);
+                  }
                   return;
                }
 
@@ -67,5 +75,18 @@ export function usePageActions() {
       );
    };
 
-   return { formData, setFormData, errors, setErrors, handleSubmit, pegawaiData, isLoading, submit };
+   const { data, isLoading: isLoadingEdit } = useApiQuery<Lists>({
+      queryKey: ["usulan-kegiatan", "actions", id_usulan_kegiatan],
+      url: `/usulan-kegiatan/actions/${id_usulan_kegiatan}`,
+      options: { enabled: !!id_usulan_kegiatan },
+   });
+
+   useEffect(() => {
+      if (!isLoadingEdit && data?.data && id_usulan_kegiatan) {
+         setFormData(data?.data);
+      }
+      return () => {};
+   }, [isLoadingEdit, data, id_usulan_kegiatan]);
+
+   return { formData, setFormData, errors, setErrors, handleSubmit, pegawaiData, isLoading, submit, isLoadingEdit };
 }

@@ -9,6 +9,31 @@ use phpseclib3\Net\SFTP;
 class UsulanKegiatan extends Model
 {
 
+   public function getDataEdit(int $id): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan tuk');
+         $table->select('tuk.id, tuk.kode, tuk.nama, tuk.latar_belakang, tuk.tujuan, tuk.sasaran, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.id_unit_pengusul, tuk.rencanca_total_anggaran');
+         $table->where('tuk.id', $id);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function deleteIKU(int $id_usulan, int $id): array
    {
       try {

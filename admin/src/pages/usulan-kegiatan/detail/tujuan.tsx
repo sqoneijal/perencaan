@@ -25,8 +25,8 @@ export default function Tujuan() {
    const dataArray = data?.data ?? {};
 
    return (
-      <div className="bg-gray-50 p-4 rounded-md">
-         <p className="text-gray-900 whitespace-pre-wrap">{getValue(dataArray, "tujuan")}</p>
+      <div className="row">
+         <div className="col-12">{getValue(dataArray, "tujuan")}</div>
       </div>
    );
 }

@@ -1,4 +1,4 @@
-import { getValue, loadingSpinner } from "@/helpers/init";
+import { detailLabel, getStatusUsulanKegiatan, getValue } from "@/helpers/init";
 import { usePegawai, useUnitKerja } from "@/helpers/simpeg";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
@@ -35,48 +35,22 @@ export default function InformasiDasar() {
    const dataArray = data?.data ?? {};
 
    return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Kode</div>
-            <p className="mt-1 text-gray-900">{getValue(dataArray, "kode")}</p>
+      <div className="row">
+         <div className="col-12 col-md-6">
+            {detailLabel({ label: "Kode", value: getValue(dataArray, "kode") })}
+            {detailLabel({ label: "Tanggal Mulai", value: formatDate(getValue(dataArray, "tanggal_mulai")) })}
+            {detailLabel({ label: "Tempat Pelaksanaan", value: getValue(dataArray, "tempat_pelaksanaan") })}
+            {detailLabel({ label: "Tanggal Pengajuan", value: formatDate(getValue(dataArray, "tanggal_pengajuan")) })}
+            {detailLabel({
+               label: "Operator Input",
+               value: isLoadingOperator ? "Loading..." : `${getValue(dataArray, "operator_input")} - ${getValue(operator, "nama")}`,
+            })}
          </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Nama</div>
-            <p className="mt-1 text-gray-900">{getValue(dataArray, "nama")}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Tanggal Mulai</div>
-            <p className="mt-1 text-gray-900">{formatDate(getValue(dataArray, "tanggal_mulai"))}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Tanggal Selesai</div>
-            <p className="mt-1 text-gray-900">{formatDate(getValue(dataArray, "tanggal_selesai"))}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Tempat Pelaksanaan</div>
-            <p className="mt-1 text-gray-900">{getValue(dataArray, "tempat_pelaksanaan")}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Status Usulan</div>
-            <p className="mt-1 text-gray-900">{getValue(dataArray, "status_usulan")}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Tanggal Pengajuan</div>
-            <p className="mt-1 text-gray-900">{formatDate(getValue(dataArray, "tanggal_pengajuan"))}</p>
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Unit Pengusul</div>
-            {isLoadingUnitKerja && loadingSpinner()}
-            {!isLoadingUnitKerja && <p className="mt-1 text-gray-900">{unitKerja}</p>}
-         </div>
-         <div>
-            <div className="block text-sm font-medium text-gray-600">Operator Input</div>
-            {isLoadingOperator && loadingSpinner()}
-            {!isLoadingOperator && (
-               <p className="mt-1 text-gray-900">
-                  {getValue(dataArray, "operator_input")} - {getValue(operator, "nama")}
-               </p>
-            )}
+         <div className="col-12 col-md-6">
+            {detailLabel({ label: "Nama", value: getValue(dataArray, "nama") })}
+            {detailLabel({ label: "Tanggal Selesai", value: formatDate(getValue(dataArray, "tanggal_selesai")) })}
+            {detailLabel({ label: "Status Usulan", value: getStatusUsulanKegiatan(getValue(dataArray, "status_usulan")) })}
+            {detailLabel({ label: "Unit Pengusul", value: isLoadingUnitKerja ? "Loading..." : unitKerja })}
          </div>
       </div>
    );

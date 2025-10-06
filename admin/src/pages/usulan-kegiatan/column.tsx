@@ -1,6 +1,6 @@
 import ConfirmDialog from "@/components/confirm-delete";
 import { Button } from "@/components/ui/button";
-import { getValue, toRupiah } from "@/helpers/init";
+import { getStatusUsulanKegiatan, getValue, toRupiah } from "@/helpers/init";
 import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye, Pencil } from "lucide-react";
@@ -16,7 +16,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/referensi/unit-satuan/actions/${getValue(original, "id")}`)}>
+               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
                <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
@@ -61,6 +61,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       accessorKey: "status_usulan",
       header: "status",
       enableSorting: true,
+      cell: ({ row: { original } }) => getStatusUsulanKegiatan(getValue(original, "status_usulan")),
    },
 ];
 export { getColumns };
