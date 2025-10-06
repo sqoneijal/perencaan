@@ -1,4 +1,4 @@
-import type { KeycloakProfile } from "keycloak-js";
+import type { KeycloakUserInfo } from "@/types/keycloak-user";
 import Keycloak from "keycloak-js";
 
 const keycloak = new Keycloak({
@@ -7,7 +7,7 @@ const keycloak = new Keycloak({
    clientId: import.meta.env.VITE_KEYCLOAK_CLIENT_ID,
 });
 
-export const initKeycloak = async (): Promise<{ keycloak: Keycloak; user: KeycloakProfile } | null> => {
+export const initKeycloak = async (): Promise<{ keycloak: Keycloak; user: KeycloakUserInfo } | null> => {
    if (typeof window === "undefined" || !window.crypto?.subtle) {
       console.warn("Web Crypto API not available — Keycloak not initialized.");
       return null;
@@ -29,8 +29,7 @@ export const initKeycloak = async (): Promise<{ keycloak: Keycloak; user: Keyclo
    }
 };
 
-export const handleLogout = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-   e.preventDefault();
+export const handleLogout = () => {
    if (keycloak?.logout) {
       keycloak.logout({
          redirectUri: import.meta.env.VITE_API_BASE_URL,

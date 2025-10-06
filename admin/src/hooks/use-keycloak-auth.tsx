@@ -1,11 +1,11 @@
-import type { KeycloakProfile } from "keycloak-js";
+import type { KeycloakUserInfo } from "@/types/keycloak-user";
 import Keycloak from "keycloak-js";
 import { useCallback, useEffect, useState } from "react";
 import { initKeycloak } from "./keycloak";
 
 interface AuthState {
    keycloak: Keycloak | null;
-   user: KeycloakProfile | null;
+   user: KeycloakUserInfo | null;
    initialized: boolean;
    token: string | null;
    tokenExpiresAt: number | null;

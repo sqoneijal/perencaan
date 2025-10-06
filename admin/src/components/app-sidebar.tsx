@@ -2,6 +2,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import {
    Sidebar,
    SidebarContent,
+   SidebarFooter,
    SidebarGroup,
    SidebarGroupContent,
    SidebarHeader,
@@ -11,8 +12,12 @@ import {
    SidebarMenuSub,
    SidebarRail,
 } from "@/components/ui/sidebar";
+import { loadingSpinner } from "@/helpers/init";
 import { BookMarked, ChevronRight, CircleGauge, ListCheck, NotepadText, SquarePercent, TicketsPlane } from "lucide-react";
+import { lazy, Suspense } from "react";
 import { Link, useLocation } from "react-router";
+
+const NavUser = lazy(() => import("./nav-user"));
 
 type MenuItem = {
    label: string;
@@ -81,6 +86,11 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                </SidebarGroupContent>
             </SidebarGroup>
          </SidebarContent>
+         <SidebarFooter>
+            <Suspense fallback={loadingSpinner()}>
+               <NavUser />
+            </Suspense>
+         </SidebarFooter>
          <SidebarRail />
       </Sidebar>
    );

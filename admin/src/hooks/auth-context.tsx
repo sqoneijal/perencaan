@@ -1,11 +1,11 @@
 import { useKeycloakAuth } from "@/hooks/use-keycloak-auth";
-import type { KeycloakProfile } from "keycloak-js";
+import type { KeycloakUserInfo } from "@/types/keycloak-user";
 import Keycloak from "keycloak-js";
 import { createContext, type ReactNode, useContext } from "react";
 
 interface AuthContextProps {
    keycloak: Keycloak | null;
-   user: KeycloakProfile | null;
+   user: KeycloakUserInfo | null;
    token: string | null;
    tokenExpiresAt: number | null;
    initialized: boolean;
