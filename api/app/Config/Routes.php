@@ -102,4 +102,22 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          $routes->post('/', 'MasterIKU::submit');
       });
    });
+
+   $routes->group('verifikasi-usulan', ['namespace' => 'App\Controllers\VerifikasiUsulan'], function (RouteCollection $routes) {
+      $routes->group('pengajuan', function (RouteCollection $routes) {
+         $routes->get('/', 'Pengajuan::index');
+
+         $routes->group('(:num)', function (RouteCollection $routes) {
+            $routes->get('informasi-dasar', 'Pengajuan::getInformasiDasar/$1');
+            $routes->get('anggaran', 'Pengajuan::getAnggaran/$1');
+            $routes->get('latar-belakang', 'Pengajuan::getLatarBelakang/$1');
+            $routes->get('tujuan', 'Pengajuan::getTujuan/$1');
+            $routes->get('sasaran', 'Pengajuan::getSasaran/$1');
+            $routes->get('rab', 'Pengajuan::getRAB/$1');
+            $routes->get('iku', 'Pengajuan::getIKU/$1');
+            $routes->get('dokumen', 'Pengajuan::getDokumen/$1');
+            $routes->post('perbaiki', 'Pengajuan::submitPerbaiki/$1');
+         });
+      });
+   });
 });

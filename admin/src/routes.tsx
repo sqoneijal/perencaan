@@ -23,6 +23,11 @@ const UsulanKegiatanActionsDetail = lazy(() => import("@/pages/usulan-kegiatan/d
 const MasterIKU = lazy(() => import("@/pages/master-iku/page"));
 const MasterIKUActions = lazy(() => import("@/pages/master-iku/actions/page"));
 
+const VerifikasiUsulanPengajuan = lazy(() => import("@/pages/verifikasi-usulan/pengajuan/page"));
+const VerifikasiUsulanPengajuanDetail = lazy(() => import("@/pages/verifikasi-usulan/pengajuan/detail/page"));
+
+const VerifikasiUsulanPerbaikan = lazy(() => import("@/pages/verifikasi-usulan/perbaikan/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -44,6 +49,9 @@ const route_path = [
    { key: v4(), path: "/master-iku", element: <MasterIKU /> },
    { key: v4(), path: "/master-iku/actions", element: <MasterIKUActions /> },
    { key: v4(), path: "/master-iku/actions/:id_iku_master", element: <MasterIKUActions /> },
+   { key: v4(), path: "/verifikasi-usulan/pengajuan", element: <VerifikasiUsulanPengajuan /> },
+   { key: v4(), path: "/verifikasi-usulan/pengajuan/:id_usulan_kegiatan", element: <VerifikasiUsulanPengajuanDetail /> },
+   { key: v4(), path: "/verifikasi-usulan/perbaikan", element: <VerifikasiUsulanPerbaikan /> },
 ];
 
 export default function Routes() {

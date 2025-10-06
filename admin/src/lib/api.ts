@@ -12,6 +12,7 @@ export interface ApiResponse<T = unknown> {
    errors?: Lists;
    status: boolean;
    code?: number;
+   content?: Lists;
 }
 
 const MAX_RETRY = 3;
