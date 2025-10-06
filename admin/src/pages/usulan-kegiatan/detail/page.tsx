@@ -1,10 +1,12 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { getFirstHash } from "@/helpers/init";
+import { getFirstHash, loadingSpinner } from "@/helpers/init";
 
-import { Button } from "@/components/ui/button";
-import { useHeaderButton } from "@/hooks/store";
+import { useStatusUsulanKegiatan } from "@/hooks/store";
+import { useApiQuery } from "@/lib/useApi";
+import type { Lists } from "@/types/init";
 import { lazy, Suspense, useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
+import { toast } from "sonner";
 import { loadingElement } from "./helper";
 
 const InformasiDasar = lazy(() => import("./informasi-dasar"));
@@ -15,25 +17,16 @@ const Sasaran = lazy(() => import("./sasaran"));
 const Rab = lazy(() => import("./rab/page"));
 const Iku = lazy(() => import("./iku/page"));
 const Dokumen = lazy(() => import("./dokumen/page"));
+const Informasi = lazy(() => import("./informasi"));
 
 export default function Page() {
-   const { setButton } = useHeaderButton();
-
    const location = useLocation();
    const navigate = useNavigate();
 
-   const [currentTab, setCurrentTab] = useState(getFirstHash(location.hash));
+   const { id_usulan_kegiatan } = useParams();
+   const { status, setStatus } = useStatusUsulanKegiatan();
 
-   useEffect(() => {
-      setButton(
-         <Button variant="outline" size="sm" onClick={() => navigate("/usulan-kegiatan")}>
-            Kembali
-         </Button>
-      );
-      return () => {
-         setButton(<div />);
-      };
-   }, [setButton, navigate]);
+   const [currentTab, setCurrentTab] = useState(getFirstHash(location.hash));
 
    const tabsMenu = [
       { value: "#informasi-dasar", label: "Informasi Dasar", element: <InformasiDasar /> },
@@ -51,8 +44,39 @@ export default function Page() {
       navigate(value);
    };
 
+   const { data, isLoading, error } = useApiQuery<Lists>({
+      queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "status-usulan"],
+      url: `/usulan-kegiatan/${id_usulan_kegiatan}/status-usulan`,
+   });
+
+   useEffect(() => {
+      if (!isLoading && data?.data && id_usulan_kegiatan) {
+         setStatus(data?.data?.status_usulan ?? "");
+      }
+      return () => {};
+   }, [data, isLoading, setStatus, id_usulan_kegiatan]);
+
+   if (isLoading)
+      return (
+         <div className="min-h-screen flex items-center justify-center from-slate-50 to-slate-100">
+            <div className="text-center">
+               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+               <p className="text-gray-600 font-medium">Memuat data...</p>
+            </div>
+         </div>
+      );
+
+   if (error) toast.error(error?.message);
+
    return (
       <div className="overflow-hidden rounded-lg border shadow-sm p-4">
+         {status !== "draft" && (
+            <Suspense fallback={loadingSpinner()}>
+               <div className="mb-2">
+                  <Informasi status={status ? (status as "submitted" | "verified" | "rejected") : undefined} />
+               </div>
+            </Suspense>
+         )}
          <Tabs value={currentTab} onValueChange={handleTabChange}>
             <TabsList>
                {tabsMenu.map((tab) => (

@@ -25,6 +25,13 @@ class UsulanKegiatan extends BaseController
       return $this->respond($data);
    }
 
+   public function getStatusUsulan(int $id): object
+   {
+      $model = new Model();
+      $data = $model->getStatusUsulan($id);
+      return $this->respond($data);
+   }
+
    public function getDataEdit(int $id): object
    {
       $model = new Model();

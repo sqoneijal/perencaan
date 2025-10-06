@@ -20,7 +20,14 @@ export function usePageActions() {
    const [formData, setFormData] = useState<Lists>({});
    const [errors, setErrors] = useState<Lists>({});
 
-   const submit = usePostMutation<{ errors: Lists }>("/usulan-kegiatan/actions");
+   interface SubmitResponse {
+      status: boolean;
+      message: string;
+      errors?: Lists;
+      id_usulan_kegiatan?: string | number;
+   }
+
+   const submit = usePostMutation<SubmitResponse>("/usulan-kegiatan/actions");
 
    const { data: pegawaiData, isLoading } = useCariUnitPegawai(user?.preferred_username);
 
@@ -61,7 +68,8 @@ export function usePageActions() {
 
                      navigate("/usulan-kegiatan");
                   } else {
-                     navigate(`/usulan-kegiatan/${id_usulan_kegiatan}#informasi-dasar`);
+                     // @ts-expect-error API returns flat response
+                     navigate(`/usulan-kegiatan/${data.id_usulan_kegiatan}#informasi-dasar`);
                   }
                   return;
                }

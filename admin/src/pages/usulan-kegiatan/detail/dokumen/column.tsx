@@ -5,23 +5,25 @@ import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Eye } from "lucide-react";
 
-type ColumnDeps = { limit: number; offset: number };
+type ColumnDeps = { limit: number; offset: number; status_usulan?: string };
 
-const getColumns = ({ limit, offset }: ColumnDeps): Array<ColumnDef<Lists>> => [
+const getColumns = ({ limit, offset, status_usulan }: ColumnDeps): Array<ColumnDef<Lists>> => [
    {
       accessorKey: "aksi",
       header: "",
       cell: ({ row: { original } }) => {
          return (
-            <>
-               <ConfirmDialog
-                  url={`/usulan-kegiatan/actions/dokumen/${getValue(original, "id")}`}
-                  refetchKey={[["usulan-kegiatan", getValue(original, "id_usulan"), "dokumen", limit, offset]]}
-               />
-               <Button variant="ghost" size="sm" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
-                  <Eye />
-               </Button>
-            </>
+            status_usulan === "draft" && (
+               <>
+                  <ConfirmDialog
+                     url={`/usulan-kegiatan/actions/dokumen/${getValue(original, "id")}`}
+                     refetchKey={[["usulan-kegiatan", getValue(original, "id_usulan"), "dokumen", limit, offset]]}
+                  />
+                  <Button variant="ghost" size="sm" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
+                     <Eye />
+                  </Button>
+               </>
+            )
          );
       },
       meta: { className: "text-start w-[150px]" },

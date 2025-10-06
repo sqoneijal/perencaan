@@ -7,27 +7,29 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { Pencil } from "lucide-react";
 import type { NavigateFunction } from "react-router";
 
-export type ColumnDeps = { navigate: NavigateFunction; limit: number; offset: number };
+export type ColumnDeps = { navigate: NavigateFunction; limit: number; offset: number; status_usulan?: string };
 
-export const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Lists>> => [
+export const getColumns = ({ navigate, limit, offset, status_usulan }: ColumnDeps): Array<ColumnDef<Lists>> => [
    {
       accessorKey: "aksi",
       header: "",
       cell: ({ row: { original } }) => {
          return (
-            <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`${getValue(original, "id")}`)}>
-                  <Pencil />
-               </Button>
-               <ConfirmDialog
-                  url={`/usulan-kegiatan/actions/rab/${getValue(original, "id")}`}
-                  refetchKey={[
-                     ["usulan-kegiatan", getValue(original, "id_usulan"), "rab", limit, offset],
-                     ["usulan-kegiatan", getValue(original, "id_usulan"), "anggaran"],
-                     ["usulan-kegiatan", limit, offset],
-                  ]}
-               />
-            </>
+            status_usulan === "draft" && (
+               <>
+                  <Button variant="ghost" size="sm" onClick={() => navigate(`${getValue(original, "id")}`)}>
+                     <Pencil />
+                  </Button>
+                  <ConfirmDialog
+                     url={`/usulan-kegiatan/actions/rab/${getValue(original, "id")}`}
+                     refetchKey={[
+                        ["usulan-kegiatan", getValue(original, "id_usulan"), "rab", limit, offset],
+                        ["usulan-kegiatan", getValue(original, "id_usulan"), "anggaran"],
+                        ["usulan-kegiatan", limit, offset],
+                     ]}
+                  />
+               </>
+            )
          );
       },
       meta: { className: "text-start w-[100px]" },

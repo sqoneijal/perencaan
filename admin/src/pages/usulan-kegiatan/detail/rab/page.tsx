@@ -1,6 +1,6 @@
 import Table from "@/components/table";
 import { Button } from "@/components/ui/button";
-import { useDialog, useHeaderButton, useTablePagination } from "@/hooks/store";
+import { useDialog, useHeaderButton, useStatusUsulanKegiatan, useTablePagination } from "@/hooks/store";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
 import { lazy, Suspense, useEffect } from "react";
@@ -10,12 +10,12 @@ import { loadingElement } from "../helper";
 import { getColumns } from "./column";
 
 const DialogAction = lazy(() => import("./dialog-action"));
-
 export default function Page() {
    const { pagination } = useTablePagination();
    const { setButton } = useHeaderButton();
    const { id_usulan_kegiatan } = useParams();
    const { setOpen } = useDialog();
+   const { status } = useStatusUsulanKegiatan();
 
    const limit = pagination.pageSize;
    const offset = pagination.pageSize * pagination.pageIndex;
@@ -31,16 +31,18 @@ export default function Page() {
    });
 
    useEffect(() => {
-      setButton(
-         <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
-            Tambah RAB
-         </Button>
-      );
+      if (status === "draft") {
+         setButton(
+            <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
+               Tambah RAB
+            </Button>
+         );
+      }
 
       return () => {
          setButton(<div />);
       };
-   }, [setButton, setOpen]);
+   }, [setButton, setOpen, status]);
 
    if (error) return toast.error(error?.message);
 
@@ -50,7 +52,7 @@ export default function Page() {
             <DialogAction />
          </Suspense>
          <Table
-            columns={getColumns({ navigate, limit, offset })}
+            columns={getColumns({ navigate, limit, offset, status_usulan: status })}
             data={Array.isArray(data?.results) ? data?.results : []}
             total={data?.total ?? 0}
             isLoading={isLoading}

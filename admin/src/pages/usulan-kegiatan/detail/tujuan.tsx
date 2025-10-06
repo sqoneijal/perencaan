@@ -26,7 +26,7 @@ export default function Tujuan() {
 
    return (
       <div className="row">
-         <div className="col-12">{getValue(dataArray, "tujuan")}</div>
+         <div className="col-12 mt-2">{getValue(dataArray, "tujuan")}</div>
       </div>
    );
 }

@@ -4,7 +4,6 @@ import {
    SidebarContent,
    SidebarGroup,
    SidebarGroupContent,
-   SidebarGroupLabel,
    SidebarHeader,
    SidebarMenu,
    SidebarMenuButton,
@@ -13,13 +12,14 @@ import {
    SidebarRail,
 } from "@/components/ui/sidebar";
 import { BookMarked, ChevronRight, CircleGauge, ListCheck, NotepadText, TicketsPlane } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 
 type MenuItem = {
    label: string;
    icon?: React.ReactNode;
    url: string;
    child?: Array<MenuItem>;
+   isActive?: boolean;
 };
 
 const data: Array<MenuItem> = [
@@ -40,6 +40,8 @@ const data: Array<MenuItem> = [
 ];
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+   const location = useLocation();
+
    return (
       <Sidebar collapsible="offcanvas" {...props}>
          <SidebarHeader>
@@ -61,11 +63,10 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
          </SidebarHeader>
          <SidebarContent>
             <SidebarGroup>
-               <SidebarGroupLabel>Files</SidebarGroupLabel>
                <SidebarGroupContent>
                   <SidebarMenu>
                      {data.map((item, index) => (
-                        <Tree key={index} item={item} />
+                        <Tree key={index} item={item} location={location} />
                      ))}
                   </SidebarMenu>
                </SidebarGroupContent>
@@ -76,11 +77,14 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
    );
 }
 
-function Tree({ item }: Readonly<{ item: MenuItem }>) {
+function Tree({ item, location }: Readonly<{ item: MenuItem; location: ReturnType<typeof useLocation> }>) {
+   const isActive = item.url !== "#" && item.url === location.pathname;
+   const isParentActive = item.child?.some((child) => child.url === location.pathname) || false;
+
    if (!item.child || item.child.length === 0) {
       return (
-         <SidebarMenuItem>
-            <SidebarMenuButton asChild>
+         <SidebarMenuItem data-active={isActive}>
+            <SidebarMenuButton asChild isActive={isActive}>
                <Link to={item.url}>
                   {item.icon}
                   {item.label}
@@ -89,11 +93,12 @@ function Tree({ item }: Readonly<{ item: MenuItem }>) {
          </SidebarMenuItem>
       );
    }
+
    return (
-      <SidebarMenuItem>
-         <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90">
+      <SidebarMenuItem data-active={isParentActive}>
+         <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90" defaultOpen={isParentActive}>
             <CollapsibleTrigger asChild>
-               <SidebarMenuButton asChild>
+               <SidebarMenuButton asChild isActive={isActive}>
                   <Link to={item.url}>
                      {item.icon}
                      {item.label}
@@ -104,7 +109,7 @@ function Tree({ item }: Readonly<{ item: MenuItem }>) {
             <CollapsibleContent>
                <SidebarMenuSub>
                   {item.child.map((subItem, index) => (
-                     <Tree key={index} item={subItem} />
+                     <Tree key={index} item={subItem} location={location} />
                   ))}
                </SidebarMenuSub>
             </CollapsibleContent>

@@ -26,7 +26,7 @@ export default function Sasaran() {
 
    return (
       <div className="row">
-         <div className="col-12">{getValue(dataArray, "sasaran")}</div>
+         <div className="col-12 mt-2">{getValue(dataArray, "sasaran")}</div>
       </div>
    );
 }

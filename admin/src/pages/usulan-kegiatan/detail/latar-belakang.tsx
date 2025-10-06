@@ -26,7 +26,7 @@ export default function LatarBelakang() {
 
    return (
       <div className="row">
-         <div className="col-12">{getValue(dataArray, "latar_belakang")}</div>
+         <div className="col-12 mt-2">{getValue(dataArray, "latar_belakang")}</div>
       </div>
    );
 }

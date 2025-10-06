@@ -9,6 +9,14 @@ export const useDialog = create<{
    setOpen: (status) => set({ open: status }),
 }));
 
+export const useStatusUsulanKegiatan = create<{
+   status: string;
+   setStatus: (status: string) => void;
+}>((set) => ({
+   status: "draft",
+   setStatus: (status) => set({ status }),
+}));
+
 type HeaderButtonStore = {
    button: React.ReactElement;
    setButton: (btn: React.ReactElement) => React.ReactElement;

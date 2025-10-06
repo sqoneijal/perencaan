@@ -1,3 +1,5 @@
+import { getValue } from "@/helpers/init";
+
 export const loadingElement = (
    <div className="flex items-center justify-center from-slate-50 to-slate-100 min-h-[500px]">
       <div className="text-center">
@@ -6,3 +8,10 @@ export const loadingElement = (
       </div>
    </div>
 );
+
+import type { Lists } from "@/types/init";
+
+export const getStatusFromData = (dataArray: Lists): "submitted" | "verified" | "rejected" | undefined => {
+   const statusValue = getValue(dataArray, "status_usulan");
+   return ["submitted", "verified", "rejected"].includes(statusValue) ? (statusValue as "submitted" | "verified" | "rejected") : undefined;
+};

@@ -9,6 +9,31 @@ use phpseclib3\Net\SFTP;
 class UsulanKegiatan extends Model
 {
 
+   public function getStatusUsulan(int $id): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan');
+         $table->select('status_usulan');
+         $table->where('id', $id);
+
+         $get = $table->get();
+         $data = $get->getRowArray();
+         $fieldNames = $get->getFieldNames();
+         $get->freeResult();
+
+         $response = [];
+         if (isset($data)) {
+            foreach ($fieldNames as $field) {
+               $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+            }
+         }
+
+         return ['status' => true, 'data' => $response];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function submitPengajuan(array $post): array
    {
       try {
@@ -238,10 +263,10 @@ class UsulanKegiatan extends Model
    private function getDokumen(int $id_usulan_kegiatan): array
    {
       try {
-         $table = $this->db->table('tb_dokumen_pendukung');
-         $table->select('id, nama_dokumen, tipe_dokumen, path_file, uploaded, modified, user_modified, file_dokumen, id_usulan');
-         $table->where('id_usulan', $id_usulan_kegiatan);
-         $table->orderBy('uploaded', 'desc');
+         $table = $this->db->table('tb_dokumen_pendukung tdp');
+         $table->select('tdp.id, tdp.nama_dokumen, tdp.tipe_dokumen, tdp.path_file, tdp.file_dokumen, tdp.id_usulan');
+         $table->where('tdp.id_usulan', $id_usulan_kegiatan);
+         $table->orderBy('tdp.uploaded', 'desc');
 
          $clone = clone $table;
 
@@ -267,7 +292,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_usulan_kegiatan');
-         $table->select('sasaran');
+         $table->select('sasaran, status_usulan');
          $table->where('id', $id_usulan_kegiatan);
 
          $get = $table->get();
@@ -292,7 +317,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_usulan_kegiatan');
-         $table->select('tujuan');
+         $table->select('tujuan, status_usulan');
          $table->where('id', $id_usulan_kegiatan);
 
          $get = $table->get();
@@ -317,7 +342,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_usulan_kegiatan');
-         $table->select('latar_belakang');
+         $table->select('latar_belakang, status_usulan');
          $table->where('id', $id_usulan_kegiatan);
 
          $get = $table->get();
@@ -342,7 +367,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_usulan_kegiatan');
-         $table->select('total_anggaran, rencanca_total_anggaran');
+         $table->select('total_anggaran, rencanca_total_anggaran, status_usulan');
          $table->where('id', $id_usulan_kegiatan);
 
          $get = $table->get();
