@@ -1,4 +1,3 @@
-import BundledEditor from "@/components/bundle-editor";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -6,9 +5,12 @@ import { btn_loading } from "@/helpers/init";
 import { useDialog, useTablePagination } from "@/hooks/store";
 import { queryClient } from "@/lib/queryClient";
 import { usePostMutation } from "@/lib/useApi";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useNavigate, useParams } from "react-router";
 import { toast } from "sonner";
+import { loadingElementSecond } from "../helpers";
+
+const BundledEditor = lazy(() => import("@/components/bundle-editor"));
 
 function DialogPerbaiki() {
    const { id_usulan_kegiatan } = useParams();
@@ -33,21 +35,23 @@ function DialogPerbaiki() {
                </DialogDescription>
             </DialogHeader>
             <ScrollArea className="w-full max-h-[calc(100vh-200px)] min-h-0">
-               <BundledEditor
-                  value={catatan_perbaikan}
-                  onEditorChange={(content) => setCatatan_perbaikan(content)}
-                  init={{
-                     height: 500,
-                     menubar: false,
-                     plugins: ["advlist", "anchor", "autolink", "help", "image", "link", "lists", "searchreplace", "table", "wordcount"],
-                     toolbar:
-                        "undo redo | blocks | " +
-                        "bold italic forecolor | alignleft aligncenter " +
-                        "alignright alignjustify | bullist numlist outdent indent | " +
-                        "removeformat | help",
-                     content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
-                  }}
-               />
+               <Suspense fallback={loadingElementSecond}>
+                  <BundledEditor
+                     value={catatan_perbaikan}
+                     onEditorChange={(content) => setCatatan_perbaikan(content)}
+                     init={{
+                        height: 500,
+                        menubar: false,
+                        plugins: ["advlist", "anchor", "autolink", "help", "image", "link", "lists", "searchreplace", "table", "wordcount"],
+                        toolbar:
+                           "undo redo | blocks | " +
+                           "bold italic forecolor | alignleft aligncenter " +
+                           "alignright alignjustify | bullist numlist outdent indent | " +
+                           "removeformat | help",
+                        content_style: "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
+                     }}
+                  />
+               </Suspense>
             </ScrollArea>
             <Button
                type="submit"

@@ -119,5 +119,21 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
             $routes->post('perbaiki', 'Pengajuan::submitPerbaiki/$1');
          });
       });
+
+      $routes->group('perbaikan', function (RouteCollection $routes) {
+         $routes->get('/', 'Perbaikan::index');
+
+         $routes->group('(:num)', function (RouteCollection $routes) {
+            $routes->get('informasi-dasar', 'Perbaikan::getInformasiDasar/$1');
+            $routes->get('anggaran', 'Perbaikan::getAnggaran/$1');
+            $routes->get('latar-belakang', 'Perbaikan::getLatarBelakang/$1');
+            $routes->get('tujuan', 'Perbaikan::getTujuan/$1');
+            $routes->get('sasaran', 'Perbaikan::getSasaran/$1');
+            $routes->get('rab', 'Perbaikan::getRAB/$1');
+            $routes->get('iku', 'Perbaikan::getIKU/$1');
+            $routes->get('dokumen', 'Perbaikan::getDokumen/$1');
+            $routes->get('catatan-perbaikan', 'Perbaikan::getCatatanPerbaikan/$1');
+         });
+      });
    });
 });

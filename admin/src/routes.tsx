@@ -27,6 +27,7 @@ const VerifikasiUsulanPengajuan = lazy(() => import("@/pages/verifikasi-usulan/p
 const VerifikasiUsulanPengajuanDetail = lazy(() => import("@/pages/verifikasi-usulan/pengajuan/detail/page"));
 
 const VerifikasiUsulanPerbaikan = lazy(() => import("@/pages/verifikasi-usulan/perbaikan/page"));
+const VerifikasiUsulanPerbaikanDetail = lazy(() => import("@/pages/verifikasi-usulan/perbaikan/detail/page"));
 
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
@@ -52,6 +53,7 @@ const route_path = [
    { key: v4(), path: "/verifikasi-usulan/pengajuan", element: <VerifikasiUsulanPengajuan /> },
    { key: v4(), path: "/verifikasi-usulan/pengajuan/:id_usulan_kegiatan", element: <VerifikasiUsulanPengajuanDetail /> },
    { key: v4(), path: "/verifikasi-usulan/perbaikan", element: <VerifikasiUsulanPerbaikan /> },
+   { key: v4(), path: "/verifikasi-usulan/perbaikan/:id_usulan_kegiatan", element: <VerifikasiUsulanPerbaikanDetail /> },
 ];
 
 export default function Routes() {

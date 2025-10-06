@@ -5,25 +5,8 @@ namespace App\Models\VerifikasiUsulan;
 use CodeIgniter\Database\RawSql;
 use CodeIgniter\Model;
 
-class Pengajuan extends Model
+class Perbaikan extends Model
 {
-
-   public function submitPerbaiki(int $id, array $post): array
-   {
-      try {
-         $table = $this->db->table('tb_usulan_kegiatan');
-         $table->where('id', $id);
-         $table->update([
-            'catatan_perbaikan' => htmlentities($post['catatan_perbaikan']),
-            'user_modified' => $post['user_modified'],
-            'modified' => new RawSql('now()'),
-            'status_usulan' => 'rejected'
-         ]);
-         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
-      } catch (\Exception $e) {
-         return ['status' => false, 'message' => $e->getMessage()];
-      }
-   }
 
    public function getDokumen(int $id, array $params): array
    {
@@ -114,7 +97,32 @@ class Pengajuan extends Model
       $table = $this->db->table('tb_usulan_kegiatan');
       $table->select('sasaran');
       $table->where('id', $id);
-      $table->where('status_usulan', 'submitted');
+      $table->where('status_usulan', 'rejected');
+
+      $get = $table->get();
+      $data = $get->getRowArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      if (isset($data)) {
+         foreach ($fieldNames as $field) {
+            $response[$field] = ($data[$field] ? trim($data[$field]) : (string) $data[$field]);
+         }
+      }
+
+      return [
+         'content' => $response,
+         'status' => !empty($response)
+      ];
+   }
+
+   public function getCatatanPerbaikan(int $id): array
+   {
+      $table = $this->db->table('tb_usulan_kegiatan');
+      $table->select('catatan_perbaikan');
+      $table->where('id', $id);
+      $table->where('status_usulan', 'rejected');
 
       $get = $table->get();
       $data = $get->getRowArray();
@@ -139,7 +147,7 @@ class Pengajuan extends Model
       $table = $this->db->table('tb_usulan_kegiatan');
       $table->select('tujuan');
       $table->where('id', $id);
-      $table->where('status_usulan', 'submitted');
+      $table->where('status_usulan', 'rejected');
 
       $get = $table->get();
       $data = $get->getRowArray();
@@ -164,7 +172,7 @@ class Pengajuan extends Model
       $table = $this->db->table('tb_usulan_kegiatan');
       $table->select('latar_belakang');
       $table->where('id', $id);
-      $table->where('status_usulan', 'submitted');
+      $table->where('status_usulan', 'rejected');
 
       $get = $table->get();
       $data = $get->getRowArray();
@@ -189,7 +197,7 @@ class Pengajuan extends Model
       $table = $this->db->table('tb_usulan_kegiatan');
       $table->select('rencanca_total_anggaran, total_anggaran');
       $table->where('id', $id);
-      $table->where('status_usulan', 'submitted');
+      $table->where('status_usulan', 'rejected');
 
       $get = $table->get();
       $data = $get->getRowArray();
@@ -214,7 +222,7 @@ class Pengajuan extends Model
       $table = $this->db->table('tb_usulan_kegiatan');
       $table->select('kode, waktu_mulai, waktu_selesai, tempat_pelaksanaan, tanggal_submit, operator_input, nama, status_usulan, id_unit_pengusul');
       $table->where('id', $id);
-      $table->where('status_usulan', 'submitted');
+      $table->where('status_usulan', 'rejected');
 
       $get = $table->get();
       $data = $get->getRowArray();
@@ -237,7 +245,7 @@ class Pengajuan extends Model
    public function getData(array $params): array
    {
       $table = $this->db->table('tb_usulan_kegiatan tuk');
-      $table->where('tuk.status_usulan', 'submitted');
+      $table->where('tuk.status_usulan', 'rejected');
       $table->limit((int) $params['limit'], (int) $params['offset']);
 
       $clone = clone $table;
