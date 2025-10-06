@@ -69,7 +69,11 @@ class MasterIKU extends Model
    public function getData(array $params): array
    {
       $table = $this->db->table('tb_iku_master');
-      tableWhere($table, ['tahun_berlaku' => @$params['year']]);
+
+      if (@$params['year']) {
+         $table->where('tahun_berlaku', $params['year']);
+      }
+
       tableSearch($table, ['kode', 'jenis', 'deskripsi'], $params);
       $table->limit((int) $params['limit'], (int) $params['offset']);
 

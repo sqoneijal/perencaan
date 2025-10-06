@@ -8,7 +8,7 @@ import { useDokumen } from "./use-dokumen";
 const ActionDialog = lazy(() => import("./action-dialog"));
 
 export default function Page() {
-   const { idUsulanKegiatanNum, limit, offset, navigate, data, isLoading, error } = useDokumen();
+   const { limit, offset, data, isLoading, error } = useDokumen();
 
    if (error) return toast.error(error?.message);
 
@@ -18,7 +18,7 @@ export default function Page() {
             <ActionDialog />
          </Suspense>
          <Table
-            columns={getColumns({ navigate, limit, offset, id_usulan_kegiatan: idUsulanKegiatanNum })}
+            columns={getColumns({ limit, offset })}
             data={Array.isArray(data?.results) ? data?.results : []}
             total={data?.total ?? 0}
             isLoading={isLoading}

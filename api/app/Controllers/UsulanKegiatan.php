@@ -18,6 +18,13 @@ class UsulanKegiatan extends BaseController
       return $this->respond($data);
    }
 
+   public function submitPengajuan(): object
+   {
+      $model = new Model();
+      $data = $model->submitPengajuan((array) $this->request->getJSON());
+      return $this->respond($data);
+   }
+
    public function getDataEdit(int $id): object
    {
       $model = new Model();

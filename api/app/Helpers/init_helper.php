@@ -31,16 +31,3 @@ function tableSearch($table, array $column_search, array $post)
       $i++;
    }
 }
-
-function tableWhere($table, array $fields)
-{
-   $table->groupStart();
-
-   foreach ($fields as $key => $value) {
-      if ($value) {
-         $table->where('trim(lower(cast(' . $key . ' as varchar)))', trim(strtolower($value)));
-      }
-   }
-
-   $table->groupEnd();
-}

@@ -11,7 +11,6 @@ export function useDokumen() {
    const { pagination } = useTablePagination();
    const { id_usulan_kegiatan } = useParams();
 
-   const idUsulanKegiatanNum = id_usulan_kegiatan ? Number(id_usulan_kegiatan) : 0;
    const limit = pagination.pageSize;
    const offset = pagination.pageSize * pagination.pageIndex;
    const navigate = useNavigate();
@@ -32,10 +31,10 @@ export function useDokumen() {
       results: Array<Lists>;
       total: number;
    }>({
-      queryKey: ["usulan-kegiatan", idUsulanKegiatanNum, "dokumen", limit, offset],
-      url: `/usulan-kegiatan/${idUsulanKegiatanNum}/dokumen`,
+      queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "dokumen", limit, offset],
+      url: `/usulan-kegiatan/${id_usulan_kegiatan}/dokumen`,
       params: { limit, offset },
    });
 
-   return { idUsulanKegiatanNum, limit, offset, navigate, data, isLoading, error };
+   return { limit, offset, navigate, data, isLoading, error };
 }

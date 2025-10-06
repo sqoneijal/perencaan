@@ -3,24 +3,20 @@ import { Button } from "@/components/ui/button";
 import { getValue } from "@/helpers/init";
 import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
-import { Eye, Pencil } from "lucide-react";
-import { type NavigateFunction } from "react-router";
+import { Eye } from "lucide-react";
 
-type ColumnDeps = { navigate: NavigateFunction; limit: number; offset: number; id_usulan_kegiatan: number };
+type ColumnDeps = { limit: number; offset: number };
 
-const getColumns = ({ navigate, limit, offset, id_usulan_kegiatan: idUsulanKegiatanNum }: ColumnDeps): Array<ColumnDef<Lists>> => [
+const getColumns = ({ limit, offset }: ColumnDeps): Array<ColumnDef<Lists>> => [
    {
       accessorKey: "aksi",
       header: "",
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/delete/rab/${getValue(original, "id")}`)}>
-                  <Pencil />
-               </Button>
                <ConfirmDialog
                   url={`/usulan-kegiatan/actions/dokumen/${getValue(original, "id")}`}
-                  refetchKey={[["usulan-kegiatan", idUsulanKegiatanNum, "dokumen", limit, offset]]}
+                  refetchKey={[["usulan-kegiatan", getValue(original, "id_usulan"), "dokumen", limit, offset]]}
                />
                <Button variant="ghost" size="sm" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
                   <Eye />

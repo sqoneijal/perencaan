@@ -24,7 +24,6 @@ export function useActionDialog() {
 
    const limit = pagination.pageSize;
    const offset = pagination.pageSize * pagination.pageIndex;
-   const idUsulanKegiatanNum = id_usulan_kegiatan ? Number(id_usulan_kegiatan) : 0;
 
    const { user } = UseAuth();
 
@@ -44,14 +43,14 @@ export function useActionDialog() {
             }
          });
          data.append("user_modified", user?.preferred_username || "");
-         const res = await post(`/usulan-kegiatan/${idUsulanKegiatanNum}/dokumen/actions`, data);
+         const res = await post(`/usulan-kegiatan/${id_usulan_kegiatan}/dokumen/actions`, data);
          const responseData = res.data;
 
          setErrors(responseData?.errors ?? {});
          if (responseData?.status) {
             setOpen(false);
             queryClient.refetchQueries({
-               queryKey: ["usulan-kegiatan", idUsulanKegiatanNum, "dokumen", limit, offset],
+               queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "dokumen", limit, offset],
             });
             toast.success(responseData?.message);
             return;

@@ -9,6 +9,24 @@ use phpseclib3\Net\SFTP;
 class UsulanKegiatan extends Model
 {
 
+   public function submitPengajuan(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_usulan_kegiatan');
+         $table->where('id', $post['id_usulan']);
+         $table->update(
+            [
+               'status_usulan' => 'submitted',
+               'tanggal_submit' => new RawSql('now()')
+            ]
+         );
+
+         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function getDataEdit(int $id): array
    {
       try {
@@ -221,7 +239,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_dokumen_pendukung');
-         $table->select('id, nama_dokumen, tipe_dokumen, path_file, uploaded, modified, user_modified, file_dokumen');
+         $table->select('id, nama_dokumen, tipe_dokumen, path_file, uploaded, modified, user_modified, file_dokumen, id_usulan');
          $table->where('id_usulan', $id_usulan_kegiatan);
          $table->orderBy('uploaded', 'desc');
 
@@ -420,6 +438,12 @@ class UsulanKegiatan extends Model
    {
       $table = $this->db->table('tb_usulan_kegiatan tuk');
       $table->select('tuk.id, tuk.kode, tuk.nama, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.total_anggaran, tuk.rencanca_total_anggaran, tuk.status_usulan');
+
+      if (@$params['status_usulan']) {
+         $table->where('tuk.status_usulan', $params['status_usulan']);
+      }
+
+      tableSearch($table, ['tuk.kode', 'tuk.nama', 'tuk.tempat_pelaksanaan'], $params);
       $table->limit((int) $params['limit'], (int) $params['offset']);
       $table->orderBy('tuk.id', 'desc');
 
