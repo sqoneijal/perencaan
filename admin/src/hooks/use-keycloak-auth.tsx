@@ -68,7 +68,7 @@ export function useKeycloakAuth() {
          } catch (err) {
             console.error("Token refresh failed", err);
          }
-      }, 10000);
+      }, 10_000);
 
       return () => clearInterval(interval);
    }, [auth.keycloak]);
@@ -82,6 +82,20 @@ export function useKeycloakAuth() {
          redirectUri: import.meta.env.VITE_API_BASE_URL,
       });
    }, [auth.keycloak]);
+
+   useEffect(() => {
+      if (auth.keycloak?.realmAccess) {
+         const keycloakRoles = auth.keycloak.realmAccess.roles;
+         const allowedRoles = ["ADM", "FUNG", "STR"];
+
+         const hasAccess = allowedRoles.some((role) => keycloakRoles.includes(role));
+
+         if (!hasAccess) {
+            logout();
+         }
+      }
+      return () => {};
+   }, [auth.keycloak, logout]);
 
    return {
       ...auth,
