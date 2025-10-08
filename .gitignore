@@ -4,3 +4,4 @@ api/tests
 api/vendor
 admin/.env.production
 admin/prod.js
+admin/public/tinymce

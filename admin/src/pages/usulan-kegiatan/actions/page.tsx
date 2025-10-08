@@ -81,11 +81,11 @@ export default function Page() {
                   <div className="col-12 col-md-4 mb-3 sm:mb-0">
                      <FormText
                         label="Rencana Total Anggaran"
-                        name="rencanca_total_anggaran"
-                        value={getValue(formData, "rencanca_total_anggaran")}
+                        name="rencana_total_anggaran"
+                        value={getValue(formData, "rencana_total_anggaran")}
                         onChange={(value) => {
                            const formatted = formatRupiah(value);
-                           setFormData((prev) => ({ ...prev, rencanca_total_anggaran: formatted }));
+                           setFormData((prev) => ({ ...prev, rencana_total_anggaran: formatted }));
                         }}
                         errors={errors}
                      />

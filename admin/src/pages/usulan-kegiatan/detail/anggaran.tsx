@@ -28,7 +28,7 @@ export default function Anggaran() {
       <div className="row">
          <div className="col-12 col-md-6">{detailLabel({ label: "Total Anggaran", value: toRupiah(getValue(dataArray, "total_anggaran")) })}</div>
          <div className="col-12 col-md-6">
-            {detailLabel({ label: "Rencana Total Anggaran", value: toRupiah(getValue(dataArray, "rencanca_total_anggaran")) })}
+            {detailLabel({ label: "Rencana Total Anggaran", value: toRupiah(getValue(dataArray, "rencana_total_anggaran")) })}
          </div>
       </div>
    );

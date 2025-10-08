@@ -74,7 +74,7 @@ class UsulanKegiatan
             'rules' => 'required',
             'label' => 'Unit pengusul'
          ],
-         'rencanca_total_anggaran' => [
+         'rencana_total_anggaran' => [
             'rules' => 'required|numeric',
             'label' => 'Rencana total anggaran'
          ]

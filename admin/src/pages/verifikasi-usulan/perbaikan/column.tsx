@@ -41,10 +41,10 @@ const getColumns = ({ navigate }: ColumnDeps): Array<ColumnDef<Lists>> => [
          `${moment(getValue(original, "waktu_mulai")).format("DD-MM-YYYY")} s.d ${moment(getValue(original, "waktu_selesai")).format("DD-MM-YYYY")}`,
    },
    {
-      accessorKey: "rencanca_total_anggaran",
+      accessorKey: "rencana_total_anggaran",
       header: "rencanca total anggaran",
       enableSorting: true,
-      cell: ({ row: { original } }) => toRupiah(getValue(original, "rencanca_total_anggaran")),
+      cell: ({ row: { original } }) => toRupiah(getValue(original, "rencana_total_anggaran")),
    },
    {
       accessorKey: "total_anggaran",

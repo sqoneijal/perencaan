@@ -17,7 +17,15 @@ const loadingELement = (
 function App() {
    return (
       <SidebarProvider>
-         <Suspense fallback={loadingELement}>
+         <Suspense
+            fallback={
+               <div className="flex items-center justify-center from-slate-50 to-slate-100">
+                  <div className="text-center">
+                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
+                     <p className="text-gray-600">Memuat data...</p>
+                  </div>
+               </div>
+            }>
             <AppSidebar />
          </Suspense>
          <SidebarInset>
@@ -25,7 +33,9 @@ function App() {
                <AppHeader />
             </Suspense>
             <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
-               <Routes />
+               <div className="@container/main flex flex-1 flex-col gap-2">
+                  <Routes />
+               </div>
             </div>
          </SidebarInset>
       </SidebarProvider>

@@ -56,7 +56,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_usulan_kegiatan tuk');
-         $table->select('tuk.id, tuk.kode, tuk.nama, tuk.latar_belakang, tuk.tujuan, tuk.sasaran, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.id_unit_pengusul, tuk.rencanca_total_anggaran');
+         $table->select('tuk.id, tuk.kode, tuk.nama, tuk.latar_belakang, tuk.tujuan, tuk.sasaran, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.id_unit_pengusul, tuk.rencana_total_anggaran');
          $table->where('tuk.id', $id);
 
          $get = $table->get();
@@ -367,7 +367,7 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_usulan_kegiatan');
-         $table->select('total_anggaran, rencanca_total_anggaran, status_usulan');
+         $table->select('total_anggaran, rencana_total_anggaran, status_usulan');
          $table->where('id', $id_usulan_kegiatan);
 
          $get = $table->get();
@@ -416,7 +416,7 @@ class UsulanKegiatan extends Model
    public function submit(array $post): array
    {
       try {
-         $data = cleanDataSubmit(['kode', 'nama', 'latar_belakang', 'tujuan', 'sasaran', 'waktu_mulai', 'waktu_selesai', 'tempat_pelaksanaan', 'id_unit_pengusul', 'rencanca_total_anggaran', 'user_modified'], $post);
+         $data = cleanDataSubmit(['kode', 'nama', 'latar_belakang', 'tujuan', 'sasaran', 'waktu_mulai', 'waktu_selesai', 'tempat_pelaksanaan', 'id_unit_pengusul', 'rencana_total_anggaran', 'user_modified'], $post);
 
          $table = $this->db->table('tb_usulan_kegiatan');
          if (@$post['id']) {
@@ -462,7 +462,7 @@ class UsulanKegiatan extends Model
    public function getData(array $params): array
    {
       $table = $this->db->table('tb_usulan_kegiatan tuk');
-      $table->select('tuk.id, tuk.kode, tuk.nama, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.total_anggaran, tuk.rencanca_total_anggaran, tuk.status_usulan');
+      $table->select('tuk.id, tuk.kode, tuk.nama, tuk.waktu_mulai, tuk.waktu_selesai, tuk.tempat_pelaksanaan, tuk.total_anggaran, tuk.rencana_total_anggaran, tuk.status_usulan');
 
       if (@$params['status_usulan']) {
          $table->where('tuk.status_usulan', $params['status_usulan']);

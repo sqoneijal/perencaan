@@ -29,6 +29,12 @@ const VerifikasiUsulanPengajuanDetail = lazy(() => import("@/pages/verifikasi-us
 const VerifikasiUsulanPerbaikan = lazy(() => import("@/pages/verifikasi-usulan/perbaikan/page"));
 const VerifikasiUsulanPerbaikanDetail = lazy(() => import("@/pages/verifikasi-usulan/perbaikan/detail/page"));
 
+const PaguAnggaranFakultas = lazy(() => import("@/pages/pagu-anggaran/fakultas/page"));
+const PaguAnggaranFakultasActions = lazy(() => import("@/pages/pagu-anggaran/fakultas/actions/page"));
+
+const PaguAnggaranProgramStudi = lazy(() => import("@/pages/pagu-anggaran/program-studi/page"));
+const PaguAnggaranProgramStudiActions = lazy(() => import("@/pages/pagu-anggaran/program-studi/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -54,6 +60,12 @@ const route_path = [
    { key: v4(), path: "/verifikasi-usulan/pengajuan/:id_usulan_kegiatan", element: <VerifikasiUsulanPengajuanDetail /> },
    { key: v4(), path: "/verifikasi-usulan/perbaikan", element: <VerifikasiUsulanPerbaikan /> },
    { key: v4(), path: "/verifikasi-usulan/perbaikan/:id_usulan_kegiatan", element: <VerifikasiUsulanPerbaikanDetail /> },
+   { key: v4(), path: "/pagu-anggaran/fakultas", element: <PaguAnggaranFakultas /> },
+   { key: v4(), path: "/pagu-anggaran/fakultas/actions", element: <PaguAnggaranFakultasActions /> },
+   { key: v4(), path: "/pagu-anggaran/fakultas/actions/:id_pagu", element: <PaguAnggaranFakultasActions /> },
+   { key: v4(), path: "/pagu-anggaran/program-studi", element: <PaguAnggaranProgramStudi /> },
+   { key: v4(), path: "/pagu-anggaran/program-studi/actions", element: <PaguAnggaranProgramStudiActions /> },
+   { key: v4(), path: "/pagu-anggaran/program-studi/actions/:id_pagu", element: <PaguAnggaranProgramStudiActions /> },
 ];
 
 export default function Routes() {

@@ -13,7 +13,7 @@ import {
    SidebarRail,
 } from "@/components/ui/sidebar";
 import { loadingSpinner } from "@/helpers/init";
-import { BookMarked, ChevronRight, CircleGauge, ListCheck, NotepadText, SquarePercent, TicketsPlane } from "lucide-react";
+import { BookMarked, ChevronRight, CircleGauge, HandCoins, ListCheck, NotepadText, SquarePercent, TicketsPlane } from "lucide-react";
 import { lazy, Suspense } from "react";
 import { Link, useLocation } from "react-router";
 
@@ -29,6 +29,18 @@ type MenuItem = {
 
 const data: Array<MenuItem> = [
    { label: "Dashboard", icon: <CircleGauge />, url: "/" },
+   {
+      label: "Pagu Anggaran",
+      icon: <HandCoins />,
+      url: "#",
+      child: [
+         { label: "Biro", url: "/pagu-anggaran/biro" },
+         { label: "Lembaga", url: "/pagu-anggaran/lembaga" },
+         { label: "UPT", url: "/pagu-anggaran/upt" },
+         { label: "Fakultas", url: "/pagu-anggaran/fakultas" },
+         { label: "Program Studi", url: "/pagu-anggaran/program-studi" },
+      ],
+   },
    {
       label: "Referensi",
       icon: <BookMarked />,
@@ -51,6 +63,7 @@ const data: Array<MenuItem> = [
          { label: "Perbaikan", url: "/verifikasi-usulan/perbaikan" },
       ],
    },
+   { label: "Realisasi", icon: <ListCheck />, url: "/master-iku" },
 ];
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
@@ -104,7 +117,7 @@ function Tree({ item, location }: Readonly<{ item: MenuItem; location: ReturnTyp
       return (
          <SidebarMenuItem data-active={isActive}>
             <SidebarMenuButton asChild isActive={isActive}>
-               <Link to={item.url}>
+               <Link to={item.url} className="font-medium">
                   {item.icon}
                   {item.label}
                </Link>
@@ -118,7 +131,7 @@ function Tree({ item, location }: Readonly<{ item: MenuItem; location: ReturnTyp
          <Collapsible className="group/collapsible [&[data-state=open]>button>svg:first-child]:rotate-90" defaultOpen={isParentActive}>
             <CollapsibleTrigger asChild>
                <SidebarMenuButton asChild isActive={isActive}>
-                  <Link to={item.url}>
+                  <Link to={item.url} className="font-medium">
                      {item.icon}
                      {item.label}
                      <ChevronRight className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-90" />

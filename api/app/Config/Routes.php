@@ -5,6 +5,11 @@ use CodeIgniter\Router\RouteCollection;
 $routes->options('api/(:any)', 'BaseController::options');
 
 $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCollection $routes) {
+   $routes->group('options', function (RouteCollection $routes) {
+      $routes->get('fakultas', 'Options::getDaftarFakultas');
+      $routes->get('program-studi', 'Options::getDaftarProgramStudi');
+   });
+
    $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], function (RouteCollection $routes) {
       $routes->group('unit-satuan', function (RouteCollection $routes) {
          $routes->get('/', 'UnitSatuan::index');
@@ -133,6 +138,29 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
             $routes->get('iku', 'Perbaikan::getIKU/$1');
             $routes->get('dokumen', 'Perbaikan::getDokumen/$1');
             $routes->get('catatan-perbaikan', 'Perbaikan::getCatatanPerbaikan/$1');
+         });
+      });
+   });
+
+   $routes->group('pagu-anggaran', ['namespace' => 'App\Controllers\PaguAnggaran'], function (RouteCollection $routes) {
+      $routes->group('fakultas', function (RouteCollection $routes) {
+         $routes->get('/', 'Fakultas::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('(:num)', 'Fakultas::getDataToEdit/$1');
+            $routes->delete('(:num)', 'Fakultas::handleDelete/$1');
+            $routes->post('/', 'Fakultas::handleSubmit');
+         });
+      });
+
+      $routes->group('program-studi', function (RouteCollection $routes) {
+         $routes->get('/', 'ProgramStudi::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('sisa-pagu', 'ProgramStudi::getSisaPaguFakultas');
+            $routes->get('(:num)', 'ProgramStudi::getDataToEdit/$1');
+            $routes->delete('(:num)', 'ProgramStudi::handleDelete/$1');
+            $routes->post('/', 'ProgramStudi::handleSubmit');
          });
       });
    });

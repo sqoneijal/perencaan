@@ -187,7 +187,7 @@ class Pengajuan extends Model
    public function getAnggaran(int $id): array
    {
       $table = $this->db->table('tb_usulan_kegiatan');
-      $table->select('rencanca_total_anggaran, total_anggaran');
+      $table->select('rencana_total_anggaran, total_anggaran');
       $table->where('id', $id);
       $table->where('status_usulan', 'submitted');
 

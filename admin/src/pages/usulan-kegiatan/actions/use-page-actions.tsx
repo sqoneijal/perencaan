@@ -48,7 +48,7 @@ export function usePageActions() {
       submit.mutate(
          {
             ...formData,
-            rencanca_total_anggaran: formData.rencanca_total_anggaran?.toString().replace(/\./g, "") || "",
+            rencana_total_anggaran: formData.rencana_total_anggaran?.toString().replace(/\./g, "") || "",
             id_unit_pengusul: pegawaiData?.bagian?.id,
          },
          {

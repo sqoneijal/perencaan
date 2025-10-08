@@ -27,4 +27,44 @@ class Common extends Model
       }
       return $response;
    }
+
+   public function getDaftarFakultas(): array
+   {
+      $table = $this->db->table('tb_fakultas_master');
+      $table->select('id as value, nama as label');
+      $table->orderBy('nama');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return ['data' => $response];
+   }
+
+   public function getDaftarProgramStudi(): array
+   {
+      $table = $this->db->table('tb_prodi_master');
+      $table->select('id as value, nama as label, id_fakultas');
+      $table->orderBy('nama');
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return ['data' => $response];
+   }
 }
