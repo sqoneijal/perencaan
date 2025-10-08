@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { btn_loading, formatRupiah, getValue, getYearOptions } from "@/helpers/init";
+import { queryClient } from "@/lib/queryClient";
 import { toast } from "sonner";
 import { useActions } from "./init";
 import { useOptions } from "./options";
@@ -21,7 +22,11 @@ export default function Page() {
          </div>
       );
 
-   if (errorDaftarFakultas || errorDaftarProdi) return toast.error(errorDaftarFakultas?.message || errorDaftarProdi?.message);
+   if (errorDaftarFakultas || errorDaftarProdi) {
+      toast.error(errorDaftarFakultas?.message || errorDaftarProdi?.message);
+      queryClient.removeQueries({ queryKey: ["options", "fakultas"] });
+      queryClient.removeQueries({ queryKey: ["options", "program-studi"] });
+   }
 
    return (
       <div className="p-0">

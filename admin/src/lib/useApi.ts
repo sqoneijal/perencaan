@@ -71,13 +71,15 @@ export function usePutMutation<T, V extends Record<string, unknown> = Record<str
    url: string,
    options?: Omit<UseMutationOptions<ApiResponse<T>, Error, V, unknown>, "mutationFn">
 ): UseMutationResult<ApiResponse<T>, Error, V, unknown> {
+   const { user } = UseAuth();
+
    return useMutation<ApiResponse<T>, Error, V, unknown>({
       mutationFn: async (variables: V) => {
          if (!navigator.onLine) {
             toast.error("No internet connection");
          }
 
-         const res = await put<T>(url, variables);
+         const res = await put<T>(url, {...variables, user_modified: user?.preferred_username || ''});
          return res.data;
       },
       ...options

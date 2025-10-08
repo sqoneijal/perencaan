@@ -48,7 +48,11 @@ export function useActions() {
       });
    };
 
-   const { data: paguFakultas, isLoading: isLoadingPaguFakultas } = useApiQuery<Lists>({
+   const {
+      data: paguFakultas,
+      isLoading: isLoadingPaguFakultas,
+      error: errorPaguFakultas,
+   } = useApiQuery<Lists>({
       queryKey: ["pagu-anggaran", "program-studi", "actions", "sisa-pagu", getValue(formData, "id_fakultas"), getValue(formData, "tahun")],
       url: `/pagu-anggaran/program-studi/actions/sisa-pagu`,
       params: { id_fakultas: getValue(formData, "id_fakultas"), tahun: getValue(formData, "tahun") },
@@ -70,6 +74,12 @@ export function useActions() {
       }
       return () => {};
    }, [paguFakultas, isLoadingPaguFakultas]);
+
+   if (errorPaguFakultas) {
+      queryClient.removeQueries({
+         queryKey: ["pagu-anggaran", "program-studi", "actions", "sisa-pagu", getValue(formData, "id_fakultas"), getValue(formData, "tahun")],
+      });
+   }
 
    return { handleSubmit, formData, setFormData, errors, submit, paguFakultas };
 }

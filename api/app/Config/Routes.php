@@ -1,6 +1,7 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
+use CodeIgniter\Router\Router;
 
 $routes->options('api/(:any)', 'BaseController::options');
 
@@ -111,6 +112,9 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
    $routes->group('verifikasi-usulan', ['namespace' => 'App\Controllers\VerifikasiUsulan'], function (RouteCollection $routes) {
       $routes->group('pengajuan', function (RouteCollection $routes) {
          $routes->get('/', 'Pengajuan::index');
+         $routes->put('rab', 'Pengajuan::updateRABStatus');
+         $routes->put('iku', 'Pengajuan::updateIKUStatus');
+         $routes->put('dokumen', 'Pengajuan::updateDokumenStatus');
 
          $routes->group('(:num)', function (RouteCollection $routes) {
             $routes->get('informasi-dasar', 'Pengajuan::getInformasiDasar/$1');
@@ -163,5 +167,9 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
             $routes->post('/', 'ProgramStudi::handleSubmit');
          });
       });
+   });
+
+   $routes->group('realisasi', function (RouteCollection $routes) {
+      $routes->get('/', 'Realisasi::index');
    });
 });

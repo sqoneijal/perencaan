@@ -35,7 +35,11 @@ export function FormDatePicker({
          <Label htmlFor={id}>{label}</Label>
          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
-               <Button variant="outline" id={id} className={cn("w-full justify-between font-normal", errors?.[name] ? "border border-red-500" : "")}>
+               <Button
+                  variant="outline"
+                  id={id}
+                  size="sm"
+                  className={cn("w-full justify-between font-normal", errors?.[name] ? "border border-red-500" : "")}>
                   {date ? date.toLocaleDateString() : <span className="opacity-80 font-light">Pilih tanggal</span>}
                   <ChevronDownIcon />
                </Button>
@@ -92,6 +96,7 @@ export function FormCommand({
          <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
                <Button
+                  size="sm"
                   disabled={disabled}
                   id={id}
                   variant="outline"
@@ -182,7 +187,7 @@ export function FormFile({
             placeholder={label}
             onChange={({ target }) => onChange?.(target.files)}
             name={name}
-            className={cn(errors?.[name] && "border border-red-500", className)}
+            className={cn(errors?.[name] && "border border-red-500", className, "h-8")}
             disabled={disabled}
          />
          {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
@@ -223,7 +228,7 @@ export function FormText({
             value={value || ""}
             onChange={({ target: { value } }) => onChange?.(value)}
             name={name}
-            className={cn(errors?.[name] && "border border-red-500", className)}
+            className={cn(errors?.[name] && "border border-red-500", className, "h-8")}
             disabled={disabled}
          />
          {errors?.[name] && <p className="text-red-500 text-xs mt-[0.5]">{errors?.[name]}</p>}
@@ -240,6 +245,7 @@ export function FormSelect({
    errors,
    disabled = false,
    withLabel = true,
+   className,
 }: Readonly<{
    name: string;
    errors?: Lists;
@@ -249,6 +255,7 @@ export function FormSelect({
    onValueChange?: (value: string) => void;
    disabled?: boolean;
    withLabel?: boolean;
+   className?: string;
 }>) {
    const id = v4();
 
@@ -256,7 +263,7 @@ export function FormSelect({
       <div className="grid w-full items-center gap-1 flex-1">
          {withLabel && <Label htmlFor={id}>{label}</Label>}
          <Select key={value} value={value || ""} onValueChange={onValueChange} disabled={disabled}>
-            <SelectTrigger className={cn(errors?.[name] && "border border-red-500", "w-full")}>
+            <SelectTrigger className={cn(errors?.[name] && "border border-red-500", "w-full", className)} size="sm">
                <SelectValue placeholder={`Pilih ${label}`} />
             </SelectTrigger>
             <SelectContent>

@@ -1,9 +1,25 @@
+import { Checkbox } from "@/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { getValue, toRupiah } from "@/helpers/init";
+import { getStatusValidasiRAB, getValue, toRupiah } from "@/helpers/init";
 import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
 
-export const getColumns = (): Array<ColumnDef<Lists>> => [
+export const getColumns = (
+   selectedRows?: Set<string>,
+   onSelectRow?: (id: string) => void,
+   onSelectAll?: () => void,
+   totalRows?: number
+): Array<ColumnDef<Lists>> => [
+   {
+      accessorKey: "aksi",
+      header: () => <Checkbox checked={selectedRows?.size === totalRows && (totalRows ?? 0) > 0} onCheckedChange={onSelectAll} />,
+      enableSorting: true,
+      cell: ({ row: { original } }) => {
+         const id = getValue(original, "id");
+         return <Checkbox checked={selectedRows?.has(id)} onCheckedChange={() => onSelectRow?.(id)} />;
+      },
+      meta: { className: "w-[20px] text-center" },
+   },
    {
       accessorKey: "uraian_biaya",
       header: "uraian",
@@ -41,5 +57,12 @@ export const getColumns = (): Array<ColumnDef<Lists>> => [
       accessorKey: "catatan",
       header: "catatan",
       enableSorting: true,
+   },
+   {
+      accessorKey: "status",
+      header: "status",
+      enableSorting: true,
+      cell: ({ row: { original } }) => getStatusValidasiRAB(getValue(original, "approve")),
+      meta: { className: "w-[20px] text-center" },
    },
 ];

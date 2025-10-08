@@ -165,10 +165,11 @@ class UsulanKegiatan extends Model
    public function getDataRAB(int $id_usulan_kegiatan, array $params): array
    {
       $table = $this->db->table('tb_rab_detail trd');
-      $table->select('trd.id, trd.uraian_biaya, trd.qty, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan, trd.id_usulan');
+      $table->select('trd.id, trd.id_usulan, trd.uraian_biaya, trd.qty, trd.id_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.approve');
       $table->join('tb_unit_satuan tus', 'tus.id = trd.id_satuan', 'left');
       $table->where('trd.id_usulan', $id_usulan_kegiatan);
       $table->limit((int) $params['limit'], (int) $params['offset']);
+      $table->orderBy('trd.id', 'desc');
 
       $clone = clone $table;
 
@@ -206,7 +207,7 @@ class UsulanKegiatan extends Model
 
             $table->insert($data);
          }
-         return ['status' => true, 'content' => '', 'message' => 'Data berhasil disimpan.'];
+         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
       } catch (\Exception $e) {
          return ['status' => false, 'message' => $e->getMessage()];
       }
@@ -236,7 +237,7 @@ class UsulanKegiatan extends Model
    private function getRelasiIKU(int $id_usulan_kegiatan): array
    {
       $table = $this->db->table('tb_relasi_usulan_iku trui');
-      $table->select('trui.id, trui.id_usulan, trui.id_iku, tim.jenis as jenis_iku, tim.kode as kode_iku, tim.tahun_berlaku as tahun_berlaku_iku, tim.deskripsi as deskripsi_iku');
+      $table->select('trui.id, trui.id_usulan, trui.id_iku, tim.jenis as jenis_iku, tim.kode as kode_iku, tim.tahun_berlaku as tahun_berlaku_iku, tim.deskripsi as deskripsi_iku, trui.approve');
       $table->join('tb_iku_master tim', 'tim.id = trui.id_iku');
       $table->where('trui.id_usulan', $id_usulan_kegiatan);
 
@@ -264,9 +265,9 @@ class UsulanKegiatan extends Model
    {
       try {
          $table = $this->db->table('tb_dokumen_pendukung tdp');
-         $table->select('tdp.id, tdp.nama_dokumen, tdp.tipe_dokumen, tdp.path_file, tdp.file_dokumen, tdp.id_usulan');
+         $table->select('tdp.id, tdp.nama_dokumen, tdp.tipe_dokumen, tdp.path_file, tdp.file_dokumen, tdp.id_usulan, tdp.approve');
          $table->where('tdp.id_usulan', $id_usulan_kegiatan);
-         $table->orderBy('tdp.uploaded', 'desc');
+         $table->orderBy('tdp.id', 'desc');
 
          $clone = clone $table;
 

@@ -1,5 +1,14 @@
+import type { Lists } from "@/types/init";
 import React from "react";
 import { create } from "zustand";
+
+export const useDataEdit = create<{
+   dataEdit: Lists;
+   setDataEdit: (dataEdit: Lists) => void;
+}>((set) => ({
+   dataEdit: {},
+   setDataEdit: (dataEdit) => set({ dataEdit }),
+}));
 
 export const useDialog = create<{
    open: boolean;

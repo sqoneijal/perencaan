@@ -26,19 +26,23 @@ const getColumns = ({ navigate, limit, offset, submitUsulan }: ColumnDeps): Arra
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
-                  <Pencil />
-               </Button>
-               <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/usulan-kegiatan/${getValue(original, "id")}#informasi-dasar`)}>
+               {["draft", "rejected"].includes(getValue(original, "status_usulan")) && (
+                  <Button variant="ghost" className="size-6" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
+                     <Pencil />
+                  </Button>
+               )}
+               {["draft"].includes(getValue(original, "status_usulan")) && (
+                  <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
+               )}
+               <Button variant="ghost" className="size-6" onClick={() => navigate(`/usulan-kegiatan/${getValue(original, "id")}#informasi-dasar`)}>
                   <Eye />
                </Button>
-               {getValue(original, "status_usulan") === "draft" && (
+               {["draft", "rejected"].includes(getValue(original, "status_usulan")) && (
                   <Tooltip>
                      <TooltipTrigger asChild>
                         <Button
                            variant="ghost"
-                           size="sm"
+                           className="size-6"
                            onClick={() => {
                               submitUsulan.mutate(
                                  {
@@ -71,7 +75,7 @@ const getColumns = ({ navigate, limit, offset, submitUsulan }: ColumnDeps): Arra
             </>
          );
       },
-      meta: { className: "text-start w-[170px]" },
+      meta: { className: "text-start w-[120px]" },
    },
    {
       accessorKey: "kode",

@@ -1,7 +1,9 @@
 import { useTablePagination } from "@/hooks/store";
-import { useApiQuery } from "@/lib/useApi";
+import { queryClient } from "@/lib/queryClient";
+import { useApiQuery, usePutMutation } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
 import { useParams } from "react-router";
+import { toast } from "sonner";
 
 export function useRabData() {
    const { id_usulan_kegiatan } = useParams();
@@ -21,4 +23,18 @@ export function useRabData() {
    });
 
    return { data, isLoading, error };
+}
+
+export function useUpdateRabBatch() {
+   const { id_usulan_kegiatan } = useParams();
+
+   return usePutMutation(`/verifikasi-usulan/pengajuan/rab`, {
+      onSuccess: (data) => {
+         toast.success(data.message || "Data berhasil diperbarui");
+         queryClient.invalidateQueries({ queryKey: ["verifikasi-usulan", "pengajuan", id_usulan_kegiatan, "rab"] });
+      },
+      onError: (error) => {
+         toast.error(error.message || "Gagal memperbarui data");
+      },
+   });
 }

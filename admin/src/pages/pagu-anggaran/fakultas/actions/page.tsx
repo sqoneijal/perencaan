@@ -1,13 +1,14 @@
 import { FormSelect, FormText } from "@/components/forms";
 import { Button } from "@/components/ui/button";
 import { btn_loading, formatRupiah, getValue, getYearOptions } from "@/helpers/init";
+import { queryClient } from "@/lib/queryClient";
 import { toast } from "sonner";
 import { useAction } from "./init";
 
 export default function Page() {
-   const { daftarFakultas, isLoading, error, errorEdit, isLoadingEdit, handleSubmit, submit, formData, setFormData, errors } = useAction();
+   const { daftarFakultas, isLoading, error, errorEdit, isLoadingEdit, handleSubmit, submit, formData, setFormData, errors, id_pagu } = useAction();
 
-   if (isLoading || isLoadingEdit)
+   if (isLoading || isLoadingEdit) {
       return (
          <div className="min-h-screen flex items-center justify-center from-slate-50 to-slate-100">
             <div className="text-center">
@@ -16,10 +17,12 @@ export default function Page() {
             </div>
          </div>
       );
+   }
 
    if (error || errorEdit) {
       toast.error(error?.message || errorEdit?.message);
-      return null;
+      queryClient.removeQueries({ queryKey: ["options", "fakultas"] });
+      queryClient.removeQueries({ queryKey: ["pagu-anggaran", "fakultas", "actions", id_pagu || "new"] });
    }
 
    return (

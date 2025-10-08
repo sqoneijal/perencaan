@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { useHeaderButton, useTablePagination } from "@/hooks/store";
+import { queryClient } from "@/lib/queryClient";
 import { useApiQuery } from "@/lib/useApi";
 import type { Lists } from "@/types/init";
 import moment from "moment";
@@ -38,7 +39,10 @@ export function useMasterIKUPage() {
       params: { limit, offset, search, year },
    });
 
-   if (error) toast.error(error?.message);
+   if (error) {
+      toast.error(error?.message);
+      queryClient.removeQueries({ queryKey: ["master-iku", limit, offset, search, year] });
+   }
 
    return { data, isLoading, error, limit, offset, navigate, search, setSearch, year, setYear };
 }

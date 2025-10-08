@@ -27,8 +27,6 @@ export function usePageActions() {
       id_usulan_kegiatan?: string | number;
    }
 
-   const submit = usePostMutation<SubmitResponse>("/usulan-kegiatan/actions");
-
    const { data: pegawaiData, isLoading } = useCariUnitPegawai(user?.preferred_username);
 
    useEffect(() => {
@@ -41,6 +39,8 @@ export function usePageActions() {
          setButton(<div />);
       };
    }, [setButton, navigate]);
+
+   const submit = usePostMutation<SubmitResponse>("/usulan-kegiatan/actions");
 
    const handleSubmit = (e: React.FormEvent) => {
       e.preventDefault();
@@ -62,9 +62,9 @@ export function usePageActions() {
                   });
 
                   if (id_usulan_kegiatan) {
-                     queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "informasi-dasar"] });
-                     queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "anggaran"] });
-                     queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "latar-belakang"] });
+                     queryClient.removeQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "informasi-dasar"] });
+                     queryClient.removeQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "anggaran"] });
+                     queryClient.removeQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "latar-belakang"] });
 
                      navigate("/usulan-kegiatan");
                   } else {
@@ -83,7 +83,11 @@ export function usePageActions() {
       );
    };
 
-   const { data, isLoading: isLoadingEdit } = useApiQuery<Lists>({
+   const {
+      data,
+      isLoading: isLoadingEdit,
+      error,
+   } = useApiQuery<Lists>({
       queryKey: ["usulan-kegiatan", "actions", id_usulan_kegiatan],
       url: `/usulan-kegiatan/actions/${id_usulan_kegiatan}`,
       options: { enabled: !!id_usulan_kegiatan },
@@ -95,6 +99,11 @@ export function usePageActions() {
       }
       return () => {};
    }, [isLoadingEdit, data, id_usulan_kegiatan]);
+
+   if (error) {
+      toast.error(error?.message);
+      queryClient.removeQueries({ queryKey: ["usulan-kegiatan", "actions", id_usulan_kegiatan] });
+   }
 
    return { formData, setFormData, errors, setErrors, handleSubmit, pegawaiData, isLoading, submit, isLoadingEdit };
 }

@@ -77,5 +77,10 @@ export function useMasterIKUActionsPage() {
       }
    }, [data, id_iku_master, navigate]);
 
-   return { formData, setFormData, errors, submit, handleSubmit, data, isLoading, error };
+   if (error) {
+      toast.error(error?.message);
+      queryClient.removeQueries({ queryKey: ["master-iku", id_iku_master] });
+   }
+
+   return { formData, setFormData, errors, submit, handleSubmit, data, isLoading };
 }

@@ -86,5 +86,5 @@ export function useAction() {
       return () => {};
    }, [dataEdit, isLoadingEdit]);
 
-   return { daftarFakultas, isLoading, error, errorEdit, isLoadingEdit, handleSubmit, submit, formData, setFormData, errors };
+   return { daftarFakultas, isLoading, error, errorEdit, isLoadingEdit, handleSubmit, submit, formData, setFormData, errors, id_pagu };
 }

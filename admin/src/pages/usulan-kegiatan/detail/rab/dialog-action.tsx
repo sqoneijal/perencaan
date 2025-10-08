@@ -3,11 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { btn_loading, formatRupiah, getValue, toNumber, toRupiah } from "@/helpers/init";
-import { useDialog, useTablePagination } from "@/hooks/store";
+import { useDataEdit, useDialog, useTablePagination } from "@/hooks/store";
 import { queryClient } from "@/lib/queryClient";
 import { useApiQuery, usePostMutation } from "@/lib/useApi";
 import type { Lists, Option } from "@/types/init";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
 import { loadingElement } from "../helper";
@@ -18,10 +18,18 @@ function DialogAction() {
    const { open, setOpen } = useDialog();
    const { id_usulan_kegiatan } = useParams();
    const { pagination } = useTablePagination();
+   const { dataEdit, setDataEdit } = useDataEdit();
 
    const [formData, setFormData] = useState<Lists>({});
    const [errors, setErrors] = useState<Lists>({});
    const [openReferensiSBM, setOpenReferensiSBM] = useState(false);
+
+   useEffect(() => {
+      if (Object.keys(dataEdit).length > 0) {
+         setFormData(dataEdit);
+      }
+      return () => {};
+   }, [dataEdit]);
 
    const limit = pagination.pageSize;
    const offset = pagination.pageSize * pagination.pageIndex;
@@ -41,6 +49,7 @@ function DialogAction() {
                setErrors(data?.errors ?? {});
                if (data?.status) {
                   setFormData({});
+                  setDataEdit({});
                   setOpen(false);
                   queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "rab", limit, offset] });
                   queryClient.refetchQueries({ queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "anggaran"] });
@@ -69,6 +78,7 @@ function DialogAction() {
          total_biaya: (1 * toNumber(getValue(row, "harga_satuan").toString().replace(/\./g, ""))).toString(),
          harga_satuan: formatRupiah(getValue(row, "harga_satuan")),
          id_satuan: getValue(row, "id_satuan"),
+         uraian_biaya: getValue(row, "nama_standar_biaya"),
       }));
       setOpenReferensiSBM(false);
    };

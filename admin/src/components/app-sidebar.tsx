@@ -63,7 +63,7 @@ const data: Array<MenuItem> = [
          { label: "Perbaikan", url: "/verifikasi-usulan/perbaikan" },
       ],
    },
-   { label: "Realisasi", icon: <ListCheck />, url: "/master-iku" },
+   { label: "Realisasi", icon: <ListCheck />, url: "/realisasi" },
 ];
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {

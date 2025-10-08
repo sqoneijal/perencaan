@@ -15,6 +15,27 @@ class Pengajuan extends BaseController
       return $this->respond($data);
    }
 
+   public function updateDokumenStatus(): object
+   {
+      $model = new Model();
+      $data = $model->updateDokumenStatus((array) $this->request->getJSON());
+      return $this->respond($data);
+   }
+
+   public function updateIKUStatus(): object
+   {
+      $model = new Model();
+      $data = $model->updateIKUStatus((array) $this->request->getJSON());
+      return $this->respond($data);
+   }
+
+   public function updateRABStatus(): object
+   {
+      $model = new Model();
+      $data = $model->updateRABStatus((array) $this->request->getJSON());
+      return $this->respond($data);
+   }
+
    public function submitPerbaiki(int $id_usulan): object
    {
       $model = new Model();

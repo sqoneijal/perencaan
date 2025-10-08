@@ -17,7 +17,7 @@ export function useDokumen() {
    const navigate = useNavigate();
 
    useEffect(() => {
-      if (status === "draft") {
+      if (["draft", "rejected"].includes(status)) {
          setButton(
             <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
                Tambah Dokumen

@@ -1,37 +1,60 @@
 import ConfirmDialog from "@/components/confirm-delete";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { getValue, toRupiah } from "@/helpers/init";
+import { getStatusValidasiRAB, getValue, toRupiah } from "@/helpers/init";
 import type { Lists } from "@/types/init";
 import type { ColumnDef } from "@tanstack/react-table";
 import { Pencil } from "lucide-react";
-import type { NavigateFunction } from "react-router";
 
-export type ColumnDeps = { navigate: NavigateFunction; limit: number; offset: number; status_usulan?: string };
+const tombolAksi = (
+   original: Lists,
+   status_usulan: string | undefined,
+   limit: number,
+   offset: number,
+   setOpen: (status: boolean) => void,
+   setDataEdit: (dataEdit: Lists) => void
+) => {
+   const approve = getValue(original, "approve");
 
-export const getColumns = ({ navigate, limit, offset, status_usulan }: ColumnDeps): Array<ColumnDef<Lists>> => [
+   if (status_usulan && ["draft", "rejected"].includes(status_usulan) && approve !== "valid") {
+      return (
+         <>
+            <Button
+               variant="ghost"
+               size="sm"
+               className="size-6"
+               onClick={() => {
+                  setOpen(true);
+                  setDataEdit(original);
+               }}>
+               <Pencil />
+            </Button>
+            <ConfirmDialog
+               url={`/usulan-kegiatan/actions/rab/${getValue(original, "id")}`}
+               refetchKey={[
+                  ["usulan-kegiatan", getValue(original, "id_usulan"), "rab", limit, offset],
+                  ["usulan-kegiatan", getValue(original, "id_usulan"), "anggaran"],
+                  ["usulan-kegiatan", limit, offset],
+               ]}
+            />
+         </>
+      );
+   }
+};
+
+export type ColumnDeps = {
+   limit: number;
+   offset: number;
+   status_usulan?: string;
+   setOpen: (status: boolean) => void;
+   setDataEdit: (dataEdit: Lists) => void;
+};
+
+export const getColumns = ({ limit, offset, status_usulan, setOpen, setDataEdit }: ColumnDeps): Array<ColumnDef<Lists>> => [
    {
       accessorKey: "aksi",
       header: "",
-      cell: ({ row: { original } }) => {
-         return (
-            status_usulan === "draft" && (
-               <>
-                  <Button variant="ghost" size="sm" onClick={() => navigate(`${getValue(original, "id")}`)}>
-                     <Pencil />
-                  </Button>
-                  <ConfirmDialog
-                     url={`/usulan-kegiatan/actions/rab/${getValue(original, "id")}`}
-                     refetchKey={[
-                        ["usulan-kegiatan", getValue(original, "id_usulan"), "rab", limit, offset],
-                        ["usulan-kegiatan", getValue(original, "id_usulan"), "anggaran"],
-                        ["usulan-kegiatan", limit, offset],
-                     ]}
-                  />
-               </>
-            )
-         );
-      },
+      cell: ({ row: { original } }) => tombolAksi(original, status_usulan, limit, offset, setOpen, setDataEdit),
       meta: { className: "text-start w-[100px]" },
    },
    {
@@ -71,5 +94,12 @@ export const getColumns = ({ navigate, limit, offset, status_usulan }: ColumnDep
       accessorKey: "catatan",
       header: "catatan",
       enableSorting: true,
+   },
+   {
+      accessorKey: "status",
+      header: "status",
+      enableSorting: true,
+      cell: ({ row: { original } }) => getStatusValidasiRAB(getValue(original, "approve")),
+      meta: { className: "text-end" },
    },
 ];

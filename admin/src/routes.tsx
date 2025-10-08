@@ -35,6 +35,10 @@ const PaguAnggaranFakultasActions = lazy(() => import("@/pages/pagu-anggaran/fak
 const PaguAnggaranProgramStudi = lazy(() => import("@/pages/pagu-anggaran/program-studi/page"));
 const PaguAnggaranProgramStudiActions = lazy(() => import("@/pages/pagu-anggaran/program-studi/actions/page"));
 
+const PaguAnggaranBiro = lazy(() => import("@/pages/pagu-anggaran/biro/page"));
+
+const Realisasi = lazy(() => import("@/pages/realisasi/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -66,6 +70,8 @@ const route_path = [
    { key: v4(), path: "/pagu-anggaran/program-studi", element: <PaguAnggaranProgramStudi /> },
    { key: v4(), path: "/pagu-anggaran/program-studi/actions", element: <PaguAnggaranProgramStudiActions /> },
    { key: v4(), path: "/pagu-anggaran/program-studi/actions/:id_pagu", element: <PaguAnggaranProgramStudiActions /> },
+   { key: v4(), path: "/pagu-anggaran/biro", element: <PaguAnggaranBiro /> },
+   { key: v4(), path: "/realisasi", element: <Realisasi /> },
 ];
 
 export default function Routes() {

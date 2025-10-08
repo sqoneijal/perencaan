@@ -8,6 +8,54 @@ use CodeIgniter\Model;
 class Pengajuan extends Model
 {
 
+   public function updateDokumenStatus(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_dokumen_pendukung');
+         $table->whereIn('id', $post['ids']);
+         $table->update([
+            'approve' => $post['aksi'],
+            'modified' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function updateIKUStatus(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_relasi_usulan_iku');
+         $table->whereIn('id', $post['ids']);
+         $table->update([
+            'approve' => $post['aksi'],
+            'modified' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   public function updateRABStatus(array $post): array
+   {
+      try {
+         $table = $this->db->table('tb_rab_detail');
+         $table->whereIn('id', $post['ids']);
+         $table->update([
+            'approve' => $post['aksi'],
+            'modified' => new RawSql('now()'),
+            'user_modified' => $post['user_modified']
+         ]);
+         return ['status' => true, 'message' => 'Data berhasil disimpan.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
    public function submitPerbaiki(int $id, array $post): array
    {
       try {
@@ -28,7 +76,7 @@ class Pengajuan extends Model
    public function getDokumen(int $id, array $params): array
    {
       $table = $this->db->table('tb_dokumen_pendukung tdp');
-      $table->select('tdp.id, tdp.nama_dokumen, tdp.tipe_dokumen, tdp.path_file, tdp.file_dokumen, tdp.id_usulan');
+      $table->select('tdp.id, tdp.nama_dokumen, tdp.tipe_dokumen, tdp.path_file, tdp.file_dokumen, tdp.id_usulan, tdp.approve');
       $table->where('tdp.id_usulan', $id);
       $table->limit((int) $params['limit'], (int) $params['offset']);
       $table->orderBy('tdp.uploaded', 'desc');
@@ -56,7 +104,7 @@ class Pengajuan extends Model
    public function getIKU(int $id, array $params): array
    {
       $table = $this->db->table('tb_relasi_usulan_iku trui');
-      $table->select('trui.id, trui.id_usulan, trui.id_iku, tim.jenis as jenis_iku, tim.kode as kode_iku, tim.tahun_berlaku as tahun_berlaku_iku, tim.deskripsi as deskripsi_iku');
+      $table->select('trui.id, trui.id_usulan, trui.id_iku, tim.jenis as jenis_iku, tim.kode as kode_iku, tim.tahun_berlaku as tahun_berlaku_iku, tim.deskripsi as deskripsi_iku, trui.approve');
       $table->join('tb_iku_master tim', 'tim.id = trui.id_iku');
       $table->where('trui.id_usulan', $id);
       $table->limit((int) $params['limit'], (int) $params['offset']);
@@ -84,10 +132,11 @@ class Pengajuan extends Model
    public function getRAB(int $id, array $params): array
    {
       $table = $this->db->table('tb_rab_detail trd');
-      $table->select('trd.id, trd.uraian_biaya, trd.qty, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan, trd.id_usulan');
+      $table->select('trd.id, trd.uraian_biaya, trd.qty, tus.nama as nama_satuan, tus.deskripsi as deskripsi_satuan, trd.harga_satuan, trd.total_biaya, trd.catatan, trd.id_usulan, trd.approve');
       $table->join('tb_unit_satuan tus', 'tus.id = trd.id_satuan', 'left');
       $table->where('trd.id_usulan', $id);
       $table->limit((int) $params['limit'], (int) $params['offset']);
+      $table->orderBy('trd.id');
 
       $clone = clone $table;
 

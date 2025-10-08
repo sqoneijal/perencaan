@@ -71,15 +71,53 @@ export const getStatusUsulanKegiatan = (status?: string) => {
    };
 
    const colorMap = {
-      draft: "bg-gray-500",
-      submitted: "bg-blue-500",
-      verified: "bg-green-500",
-      rejected: "bg-red-500",
+      draft: "bg-gray-100 text-black",
+      submitted: "bg-sky-400",
+      verified: "bg-green-400",
+      rejected: "bg-red-400",
    };
 
    return status && status in obj ? (
-      <Badge className={`${colorMap[status as keyof typeof colorMap]} text-white`}>{obj[status as keyof typeof obj]}</Badge>
+      <Badge className={`${colorMap[status as keyof typeof colorMap]} text-[10px] font-bold`}>{obj[status as keyof typeof obj]}</Badge>
    ) : null;
+};
+
+export const getStatusValidasiRAB = (status?: string) => {
+   const obj = {
+      perbaiki: "Perbaiki",
+      valid: "Valid",
+      tidak_valid: "Tidak Valid",
+   };
+
+   const colorMap = {
+      perbaiki: "bg-orange-400",
+      valid: "bg-green-400",
+      tidak_valid: "bg-red-400",
+   };
+
+   return status && status in obj ? (
+      <Badge className={`${colorMap[status as keyof typeof colorMap]} text-[10px] font-bold`}>{obj[status as keyof typeof obj]}</Badge>
+   ) : (
+      <Badge className="text-[10px] font-bold bg-gray-100 text-black">Draft</Badge>
+   );
+};
+
+export const getStatusValidasiSesuai = (status?: string) => {
+   const obj = {
+      sesuai: "Sesuai",
+      tidak_sesuai: "Tidak Sesuai",
+   };
+
+   const colorMap = {
+      sesuai: "bg-green-400",
+      tidak_sesuai: "bg-red-400",
+   };
+
+   return status && status in obj ? (
+      <Badge className={`${colorMap[status as keyof typeof colorMap]} text-[10px] font-bold`}>{obj[status as keyof typeof obj]}</Badge>
+   ) : (
+      <Badge className="text-[10px] font-bold bg-gray-100 text-black">Draft</Badge>
+   );
 };
 
 export const detailLabel = ({ label, value }: { label?: string; value?: React.ReactNode }) => {

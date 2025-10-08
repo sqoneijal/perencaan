@@ -50,7 +50,7 @@ export default function ConfirmDialog({ url, refetchKey }: Readonly<ConfirmDialo
    return (
       <AlertDialog>
          <AlertDialogTrigger asChild>
-            <Button variant="ghost" size="icon">
+            <Button variant="ghost" className="size-6">
                <Trash />
             </Button>
          </AlertDialogTrigger>

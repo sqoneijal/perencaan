@@ -38,7 +38,7 @@ export function useActionDialog() {
                if (value.length > 0) {
                   data.append(key, value[0]);
                }
-            } else if (value !== undefined && value !== null) {
+            } else if (value != null) {
                data.append(key, value.toString());
             }
          });
@@ -49,6 +49,7 @@ export function useActionDialog() {
          setErrors(responseData?.errors ?? {});
          if (responseData?.status) {
             setOpen(false);
+            setFormData({});
             queryClient.refetchQueries({
                queryKey: ["usulan-kegiatan", id_usulan_kegiatan, "dokumen", limit, offset],
             });

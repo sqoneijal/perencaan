@@ -21,7 +21,7 @@ export function useIKUPage() {
    const submit = usePostMutation(`/usulan-kegiatan/${id_usulan_kegiatan}/iku/actions`);
 
    useEffect(() => {
-      if (status === "draft") {
+      if (["draft", "rejected"].includes(status)) {
          setButton(
             <Button variant="outline" size="sm" onClick={() => setOpen(true)}>
                Tambah Relasi IKU
