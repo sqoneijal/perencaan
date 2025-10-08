@@ -172,4 +172,14 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
    $routes->group('realisasi', function (RouteCollection $routes) {
       $routes->get('/', 'Realisasi::index');
    });
+
+   $routes->group('pengaturan', function (RouteCollection $routes) {
+      $routes->get('/', 'Pengaturan::index');
+
+      $routes->group('actions', function (RouteCollection $routes) {
+         $routes->get('(:num)', 'Pengaturan::getDataEdit/$1');
+         $routes->delete('(:num)', 'Pengaturan::handleDelete/$1');
+         $routes->post('/', 'Pengaturan::handleSubmit');
+      });
+   });
 });

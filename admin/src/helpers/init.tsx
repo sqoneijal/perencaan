@@ -28,6 +28,13 @@ export const toNumber = (val: unknown, fallback = 0): number => {
    return fallback;
 };
 
+export const cleanRupiah = (val: unknown, fallback = 0): number => {
+   if (val == null) return fallback;
+   const cleaned = val.toString().replace(/\./g, "");
+   const num = Number(cleaned);
+   return Number.isNaN(num) ? fallback : num;
+};
+
 export const toRupiah = (val: unknown): string => {
    const num = toNumber(val);
    return new Intl.NumberFormat("id-ID", { style: "currency", currency: "IDR", minimumFractionDigits: 0, maximumFractionDigits: 0 }).format(num);
@@ -56,9 +63,9 @@ export function getFirstHash(url: string): string {
 
 export const getYearOptions = () => {
    const currentYear = new Date().getFullYear();
-   return Array.from({ length: 10 }, (_, i) => ({
-      label: (currentYear - i).toString(),
-      value: (currentYear - i).toString(),
+   return Array.from({ length: 5 }, (_, i) => ({
+      label: (currentYear + 1 - i).toString(),
+      value: (currentYear + 1 - i).toString(),
    }));
 };
 
@@ -111,6 +118,24 @@ export const getStatusValidasiSesuai = (status?: string) => {
    const colorMap = {
       sesuai: "bg-green-400",
       tidak_sesuai: "bg-red-400",
+   };
+
+   return status && status in obj ? (
+      <Badge className={`${colorMap[status as keyof typeof colorMap]} text-[10px] font-bold`}>{obj[status as keyof typeof obj]}</Badge>
+   ) : (
+      <Badge className="text-[10px] font-bold bg-gray-100 text-black">Draft</Badge>
+   );
+};
+
+export const getStatusAktifNonAktif = (status?: string) => {
+   const obj = {
+      t: "Aktif",
+      f: "Tidak Aktif",
+   };
+
+   const colorMap = {
+      t: "bg-green-400",
+      f: "bg-red-400",
    };
 
    return status && status in obj ? (

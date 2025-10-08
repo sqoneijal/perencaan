@@ -39,6 +39,9 @@ const PaguAnggaranBiro = lazy(() => import("@/pages/pagu-anggaran/biro/page"));
 
 const Realisasi = lazy(() => import("@/pages/realisasi/page"));
 
+const Pengaturan = lazy(() => import("@/pages/pengaturan/page"));
+const PengaturanActions = lazy(() => import("@/pages/pengaturan/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -72,6 +75,9 @@ const route_path = [
    { key: v4(), path: "/pagu-anggaran/program-studi/actions/:id_pagu", element: <PaguAnggaranProgramStudiActions /> },
    { key: v4(), path: "/pagu-anggaran/biro", element: <PaguAnggaranBiro /> },
    { key: v4(), path: "/realisasi", element: <Realisasi /> },
+   { key: v4(), path: "/pengaturan", element: <Pengaturan /> },
+   { key: v4(), path: "/pengaturan/actions", element: <PengaturanActions /> },
+   { key: v4(), path: "/pengaturan/actions/:id_pengaturan", element: <PengaturanActions /> },
 ];
 
 export default function Routes() {
