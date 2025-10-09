@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/sidebar";
 import { loadingSpinner } from "@/helpers/init";
 import { BookMarked, ChevronRight, CircleGauge, Cog, HandCoins, ListCheck, NotepadText, SquarePercent, TicketsPlane } from "lucide-react";
-import { lazy, Suspense, useState } from "react";
+import { lazy, Suspense } from "react";
 import { Link, useLocation } from "react-router";
 
 const NavUser = lazy(() => import("./nav-user"));
@@ -62,7 +62,6 @@ const data: Array<MenuItem> = [
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
    const location = useLocation();
-   const [isHover, setIsHover] = useState(false);
 
    return (
       <Sidebar collapsible="offcanvas" {...props}>
@@ -72,28 +71,18 @@ export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sid
                   <SidebarMenuButton size="lg" asChild>
                      <Link
                         to="/"
-                        onMouseEnter={() => setIsHover(true)}
-                        onMouseLeave={() => setIsHover(false)}
                         className="group flex items-center gap-3 rounded-lg px-3 py-2 transition-all duration-300 hover:bg-muted/50 hover:-translate-y-0.5">
                         <div
-                           className={`flex aspect-square size-9 items-center justify-center rounded-md bg-muted text-primary transition-all duration-300 ${
-                              isHover ? "animate-shake text-destructive/90" : "group-hover:text-primary/90"
-                           }`}>
-                           <TicketsPlane className={`size-5 transition-transform duration-300 ${isHover ? "scale-95" : "group-hover:scale-110"}`} />
+                           className={`flex aspect-square size-9 items-center justify-center rounded-md bg-muted text-primary transition-all duration-300 group-hover:text-primary/90`}>
+                           <TicketsPlane className={`size-5 transition-transform duration-300 group-hover:scale-110`} />
                         </div>
 
                         <div className="flex flex-col leading-none">
-                           <span
-                              className={`font-semibold tracking-wide text-foreground transition-all duration-300 ${
-                                 isHover ? "text-destructive/90" : "group-hover:text-foreground"
-                              }`}>
-                              {isHover ? "Belum Disetujui..." : "PlanKePentok"}
+                           <span className={`font-semibold tracking-wide text-foreground transition-all duration-300 group-hover:text-foreground`}>
+                              PlanKePentok
                            </span>
-                           <span
-                              className={`text-xs font-medium text-muted-foreground transition-all duration-300 ${
-                                 isHover ? "text-destructive/60 text-white" : "group-hover:text-primary/60"
-                              }`}>
-                              {isHover ? "lagi nggak ada anggaran 😭" : "v1.0"}
+                           <span className={`text-xs font-medium text-muted-foreground transition-all duration-300 group-hover:text-primary/60`}>
+                              v1.0
                            </span>
                         </div>
                      </Link>

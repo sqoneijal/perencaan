@@ -5,6 +5,7 @@ import { flexRender, getCoreRowModel, getPaginationRowModel, getSortedRowModel, 
 import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from "lucide-react";
 import { Button } from "./ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
+import { Skeleton } from "./ui/skeleton";
 
 type Props<T> = {
    columns: Array<ColumnDef<T>>;
@@ -33,6 +34,57 @@ export default function Table<T>({ columns, data, isLoading, total = 0, trCursor
       getSortedRowModel: getSortedRowModel(),
    });
 
+   const noDataOrLoading = isLoading ? (
+      Array.from({ length: 5 }).map((_, i) => (
+         <TableRow key={`loading-${i}`} className={cn(i % 2 === 0 ? "bg-white" : "bg-gray-50")}>
+            {columns.map((col, j) => (
+               <TableCell
+                  key={`loading-${i}-${j}`}
+                  className="font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8 whitespace-normal break-words">
+                  <Skeleton className="h-4 w-full" />
+               </TableCell>
+            ))}
+         </TableRow>
+      ))
+   ) : (
+      <TableRow>
+         <TableCell colSpan={columns.length} className="h-24 text-center p-0 m-0">
+            <div className="min-h-[200px] flex flex-col items-center justify-center bg-gray-50 p-8">
+               <svg className="w-16 h-16 text-gray-400 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path
+                     strokeLinecap="round"
+                     strokeLinejoin="round"
+                     strokeWidth={2}
+                     d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v12a2 2 0 01-2 2z"
+                  />
+               </svg>
+               <p className="text-gray-500 text-lg mb-2 text-center">Tidak ada data yang dapat ditampilkan</p>
+               <p className="text-gray-400 text-sm text-center">Coba lakukan pencarian lain atau tambahkan data baru</p>
+            </div>
+         </TableCell>
+      </TableRow>
+   );
+
+   const bodyRows = table.getRowModel().rows?.length
+      ? table.getRowModel().rows.map((row, index) => (
+           <TableRow
+              key={row.id}
+              className={cn(index % 2 === 0 ? "bg-white" : "bg-gray-50", trCursor && "hover:cursor-pointer hover:bg-slate-300")}
+              onClick={onRowClick ? () => onRowClick(row.original) : undefined}>
+              {row.getVisibleCells().map((cell) => (
+                 <TableCell
+                    key={cell.id}
+                    className={cn(
+                       "font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8 whitespace-normal break-words",
+                       (cell.column.columnDef.meta as { className?: string })?.className ?? ""
+                    )}>
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                 </TableCell>
+              ))}
+           </TableRow>
+        ))
+      : noDataOrLoading;
+
    return (
       <div className="overflow-hidden rounded-lg border shadow-sm">
          <ShadcnTable style={{ width: "w-full" }}>
@@ -52,58 +104,7 @@ export default function Table<T>({ columns, data, isLoading, total = 0, trCursor
                   </TableRow>
                ))}
             </TableHeader>
-            <TableBody className="font-medium divide-y divide-gray-200">
-               {table.getRowModel().rows?.length ? (
-                  table.getRowModel().rows.map((row, index) => (
-                     <TableRow
-                        key={row.id}
-                        className={cn(index % 2 === 0 ? "bg-white" : "bg-gray-50", trCursor && "hover:cursor-pointer hover:bg-slate-300")}
-                        onClick={onRowClick ? () => onRowClick(row.original) : undefined}>
-                        {row.getVisibleCells().map((cell) => (
-                           <TableCell
-                              key={cell.id}
-                              className={cn(
-                                 "font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8 whitespace-normal break-words",
-                                 (cell.column.columnDef.meta as { className?: string })?.className ?? ""
-                              )}>
-                              {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                           </TableCell>
-                        ))}
-                     </TableRow>
-                  ))
-               ) : (
-                  <TableRow>
-                     <TableCell colSpan={columns.length} className="h-24 text-center p-0 m-0">
-                        {isLoading ? (
-                           <div className="min-h-[200px] flex items-center justify-center from-slate-50 to-slate-100">
-                              <div className="text-center">
-                                 <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
-                                 <p className="text-gray-600 font-medium">Memuat data...</p>
-                              </div>
-                           </div>
-                        ) : (
-                           <div className="min-h-[200px] flex flex-col items-center justify-center bg-gray-50 p-8">
-                              <svg
-                                 className="w-16 h-16 text-gray-400 mb-4"
-                                 fill="none"
-                                 stroke="currentColor"
-                                 viewBox="0 0 24 24"
-                                 xmlns="http://www.w3.org/2000/svg">
-                                 <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 17v-6h6v6m2 4H7a2 2 0 01-2-2V7a2 2 0 012-2h5l2 2h5a2 2 0 012 2v12a2 2 0 01-2 2z"
-                                 />
-                              </svg>
-                              <p className="text-gray-500 text-lg mb-2 text-center">Tidak ada data yang dapat ditampilkan</p>
-                              <p className="text-gray-400 text-sm text-center">Coba lakukan pencarian lain atau tambahkan data baru</p>
-                           </div>
-                        )}
-                     </TableCell>
-                  </TableRow>
-               )}
-            </TableBody>
+            <TableBody className="font-medium divide-y divide-gray-200">{bodyRows}</TableBody>
          </ShadcnTable>
          {total > pagination?.pageSize && (
             <div className="flex items-center justify-between px-2 mt-2 mb-2">

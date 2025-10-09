@@ -1,3 +1,4 @@
+import { LoadingSkeleton } from "@/components/loading-skeleton";
 import { lazy, Suspense } from "react";
 import { Routes as ReactRoutes, Route } from "react-router";
 import { v4 } from "uuid";
@@ -71,15 +72,7 @@ const route_path = [
 export default function Routes() {
    return (
       <div className="mt-3">
-         <Suspense
-            fallback={
-               <div className="min-h-screen flex items-center justify-center from-slate-50 to-slate-100">
-                  <div className="text-center">
-                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4" />
-                     <p className="text-gray-600 font-medium">Memuat data...</p>
-                  </div>
-               </div>
-            }>
+         <Suspense fallback={<LoadingSkeleton />}>
             <ReactRoutes>
                {route_path.map((item) => {
                   if (!item.element) {
