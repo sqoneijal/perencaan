@@ -46,6 +46,12 @@ const UnitKerjaLembagaActions = lazy(() => import("@/pages/unit-kerja/lembaga/ac
 const UnitKerjaUPT = lazy(() => import("@/pages/unit-kerja/upt/page"));
 const UnitKerjaUPTActions = lazy(() => import("@/pages/unit-kerja/upt/actions/page"));
 
+const UnitKerjaFakultas = lazy(() => import("@/pages/unit-kerja/fakultas/page"));
+const UnitKerjaFakultasActions = lazy(() => import("@/pages/unit-kerja/fakultas/actions/page"));
+
+const UnitKerjaProgramStudi = lazy(() => import("@/pages/unit-kerja/prodi/page"));
+const UnitKerjaProgramStudiActions = lazy(() => import("@/pages/unit-kerja/prodi/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -85,6 +91,12 @@ const route_path = [
    { key: v4(), path: "/unit-kerja/upt", element: <UnitKerjaUPT /> },
    { key: v4(), path: "/unit-kerja/upt/actions", element: <UnitKerjaUPTActions /> },
    { key: v4(), path: "/unit-kerja/upt/actions/:id", element: <UnitKerjaUPTActions /> },
+   { key: v4(), path: "/unit-kerja/fakultas", element: <UnitKerjaFakultas /> },
+   { key: v4(), path: "/unit-kerja/fakultas/actions", element: <UnitKerjaFakultasActions /> },
+   { key: v4(), path: "/unit-kerja/fakultas/actions/:id", element: <UnitKerjaFakultasActions /> },
+   { key: v4(), path: "/unit-kerja/program-studi", element: <UnitKerjaProgramStudi /> },
+   { key: v4(), path: "/unit-kerja/program-studi/actions", element: <UnitKerjaProgramStudiActions /> },
+   { key: v4(), path: "/unit-kerja/program-studi/actions/:id", element: <UnitKerjaProgramStudiActions /> },
 ];
 
 export default function Routes() {

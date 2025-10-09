@@ -2,15 +2,17 @@
 
 use CodeIgniter\Router\RouteCollection;
 
-$routes->options('api/(:any)', 'BaseController::options');
-
-$routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCollection $routes) {
+function defineOptionsRoutes(RouteCollection $routes)
+{
    $routes->group('options', function (RouteCollection $routes) {
       $routes->get('fakultas', 'Options::getDaftarFakultas');
       $routes->get('program-studi', 'Options::getDaftarProgramStudi');
       $routes->get('biro', 'Options::getDaftarBiro');
    });
+}
 
+function defineUnitKerjaRoutes(RouteCollection $routes)
+{
    $routes->group('unit-kerja', ['namespace' => 'App\Controllers\UnitKerja'], function (RouteCollection $routes) {
       $routes->group('biro', function (RouteCollection $routes) {
          $routes->get('/', 'Biro::index');
@@ -41,8 +43,31 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
             $routes->post('/', 'Upt::handleSubmit');
          });
       });
-   });
 
+      $routes->group('fakultas', function (RouteCollection $routes) {
+         $routes->get('/', 'Fakultas::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('(:num)', 'Fakultas::handleEditData/$1');
+            $routes->delete('(:num)', 'Fakultas::handleDelete/$1');
+            $routes->post('/', 'Fakultas::handleSubmit');
+         });
+      });
+
+      $routes->group('program-studi', function (RouteCollection $routes) {
+         $routes->get('/', 'ProgramStudi::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('(:num)', 'ProgramStudi::handleEditData/$1');
+            $routes->delete('(:num)', 'ProgramStudi::handleDelete/$1');
+            $routes->post('/', 'ProgramStudi::handleSubmit');
+         });
+      });
+   });
+}
+
+function defineReferensiRoutes(RouteCollection $routes)
+{
    $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], function (RouteCollection $routes) {
       $routes->group('unit-satuan', function (RouteCollection $routes) {
          $routes->get('/', 'UnitSatuan::index');
@@ -95,7 +120,10 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          });
       });
    });
+}
 
+function defineUsulanKegiatanRoutes(RouteCollection $routes)
+{
    $routes->group('usulan-kegiatan', function (RouteCollection $routes) {
       $routes->get('/', 'UsulanKegiatan::index');
 
@@ -130,7 +158,10 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          $routes->delete('dokumen/(:num)', 'UsulanKegiatan::deleteDokumen/$1');
       });
    });
+}
 
+function defineMasterIKURoutes(RouteCollection $routes)
+{
    $routes->group('master-iku', function (RouteCollection $routes) {
       $routes->get('/', 'MasterIKU::index');
       $routes->delete('(:num)', 'MasterIKU::handleDelete/$1');
@@ -140,7 +171,10 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          $routes->post('/', 'MasterIKU::submit');
       });
    });
+}
 
+function defineVerifikasiUsulanRoutes(RouteCollection $routes)
+{
    $routes->group('verifikasi-usulan', ['namespace' => 'App\Controllers\VerifikasiUsulan'], function (RouteCollection $routes) {
       $routes->group('pengajuan', function (RouteCollection $routes) {
          $routes->get('/', 'Pengajuan::index');
@@ -177,7 +211,10 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          });
       });
    });
+}
 
+function definePaguAnggaranRoutes(RouteCollection $routes)
+{
    $routes->group('pagu-anggaran', function (RouteCollection $routes) {
       $routes->get('tahun-anggaran', 'PaguAnggaran::getTahunAnggaran');
 
@@ -187,11 +224,17 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          $routes->get('fakultas', 'PaguAnggaran::getPaguFakultas/$1');
       });
    });
+}
 
+function defineRealisasiRoutes(RouteCollection $routes)
+{
    $routes->group('realisasi', function (RouteCollection $routes) {
       $routes->get('/', 'Realisasi::index');
    });
+}
 
+function definePengaturanRoutes(RouteCollection $routes)
+{
    $routes->group('pengaturan', function (RouteCollection $routes) {
       $routes->get('/', 'Pengaturan::index');
 
@@ -201,4 +244,18 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
          $routes->post('/', 'Pengaturan::handleSubmit');
       });
    });
+}
+
+$routes->options('api/(:any)', 'BaseController::options');
+
+$routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCollection $routes) {
+   defineOptionsRoutes($routes);
+   defineUnitKerjaRoutes($routes);
+   defineReferensiRoutes($routes);
+   defineUsulanKegiatanRoutes($routes);
+   defineMasterIKURoutes($routes);
+   defineVerifikasiUsulanRoutes($routes);
+   definePaguAnggaranRoutes($routes);
+   defineRealisasiRoutes($routes);
+   definePengaturanRoutes($routes);
 });
