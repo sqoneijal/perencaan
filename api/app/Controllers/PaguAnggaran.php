@@ -35,4 +35,25 @@ class PaguAnggaran extends BaseController
       $data = $model->getPaguFakultas($tahun_anggaran);
       return $this->respond($data);
    }
+
+   public function getPaguProgramStudi(int $tahun_anggaran): object
+   {
+      $model = new Model();
+      $data = $model->getPaguProgramStudi($tahun_anggaran);
+      return $this->respond($data);
+   }
+
+   public function getPaguLembaga(int $tahun_anggaran): object
+   {
+      $model = new Model();
+      $data = $model->getPaguLembaga($tahun_anggaran);
+      return $this->respond($data);
+   }
+
+   public function getPaguUPT(int $tahun_anggaran): object
+   {
+      $model = new Model();
+      $data = $model->getPaguUPT($tahun_anggaran);
+      return $this->respond($data);
+   }
 }

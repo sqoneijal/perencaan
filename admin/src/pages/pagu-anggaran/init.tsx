@@ -93,3 +93,69 @@ export function useInitPaguFakultas(paguBiro: Array<Lists>) {
 
    return { paguFakultas, isLoading, error };
 }
+
+export function useInitPaguProgramStudi(paguFakultas: Array<Lists>) {
+   const { tahunAnggaran } = useTahunAnggaran();
+
+   const { data, isLoading, error } = useApiQuery<{
+      results: Lists;
+      status: boolean;
+   }>({
+      queryKey: ["pagu-anggaran", "program-studi", tahunAnggaran],
+      url: `/pagu-anggaran/${tahunAnggaran}/program-studi`,
+      options: { enabled: !!tahunAnggaran && paguFakultas.length > 0 },
+   });
+
+   if (error) {
+      toast.error(error?.message);
+      queryClient.removeQueries({ queryKey: ["pagu-anggaran", "program-studi", tahunAnggaran] });
+   }
+
+   const paguProdi = Array.isArray(data?.results) ? data?.results : [];
+
+   return { paguProdi, isLoading, error };
+}
+
+export function useInitPaguLembaga(paguBiro: Array<Lists>) {
+   const { tahunAnggaran } = useTahunAnggaran();
+
+   const { data, isLoading, error } = useApiQuery<{
+      results: Lists;
+      status: boolean;
+   }>({
+      queryKey: ["pagu-anggaran", "lembaga", tahunAnggaran],
+      url: `/pagu-anggaran/${tahunAnggaran}/lembaga`,
+      options: { enabled: !!tahunAnggaran && paguBiro.length > 0 },
+   });
+
+   if (error) {
+      toast.error(error?.message);
+      queryClient.removeQueries({ queryKey: ["pagu-anggaran", "lembaga", tahunAnggaran] });
+   }
+
+   const paguLembaga = Array.isArray(data?.results) ? data?.results : [];
+
+   return { paguLembaga, isLoading, error };
+}
+
+export function useInitPaguUPT(paguBiro: Array<Lists>) {
+   const { tahunAnggaran } = useTahunAnggaran();
+
+   const { data, isLoading, error } = useApiQuery<{
+      results: Lists;
+      status: boolean;
+   }>({
+      queryKey: ["pagu-anggaran", "upt", tahunAnggaran],
+      url: `/pagu-anggaran/${tahunAnggaran}/upt`,
+      options: { enabled: !!tahunAnggaran && paguBiro.length > 0 },
+   });
+
+   if (error) {
+      toast.error(error?.message);
+      queryClient.removeQueries({ queryKey: ["pagu-anggaran", "upt", tahunAnggaran] });
+   }
+
+   const paguUPT = Array.isArray(data?.results) ? data?.results : [];
+
+   return { paguUPT, isLoading, error };
+}

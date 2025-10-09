@@ -222,6 +222,9 @@ function definePaguAnggaranRoutes(RouteCollection $routes)
          $routes->get('universitas', 'PaguAnggaran::getPaguUniversitas/$1');
          $routes->get('biro', 'PaguAnggaran::getPaguBiro/$1');
          $routes->get('fakultas', 'PaguAnggaran::getPaguFakultas/$1');
+         $routes->get('program-studi', 'PaguAnggaran::getPaguProgramStudi/$1');
+         $routes->get('lembaga', 'PaguAnggaran::getPaguLembaga/$1');
+         $routes->get('upt', 'PaguAnggaran::getPaguUPT/$1');
       });
    });
 }
