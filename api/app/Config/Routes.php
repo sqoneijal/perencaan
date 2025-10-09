@@ -146,26 +146,9 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
       });
    });
 
-   $routes->group('pagu-anggaran', ['namespace' => 'App\Controllers\PaguAnggaran'], function (RouteCollection $routes) {
-      $routes->group('fakultas', function (RouteCollection $routes) {
-         $routes->get('/', 'Fakultas::index');
-
-         $routes->group('actions', function (RouteCollection $routes) {
-            $routes->get('(:num)', 'Fakultas::getDataToEdit/$1');
-            $routes->delete('(:num)', 'Fakultas::handleDelete/$1');
-            $routes->post('/', 'Fakultas::handleSubmit');
-         });
-      });
-
-      $routes->group('program-studi', function (RouteCollection $routes) {
-         $routes->get('/', 'ProgramStudi::index');
-
-         $routes->group('actions', function (RouteCollection $routes) {
-            $routes->get('sisa-pagu', 'ProgramStudi::getSisaPaguFakultas');
-            $routes->get('(:num)', 'ProgramStudi::getDataToEdit/$1');
-            $routes->delete('(:num)', 'ProgramStudi::handleDelete/$1');
-            $routes->post('/', 'ProgramStudi::handleSubmit');
-         });
+   $routes->group('pagu-anggaran', function (RouteCollection $routes) {
+      $routes->group('biro', function (RouteCollection $routes) {
+         $routes->get('/', 'PaguAnggaran::getDaftarBiro');
       });
    });
 
