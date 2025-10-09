@@ -21,4 +21,11 @@ class Options extends BaseController
       $data = $model->getDaftarProgramStudi();
       return $this->respond($data);
    }
+
+   public function getDaftarBiro()
+   {
+      $model = new Model();
+      $data = $model->getDaftarBiro();
+      return $this->respond($data);
+   }
 }

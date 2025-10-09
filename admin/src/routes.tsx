@@ -37,6 +37,15 @@ const Realisasi = lazy(() => import("@/pages/realisasi/page"));
 const Pengaturan = lazy(() => import("@/pages/pengaturan/page"));
 const PengaturanActions = lazy(() => import("@/pages/pengaturan/actions/page"));
 
+const UnitKerjaBiro = lazy(() => import("@/pages/unit-kerja/biro/page"));
+const UnitKerjaBiroActions = lazy(() => import("@/pages/unit-kerja/biro/actions/page"));
+
+const UnitKerjaLembaga = lazy(() => import("@/pages/unit-kerja/lembaga/page"));
+const UnitKerjaLembagaActions = lazy(() => import("@/pages/unit-kerja/lembaga/actions/page"));
+
+const UnitKerjaUPT = lazy(() => import("@/pages/unit-kerja/upt/page"));
+const UnitKerjaUPTActions = lazy(() => import("@/pages/unit-kerja/upt/actions/page"));
+
 const route_path = [
    { key: v4(), path: "/", element: <Dashboard /> },
    { key: v4(), path: "/referensi/unit-satuan", element: <ReferensiUnitSatuan /> },
@@ -67,6 +76,15 @@ const route_path = [
    { key: v4(), path: "/pengaturan", element: <Pengaturan /> },
    { key: v4(), path: "/pengaturan/actions", element: <PengaturanActions /> },
    { key: v4(), path: "/pengaturan/actions/:id_pengaturan", element: <PengaturanActions /> },
+   { key: v4(), path: "/unit-kerja/biro", element: <UnitKerjaBiro /> },
+   { key: v4(), path: "/unit-kerja/biro/actions", element: <UnitKerjaBiroActions /> },
+   { key: v4(), path: "/unit-kerja/biro/actions/:id", element: <UnitKerjaBiroActions /> },
+   { key: v4(), path: "/unit-kerja/lembaga", element: <UnitKerjaLembaga /> },
+   { key: v4(), path: "/unit-kerja/lembaga/actions", element: <UnitKerjaLembagaActions /> },
+   { key: v4(), path: "/unit-kerja/lembaga/actions/:id", element: <UnitKerjaLembagaActions /> },
+   { key: v4(), path: "/unit-kerja/upt", element: <UnitKerjaUPT /> },
+   { key: v4(), path: "/unit-kerja/upt/actions", element: <UnitKerjaUPTActions /> },
+   { key: v4(), path: "/unit-kerja/upt/actions/:id", element: <UnitKerjaUPTActions /> },
 ];
 
 export default function Routes() {

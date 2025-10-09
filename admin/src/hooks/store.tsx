@@ -2,6 +2,14 @@ import type { Lists } from "@/types/init";
 import React from "react";
 import { create } from "zustand";
 
+export const useTahunAnggaran = create<{
+   tahunAnggaran: string;
+   setTahunAnggaran: (tahunAnggaran: string) => void;
+}>((set) => ({
+   tahunAnggaran: "",
+   setTahunAnggaran: (data) => set({ tahunAnggaran: data }),
+}));
+
 export const useDataEdit = create<{
    dataEdit: Lists;
    setDataEdit: (dataEdit: Lists) => void;
@@ -16,6 +24,14 @@ export const useDialog = create<{
 }>((set) => ({
    open: false,
    setOpen: (status) => set({ open: status }),
+}));
+
+export const useOptions = create<{
+   options: Record<string, string | null | Array<Lists>>;
+   setOptions: (opt: Record<string, string | null | Array<Lists>>) => void;
+}>((set) => ({
+   options: {},
+   setOptions: (options) => set({ options }),
 }));
 
 export const useStatusUsulanKegiatan = create<{

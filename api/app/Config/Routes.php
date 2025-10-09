@@ -1,7 +1,6 @@
 <?php
 
 use CodeIgniter\Router\RouteCollection;
-use CodeIgniter\Router\Router;
 
 $routes->options('api/(:any)', 'BaseController::options');
 
@@ -9,6 +8,39 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
    $routes->group('options', function (RouteCollection $routes) {
       $routes->get('fakultas', 'Options::getDaftarFakultas');
       $routes->get('program-studi', 'Options::getDaftarProgramStudi');
+      $routes->get('biro', 'Options::getDaftarBiro');
+   });
+
+   $routes->group('unit-kerja', ['namespace' => 'App\Controllers\UnitKerja'], function (RouteCollection $routes) {
+      $routes->group('biro', function (RouteCollection $routes) {
+         $routes->get('/', 'Biro::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('(:num)', 'Biro::handleEditData/$1');
+            $routes->delete('(:num)', 'Biro::handleDelete/$1');
+            $routes->post('/', 'Biro::handleSubmit');
+         });
+      });
+
+      $routes->group('lembaga', function (RouteCollection $routes) {
+         $routes->get('/', 'Lembaga::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('(:num)', 'Lembaga::handleEditData/$1');
+            $routes->delete('(:num)', 'Lembaga::handleDelete/$1');
+            $routes->post('/', 'Lembaga::handleSubmit');
+         });
+      });
+
+      $routes->group('upt', function (RouteCollection $routes) {
+         $routes->get('/', 'Upt::index');
+
+         $routes->group('actions', function (RouteCollection $routes) {
+            $routes->get('(:num)', 'Upt::handleEditData/$1');
+            $routes->delete('(:num)', 'Upt::handleDelete/$1');
+            $routes->post('/', 'Upt::handleSubmit');
+         });
+      });
    });
 
    $routes->group('referensi', ['namespace' => "App\Controllers\Referensi"], function (RouteCollection $routes) {
@@ -147,8 +179,12 @@ $routes->group('api', ['filter' => ['cors', 'keycloak-auth']], function (RouteCo
    });
 
    $routes->group('pagu-anggaran', function (RouteCollection $routes) {
-      $routes->group('biro', function (RouteCollection $routes) {
-         $routes->get('/', 'PaguAnggaran::getDaftarBiro');
+      $routes->get('tahun-anggaran', 'PaguAnggaran::getTahunAnggaran');
+
+      $routes->group('(:num)', function (RouteCollection $routes) { // (:num) tahun_anggaran
+         $routes->get('universitas', 'PaguAnggaran::getPaguUniversitas/$1');
+         $routes->get('biro', 'PaguAnggaran::getPaguBiro/$1');
+         $routes->get('fakultas', 'PaguAnggaran::getPaguFakultas/$1');
       });
    });
 

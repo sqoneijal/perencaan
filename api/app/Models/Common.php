@@ -7,6 +7,27 @@ use CodeIgniter\Model;
 class Common extends Model
 {
 
+   public function getDaftarBiro(): array
+   {
+      $table = $this->db->table('tb_biro_master');
+      $table->orderBy('nama');
+
+      $clone = clone $table;
+
+      $get = $table->get();
+      $result = $get->getResultArray();
+      $fieldNames = $get->getFieldNames();
+      $get->freeResult();
+
+      $response = [];
+      foreach ($result as $key => $val) {
+         foreach ($fieldNames as $field) {
+            $response[$key][$field] = $val[$field] ? trim($val[$field]) : (string) $val[$field];
+         }
+      }
+      return ['results' => $response, 'total' => $clone->countAllResults()];
+   }
+
    public function getDaftarUnitSatuan(): array
    {
       $table = $this->db->table('tb_unit_satuan');

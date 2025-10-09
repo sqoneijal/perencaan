@@ -1,5 +1,19 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
+function LoadingSkeletonEditContent() {
+   return (
+      <div className="min-h-screen p-4 space-y-4">
+         <div className="flex items-center justify-between">
+            <Skeleton className="h-8 w-48" />
+            <Skeleton className="h-10 w-32" />
+         </div>
+
+         {/* Search bar skeleton */}
+         <Skeleton className="h-10 w-full max-w-sm" />
+      </div>
+   );
+}
+
 function LoadingSkeleton() {
    return (
       <div className="min-h-screen p-4 space-y-4">
@@ -77,4 +91,4 @@ function AppHeaderSkeleton() {
    );
 }
 
-export { AppHeaderSkeleton, AppSidebarSkeleton, LoadingSkeleton };
+export { AppHeaderSkeleton, AppSidebarSkeleton, LoadingSkeleton, LoadingSkeletonEditContent };

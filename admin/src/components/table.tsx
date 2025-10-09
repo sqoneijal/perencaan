@@ -37,13 +37,15 @@ export default function Table<T>({ columns, data, isLoading, total = 0, trCursor
    const noDataOrLoading = isLoading ? (
       Array.from({ length: 5 }).map((_, i) => (
          <TableRow key={`loading-${i}`} className={cn(i % 2 === 0 ? "bg-white" : "bg-gray-50")}>
-            {columns.map((col, j) => (
-               <TableCell
-                  key={`loading-${i}-${j}`}
-                  className="font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8 whitespace-normal break-words">
-                  <Skeleton className="h-4 w-full" />
-               </TableCell>
-            ))}
+            {columns.map((col, j) => {
+               return (
+                  <TableCell
+                     key={`loading-${i}-${j}-${col.id}`}
+                     className="font-medium p-1 pl-2 px-3 py-1 text-sm text-gray-900 h-8 whitespace-normal break-words">
+                     <Skeleton className="h-4 w-full" />
+                  </TableCell>
+               );
+            })}
          </TableRow>
       ))
    ) : (
@@ -87,7 +89,7 @@ export default function Table<T>({ columns, data, isLoading, total = 0, trCursor
 
    return (
       <div className="overflow-hidden rounded-lg border shadow-sm">
-         <ShadcnTable style={{ width: "w-full" }}>
+         <ShadcnTable className="w-full">
             <TableHeader className="bg-muted sticky top-0 z-10">
                {table.getHeaderGroups().map((headerGroup) => (
                   <TableRow key={headerGroup.id}>

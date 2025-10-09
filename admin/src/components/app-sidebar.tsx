@@ -13,7 +13,19 @@ import {
    SidebarRail,
 } from "@/components/ui/sidebar";
 import { loadingSpinner } from "@/helpers/init";
-import { BookMarked, ChevronRight, CircleGauge, Cog, HandCoins, ListCheck, NotepadText, SquarePercent, TicketsPlane } from "lucide-react";
+import {
+   BookOpen,
+   Building2,
+   CheckCircle,
+   ChevronRight,
+   DollarSign,
+   FileText,
+   LayoutDashboard,
+   Settings,
+   Target,
+   TicketsPlane,
+   TrendingUp,
+} from "lucide-react";
 import { lazy, Suspense } from "react";
 import { Link, useLocation } from "react-router";
 
@@ -28,15 +40,10 @@ type MenuItem = {
 };
 
 const data: Array<MenuItem> = [
-   { label: "Dashboard", icon: <CircleGauge />, url: "/" },
-   {
-      label: "Pagu Anggaran",
-      icon: <HandCoins />,
-      url: "/pagu-anggaran",
-   },
+   { label: "Dashboard", icon: <LayoutDashboard />, url: "/" },
    {
       label: "Referensi",
-      icon: <BookMarked />,
+      icon: <BookOpen />,
       url: "#",
       child: [
          { label: "Unit Satuan", url: "/referensi/unit-satuan" },
@@ -45,19 +52,36 @@ const data: Array<MenuItem> = [
          { label: "Detail Harga SBM", url: "/referensi/detail-harga-sbm" },
       ],
    },
-   { label: "Master IKU", icon: <ListCheck />, url: "/master-iku" },
-   { label: "Usulan Kegiatan", icon: <NotepadText />, url: "/usulan-kegiatan" },
+   {
+      label: "Unit Kerja",
+      icon: <Building2 />,
+      url: "#",
+      child: [
+         { label: "Biro", url: "/unit-kerja/biro" },
+         { label: "Lembaga", url: "/unit-kerja/lembaga" },
+         { label: "UPT", url: "/unit-kerja/upt" },
+         { label: "Fakultas", url: "/unit-kerja/fakultas" },
+         { label: "Program Studi", url: "/unit-kerja/program-studi" },
+      ],
+   },
+   {
+      label: "Pagu Anggaran",
+      icon: <DollarSign />,
+      url: "/pagu-anggaran",
+   },
+   { label: "Master IKU", icon: <Target />, url: "/master-iku" },
+   { label: "Usulan Kegiatan", icon: <FileText />, url: "/usulan-kegiatan" },
    {
       label: "Verifikasi Usulan",
-      icon: <SquarePercent />,
+      icon: <CheckCircle />,
       url: "#",
       child: [
          { label: "Pengajuan", url: "/verifikasi-usulan/pengajuan" },
          { label: "Perbaikan", url: "/verifikasi-usulan/perbaikan" },
       ],
    },
-   { label: "Realisasi", icon: <ListCheck />, url: "/realisasi" },
-   { label: "Pengaturan", icon: <Cog />, url: "/pengaturan" },
+   { label: "Realisasi", icon: <TrendingUp />, url: "/realisasi" },
+   { label: "Pengaturan", icon: <Settings />, url: "/pengaturan" },
 ];
 
 export default function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
