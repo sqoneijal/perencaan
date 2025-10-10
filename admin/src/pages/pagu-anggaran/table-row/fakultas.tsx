@@ -35,12 +35,18 @@ export default function Fakultas({
    id_biro,
    paguProdi,
    isLoadingPaguProdi,
+   actionButton,
+   actionText,
+   editFormBiro,
 }: {
    paguFakultas: Array<Lists>;
    tableCellClass: string;
    id_biro: string;
    isLoadingPaguProdi: boolean;
    paguProdi: Array<Lists>;
+   actionButton: (row: Lists, pagu: string) => React.ReactElement;
+   actionText: () => React.ReactElement;
+   editFormBiro: string;
 }) {
    return paguFakultas
       .filter((e) => e.id_biro === id_biro)
@@ -54,9 +60,21 @@ export default function Fakultas({
                      {row.nama}
                   </TableCell>
                   <TableCell className={tableCellClass}>{toRupiah(row.realisasi)}</TableCell>
-                  <TableCell className={tableCellClass}>{toRupiah(row.total_pagu)}</TableCell>
+                  <TableCell className={tableCellClass}>{editFormBiro === `fakultas_${row.id}` ? actionText() : toRupiah(row.total_pagu)}</TableCell>
+                  <TableCell className={tableCellClass}>{actionButton(row, "fakultas")}</TableCell>
                </TableRow>
-               {isLoadingPaguProdi ? loading_level_3 : <Prodi paguProdi={paguProdi} tableCellClass={tableCellClass} id_fakultas={row.id as string} />}
+               {isLoadingPaguProdi ? (
+                  loading_level_3
+               ) : (
+                  <Prodi
+                     paguProdi={paguProdi}
+                     tableCellClass={tableCellClass}
+                     id_fakultas={row.id as string}
+                     actionButton={actionButton}
+                     actionText={actionText}
+                     editFormBiro={editFormBiro}
+                  />
+               )}
             </React.Fragment>
          );
       });

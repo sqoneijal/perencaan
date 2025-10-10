@@ -39,7 +39,7 @@ export function FormDatePicker({
                   variant="outline"
                   id={id}
                   size="sm"
-                  className={cn("w-full justify-between font-normal", errors?.[name] ? "border border-red-500" : "")}>
+                  className={cn("w-full justify-between font-normal h-8", errors?.[name] ? "border border-red-500" : "")}>
                   {date ? date.toLocaleDateString() : <span className="opacity-80 font-light">Pilih tanggal</span>}
                   <ChevronDownIcon />
                </Button>
@@ -101,7 +101,7 @@ export function FormCommand({
                   id={id}
                   variant="outline"
                   className={cn(
-                     "border-input text-popover-foreground justify-between w-full h-9 rounded-md border inline-center",
+                     "border-input text-popover-foreground justify-between w-full h-9 rounded-md border inline-center h-8",
                      errors?.[name] ? "border border-red-500" : ""
                   )}>
                   {valueProps || value ? (

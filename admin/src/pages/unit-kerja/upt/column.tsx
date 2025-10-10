@@ -15,7 +15,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/unit-kerja/upt/actions/${getValue(original, "id")}`)}>
+               <Button variant="ghost" onClick={() => navigate(`/unit-kerja/upt/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
                <ConfirmDialog url={`/unit-kerja/upt/actions/${getValue(original, "id")}`} refetchKey={["unit-kerja", "upt", limit, offset]} />

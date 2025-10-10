@@ -27,14 +27,14 @@ const getColumns = ({ navigate, limit, offset, submitUsulan }: ColumnDeps): Arra
          return (
             <>
                {["draft", "rejected"].includes(getValue(original, "status_usulan")) && (
-                  <Button variant="ghost" className="size-6" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
+                  <Button variant="ghost" onClick={() => navigate(`/usulan-kegiatan/actions/${getValue(original, "id")}`)}>
                      <Pencil />
                   </Button>
                )}
                {["draft"].includes(getValue(original, "status_usulan")) && (
                   <ConfirmDialog url={`/usulan-kegiatan/${getValue(original, "id")}`} refetchKey={["usulan-kegiatan", limit, offset]} />
                )}
-               <Button variant="ghost" className="size-6" onClick={() => navigate(`/usulan-kegiatan/${getValue(original, "id")}#informasi-dasar`)}>
+               <Button variant="ghost" onClick={() => navigate(`/usulan-kegiatan/${getValue(original, "id")}#informasi-dasar`)}>
                   <Eye />
                </Button>
                {["draft", "rejected"].includes(getValue(original, "status_usulan")) && (
@@ -42,7 +42,6 @@ const getColumns = ({ navigate, limit, offset, submitUsulan }: ColumnDeps): Arra
                      <TooltipTrigger asChild>
                         <Button
                            variant="ghost"
-                           className="size-6"
                            onClick={() => {
                               submitUsulan.mutate(
                                  {

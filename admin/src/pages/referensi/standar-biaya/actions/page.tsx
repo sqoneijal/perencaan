@@ -55,42 +55,52 @@ export default function Page() {
       <div className="p-0">
          <div className="border rounded-lg p-6 shadow-sm bg-white">
             <form onSubmit={handleSubmit} className="space-y-4">
-               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <FormText
-                     label="Kode Biaya"
-                     value={getValue(formData, "kode")}
-                     onChange={(value) => setFormData((prev) => ({ ...prev, kode: value }))}
-                     name="kode"
-                     errors={errors}
-                  />
-                  <FormText
-                     label="Nama Biaya"
-                     value={getValue(formData, "nama")}
-                     onChange={(value) => setFormData((prev) => ({ ...prev, nama: value }))}
-                     name="nama"
-                     errors={errors}
-                  />
-                  <FormCommand
-                     name="id_kategori"
-                     label="Kategori SBM"
-                     onSearch={(value) => setCariKategoriSBM(value)}
-                     isLoading={isLoadingKategoriSBM}
-                     options={kategoriOptions}
-                     errors={errors}
-                     onChange={(value) => setFormData((prev) => ({ ...prev, id_kategori: value }))}
-                     value={getValue(formData, "id_kategori")}
-                  />
-                  <FormCommand
-                     name="id_unit_satuan"
-                     label="Unit Satuan"
-                     onSearch={(value) => setCariUnitSatuan(value)}
-                     isLoading={isLoadingUnitSatuan}
-                     options={unitSatuanOptions}
-                     errors={errors}
-                     onChange={(value) => setFormData((prev) => ({ ...prev, id_unit_satuan: value }))}
-                     value={getValue(formData, "id_unit_satuan")}
-                  />
-                  <div className="md:col-span-2">
+               <div className="row">
+                  <div className="col-12 col-md-2">
+                     <FormText
+                        label="Kode Biaya"
+                        value={getValue(formData, "kode")}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, kode: value }))}
+                        name="kode"
+                        errors={errors}
+                     />
+                  </div>
+                  <div className="col-12 col-md-3">
+                     <FormText
+                        label="Nama Biaya"
+                        value={getValue(formData, "nama")}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, nama: value }))}
+                        name="nama"
+                        errors={errors}
+                     />
+                  </div>
+                  <div className="col-12 col-md-3">
+                     <FormCommand
+                        name="id_kategori"
+                        label="Kategori SBM"
+                        onSearch={(value) => setCariKategoriSBM(value)}
+                        isLoading={isLoadingKategoriSBM}
+                        options={kategoriOptions}
+                        errors={errors}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, id_kategori: value }))}
+                        value={getValue(formData, "id_kategori")}
+                     />
+                  </div>
+                  <div className="col-12 col-md-3">
+                     <FormCommand
+                        name="id_unit_satuan"
+                        label="Unit Satuan"
+                        onSearch={(value) => setCariUnitSatuan(value)}
+                        isLoading={isLoadingUnitSatuan}
+                        options={unitSatuanOptions}
+                        errors={errors}
+                        onChange={(value) => setFormData((prev) => ({ ...prev, id_unit_satuan: value }))}
+                        value={getValue(formData, "id_unit_satuan")}
+                     />
+                  </div>
+               </div>
+               <div className="row">
+                  <div className="col-12">
                      <FormTextarea
                         label="Deskripsi"
                         value={getValue(formData, "deskripsi")}

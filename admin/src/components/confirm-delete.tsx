@@ -50,7 +50,7 @@ export default function ConfirmDialog({ url, refetchKey }: Readonly<ConfirmDialo
    return (
       <AlertDialog>
          <AlertDialogTrigger asChild>
-            <Button variant="ghost" className="size-6">
+            <Button variant="ghost">
                <Trash />
             </Button>
          </AlertDialogTrigger>
@@ -60,8 +60,8 @@ export default function ConfirmDialog({ url, refetchKey }: Readonly<ConfirmDialo
                <AlertDialogDescription>Apakah anda yakin ingin menghapus. Data yang dihapus tidak dapat dikembalikan!!!</AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-               <AlertDialogCancel>Batal</AlertDialogCancel>
-               <AlertDialogAction disabled={_delete.isPending} onClick={() => _delete.mutate()}>
+               <AlertDialogCancel className="h-7">Batal</AlertDialogCancel>
+               <AlertDialogAction className="h-7" disabled={_delete.isPending} onClick={() => _delete.mutate()}>
                   {_delete.isPending ? (
                      <>
                         <Loader2Icon className="animate-spin" />

@@ -2,6 +2,14 @@ import type { Lists } from "@/types/init";
 import React from "react";
 import { create } from "zustand";
 
+export const useFormEditPaguAnggaran = create<{
+   editStatus: boolean;
+   setEditStatus: (status: boolean) => void;
+}>((set) => ({
+   editStatus: false,
+   setEditStatus: (status) => set({ editStatus: status }),
+}));
+
 export const useTahunAnggaran = create<{
    tahunAnggaran: string;
    setTahunAnggaran: (tahunAnggaran: string) => void;

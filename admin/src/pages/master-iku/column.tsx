@@ -20,7 +20,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/master-iku/actions/${getValue(original, "id")}`)}>
+               <Button variant="ghost" onClick={() => navigate(`/master-iku/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
                <ConfirmDialog url={`/master-iku/${getValue(original, "id")}`} refetchKey={[["master-iku", limit, offset]]} />

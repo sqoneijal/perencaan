@@ -20,7 +20,7 @@ const getColumns = ({ limit, offset, status_usulan }: ColumnDeps): Array<ColumnD
                      refetchKey={[["usulan-kegiatan", getValue(original, "id_usulan"), "dokumen", limit, offset]]}
                   />
                )}
-               <Button variant="ghost" className="size-6" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
+               <Button variant="ghost" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
                   <Eye />
                </Button>
             </>

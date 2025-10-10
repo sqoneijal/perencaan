@@ -10,7 +10,7 @@ const getColumns = (): Array<ColumnDef<Lists>> => [
       header: "",
       cell: ({ row: { original } }) => {
          return (
-            <Button variant="ghost" size="sm" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
+            <Button variant="ghost" onClick={() => window.open(getValue(original, "path_file"), "_blank")}>
                <Eye />
             </Button>
          );

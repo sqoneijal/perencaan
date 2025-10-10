@@ -56,4 +56,11 @@ class PaguAnggaran extends BaseController
       $data = $model->getPaguUPT($tahun_anggaran);
       return $this->respond($data);
    }
+
+   public function handleUpdate(int $tahun_anggaran): object
+   {
+      $model = new Model();
+      $data = $model->handleUpdate(array_merge((array) $this->request->getJSON(), ['tahun_anggaran' => $tahun_anggaran]));
+      return $this->respond($data);
+   }
 }

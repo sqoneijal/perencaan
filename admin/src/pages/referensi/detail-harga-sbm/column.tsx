@@ -32,7 +32,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" size="sm" onClick={() => navigate(`/referensi/detail-harga-sbm/actions/${getValue(original, "id")}`)}>
+               <Button variant="ghost" onClick={() => navigate(`/referensi/detail-harga-sbm/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
                <ConfirmDialog

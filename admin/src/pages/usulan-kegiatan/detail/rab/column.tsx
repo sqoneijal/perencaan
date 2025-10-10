@@ -21,8 +21,6 @@ const tombolAksi = (
          <>
             <Button
                variant="ghost"
-               size="sm"
-               className="size-6"
                onClick={() => {
                   setOpen(true);
                   setDataEdit(original);

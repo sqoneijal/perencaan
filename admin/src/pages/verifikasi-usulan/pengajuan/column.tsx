@@ -16,7 +16,7 @@ const getColumns = ({ navigate }: ColumnDeps): Array<ColumnDef<Lists>> => [
       header: "",
       cell: ({ row: { original } }) => {
          return (
-            <Button variant="ghost" size="sm" onClick={() => navigate(`/verifikasi-usulan/pengajuan/${getValue(original, "id")}#informasi-dasar`)}>
+            <Button variant="ghost" onClick={() => navigate(`/verifikasi-usulan/pengajuan/${getValue(original, "id")}#informasi-dasar`)}>
                <Eye />
             </Button>
          );

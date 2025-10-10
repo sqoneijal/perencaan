@@ -8,6 +8,83 @@ use CodeIgniter\Model;
 class PaguAnggaran extends Model
 {
 
+   public function handleUpdate(array $post): array
+   {
+      try {
+         $pagu = $post['pagu'];
+
+         if ($pagu === 'biro') {
+            $this->handleUpdatePaguBiro($post);
+         } elseif ($pagu === 'lembaga') {
+            $this->handleUpdatePaguLembaga($post);
+         } elseif ($pagu === 'upt') {
+            $this->handleUpdatePaguUPT($post);
+         } elseif ($pagu === 'fakultas') {
+            $this->handleUpdatePaguFakultas($post);
+         } elseif ($pagu === 'prodi') {
+            $this->handleUpdatePaguProdi($post);
+         }
+         return ['status' => true, 'message' => 'Data berhasil diperbarui.'];
+      } catch (\Exception $e) {
+         return ['status' => false, 'message' => $e->getMessage()];
+      }
+   }
+
+   private function handleUpdatePaguProdi(array $post): void
+   {
+      $data = cleanDataSubmit(['total_pagu', 'user_modified'], $post);
+      $data['modified'] = new RawSql('now()');
+
+      $table = $this->db->table('tb_pagu_anggaran_prodi');
+      $table->where('id_prodi', $post['id']);
+      $table->where('tahun_anggaran', $post['tahun_anggaran']);
+      $table->update($data);
+   }
+
+   private function handleUpdatePaguFakultas(array $post): void
+   {
+      $data = cleanDataSubmit(['total_pagu', 'user_modified'], $post);
+      $data['modified'] = new RawSql('now()');
+
+      $table = $this->db->table('tb_pagu_anggaran_fakultas');
+      $table->where('id_fakultas', $post['id']);
+      $table->where('tahun_anggaran', $post['tahun_anggaran']);
+      $table->update($data);
+   }
+
+   private function handleUpdatePaguUPT(array $post): void
+   {
+      $data = cleanDataSubmit(['total_pagu', 'user_modified'], $post);
+      $data['modified'] = new RawSql('now()');
+
+      $table = $this->db->table('tb_pagu_anggaran_upt');
+      $table->where('id_upt', $post['id']);
+      $table->where('tahun_anggaran', $post['tahun_anggaran']);
+      $table->update($data);
+   }
+
+   private function handleUpdatePaguLembaga(array $post): void
+   {
+      $data = cleanDataSubmit(['total_pagu', 'user_modified'], $post);
+      $data['modified'] = new RawSql('now()');
+
+      $table = $this->db->table('tb_pagu_anggaran_lembaga');
+      $table->where('id_lembaga', $post['id']);
+      $table->where('tahun_anggaran', $post['tahun_anggaran']);
+      $table->update($data);
+   }
+
+   private function handleUpdatePaguBiro(array $post): void
+   {
+      $data = cleanDataSubmit(['total_pagu', 'user_modified'], $post);
+      $data['modified'] = new RawSql('now()');
+
+      $table = $this->db->table('tb_pagu_anggaran_biro');
+      $table->where('id_biro', $post['id']);
+      $table->where('tahun_anggaran', $post['tahun_anggaran']);
+      $table->update($data);
+   }
+
    public function getPaguUPT(int $tahun_anggaran): array
    {
       $result = $this->queryDaftarPaguUPT($tahun_anggaran);

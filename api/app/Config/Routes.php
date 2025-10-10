@@ -217,6 +217,7 @@ function definePaguAnggaranRoutes(RouteCollection $routes)
 {
    $routes->group('pagu-anggaran', function (RouteCollection $routes) {
       $routes->get('tahun-anggaran', 'PaguAnggaran::getTahunAnggaran');
+      $routes->put('(:num)', 'PaguAnggaran::handleUpdate/$1'); // (:num) tahun_anggaran
 
       $routes->group('(:num)', function (RouteCollection $routes) { // (:num) tahun_anggaran
          $routes->get('universitas', 'PaguAnggaran::getPaguUniversitas/$1');

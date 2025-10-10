@@ -15,7 +15,7 @@ const getColumns = ({ navigate, limit, offset }: ColumnDeps): Array<ColumnDef<Li
       cell: ({ row: { original } }) => {
          return (
             <>
-               <Button variant="ghost" className="size-6" onClick={() => navigate(`/pengaturan/actions/${getValue(original, "id")}`)}>
+               <Button variant="ghost" onClick={() => navigate(`/pengaturan/actions/${getValue(original, "id")}`)}>
                   <Pencil />
                </Button>
                <ConfirmDialog url={`/pengaturan/actions/${getValue(original, "id")}`} refetchKey={["pengaturan", limit, offset]} />
